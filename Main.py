@@ -25,6 +25,32 @@ class Tournoi: # Définition de notre classe Tournoi
         self.description = ""
 
 
+class Joueur: # Définition de notre classe Joueur
+    """Classe définissant un joueur caractérisé par :
+    - son nom
+    - son prénom
+    - sa date de naissance
+    - son sexe
+    - sa classement"""
+
+    def __init__(self):  # Notre méthode constructeur
+        """Pour l'instant, on ne va définir que les attribut"""
+        self.nom = ""
+        self.prenom = ""
+        self.date_naissance = ""
+        self.sexe = ""
+        self.classement = 1
+
+
+class Tour: # Définition de notre classe Tour
+    """Classe définissant un tour caractérisé par :
+    - sa liste de matchs"""
+
+    def __init__(self):  # Notre méthode constructeur
+        """Pour l'instant, on ne va définir que les attribut"""
+        self.liste_matchs = []
+
+
 def main():
     pass
 
