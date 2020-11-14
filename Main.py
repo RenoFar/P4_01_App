@@ -15,7 +15,7 @@ class Tournoi:  # Définition de la classe Tournoi
     - son controleur de temps
     - sa descrition"""
 
-    def __init__(self, nom, lieu, date, nbre_tour=4, mode_jeu, description=""):
+    def __init__(self, nom, lieu, date, mode_jeu, nbre_tour=4, description=""):
         self.nom = nom
         self.lieu = lieu
         self.date = date
@@ -32,16 +32,14 @@ class Joueur:  # Définition de la classe Joueur
     - son prénom
     - sa date de naissance
     - son sexe
-    - son classement
-    - numéro de l'indice joueur en mémoire"""
+    - son classement"""
 
-    def __init__(self, nom, prenom, date_naissance, sexe, classement=0, indice=""):
+    def __init__(self, nom, prenom, date_naissance, sexe, classement=0):
         self.nom = nom
         self.prenom = prenom
         self.date_naissance = date_naissance
         self.sexe = sexe
         self.classement = classement
-        self.indice = indice
 
 
 class Tour:  # Définition de la classe Tour
@@ -61,7 +59,11 @@ class Tour:  # Définition de la classe Tour
 
 
 def creer_tournoi():  # créer le tournoi
-    nom = "", lieu = "", date = "", nbre_tour = 4, mode_jeu, description = ""
+    nom = ""
+    lieu = ""
+    date = ""
+    mode_jeu = ""
+    description = ""
     while len(nom) < 1 or not nom.isalnum():
         nom = input("\nVeuillez saisir le nom du tournoi: ")
     while len(lieu) < 1:
@@ -72,7 +74,7 @@ def creer_tournoi():  # créer le tournoi
         description = input("Veuillez saisir la Description du tournoi: ")
     while True:
         nbre_tour = input('le nombre de tours par défaut est de 4.'
-                                  '\nSaisissez un autre nombre ou Entrée pour valider: ')
+                          '\nSaisissez un autre nombre ou Entrée pour valider: ')
         if len(nbre_tour) < 1:  # si rien n'est saisi
             nbre_tour = 4
             break
@@ -84,23 +86,32 @@ def creer_tournoi():  # créer le tournoi
     print('le nombre de tours est de ' + str(nbre_tour))
     while mode_jeu.lower() not in ('bullet', 'blitz', 'rapide'):
         mode_jeu = input("Veuillez saisir le mode du tournoi (bullet / blitz / rapide): ")
-    tournoi = Tournoi(nom, lieu, date, nbre_tour, mode_jeu, description)
+    tournoi = Tournoi(nom, lieu, date, mode_jeu, nbre_tour, description)
     return tournoi
 
 
 def ajouter_joueur():  # ajouter les joueurs
     ajout = ""
+    ajout1 = 0
+    for j in enumerate(joueurs_connus): print(j)
     while ajout not in ('1', '2'):
         ajout = input('\nAjouter un joueur connu : 1'
-                      '\nAjouter un nouveau joueur : 2')
+                      '\nCréer un nouveau joueur : 2\n')
     if ajout == '1':
-
+        while ajout1 not in (enumerate(joueurs_connus)):
+            ajout1 = input('\nSélectionner le numero du joueur: ')
+        return joueurs_connus(ajout1)
     if ajout == '2':
-        creer_joueur_()
+        nouveau_joueur = creer_joueur()
+        joueurs_connus.append(nouveau_joueur)
+        ajouter_joueur()
 
-
-def creer_joueur_:()
-    nom = "", prenom = "", date_naissance ="", sexe ="", classement = 0, indice = ""
+def creer_joueur():
+    nom = ""
+    prenom = ""
+    date_naissance =""
+    sexe =""
+    classement = 0
     while len(nom) < 1 or not nom.isalnum():
         nom = input("\nVeuillez saisir le nom du joueur: ")
     while len(prenom) < 1 or not prenom.isalnum():
@@ -112,13 +123,37 @@ def creer_joueur_:()
         sexe = input("Veuillez saisir le sexe du joueur (F/M): ")
     while true:
         classement = input("Veuillez saisir le classement du joueur: ")
-        try
+        try:
             classement = int(classement)
             if classement > 0 : break
         except ValueError: print('Veuillez saisir un entier positif!\n')
-    joueur = Joueur(nom, prenom, date_naissance, sexe, classement, indice)
+    joueur = Joueur(nom, prenom, date_naissance, sexe, classement)
     return joueur
 
+
+def main():
+    """Fonction principale d'exécution de l'application"""
+joueurs_connus = []
+tournois_existants = []
+choix =""
+while choix not in ('1', '2'):
+    choix = input('\nMenu principal: '
+                  '\nCréer un tournoi : 1'
+                  '\nExécuter un tournoi: 2'
+                  '\nVoir les rapports : 3')
+if choix == '1':
+    choix1 = creer_tournoi()
+    tournois_existantschoix1
+    ajouter_joueur()
+elif choix == '2': pass
+
+elif choix == '3': pass
+
+
+
+
+if __name__ == "__main__":
+    main()
 
     # déterminer la liste des matchs
 
@@ -136,21 +171,3 @@ def creer_joueur_:()
 # lister les tournois
 # lister les matchs du tournoi
 # Remarque du directeur
-
-
-def main():
-    """Fonction principale d'exécution de l'application"""
-choix =""
-while choix not in ('1', '2'):
-    choix = input('\nMenu principal: '
-                  '\nCréer un tournoi : 1'
-                  '\nVoir les raports : 2')
-if choix == '1':
-    choix1 = creer_tournoi()
-    ajouter_joueur()
-if choix == '2': pass
-
-
-
-if __name__ == "__main__":
-    main()
