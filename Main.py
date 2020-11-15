@@ -45,14 +45,12 @@ class Joueur:  # Définition de la classe Joueur
 class Tour:  # Définition de la classe Tour
     """Classe définissant un tour caractérisé par :
     - son nom
-    - sa date
     - son heure de début
     - son heure de fin
     - sa liste de matchs"""
 
-    def __init__(self, nom, date, debut, fin):
+    def __init__(self, nom, debut, fin):
         self.nom = nom
-        self.date = date
         self.debut = debut
         self.fin = fin
         self.liste_matchs = []
@@ -118,6 +116,13 @@ def creer_joueur():
     return joueur
 
 
+def creer_tour(joueurs_selectionnes, numero_tour):
+    nom = "round " + str(numero_tour + 1)
+    debut = ""
+    fin = ""
+
+
+
 def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
     choix_joueur = -1
     while choix_joueur == -1:
@@ -149,8 +154,7 @@ def selectionner_tournoi(liste_tournoi):
     choix_tournoi = ""
     while choix_tournoi not in listing_tournoi:
         choix_tournoi = input('Sélectionner le numéro du tournoi : ')
-    joueurs_tournoi = listing_tournoi[int(choix_tournoi)][6]
-    return joueurs_tournoi
+    return liste_tournoi[int(choix_tournoi)]
 
 
 def main():
@@ -181,8 +185,11 @@ def main():
             print('\nliste des joueurs connus: ', joueurs_connus)
             print('liste des tournois connus: ', tournois_existants, '\n')
         elif choix == '2':
-            joueurs_selectionnes = selectionner_tournoi(tournois_existants)
-            print(*joueurs_selectionnes)
+            tournoi_selectionnes = selectionner_tournoi(tournois_existants)
+            for t in range(tournois_selectionnes[4]):
+                print('\n---------- Exécution du tour numéro' + str(t + 1) + ' -----------')
+                creer_tour(tournoi_selectionnes[6], t)
+
         elif choix == '3':
             pass
         elif choix == '4':
