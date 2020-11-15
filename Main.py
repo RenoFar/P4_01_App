@@ -86,8 +86,7 @@ def creer_tournoi():  # créer le tournoi
                 print('\nVeuillez saisir un entier positif!')
     while mode_jeu.lower() not in ('bullet', 'blitz', 'rapide'):
         mode_jeu = input("Veuillez saisir le mode du tournoi (bullet / blitz / rapide): ")
-    tournoi = Tournoi(nom, lieu, date, mode_jeu, nbre_tour, description)
-    return tournoi
+    return Tournoi(nom, lieu, date, mode_jeu, nbre_tour, description)
 
 
 def creer_joueur():
@@ -112,8 +111,7 @@ def creer_joueur():
             if classement > 0: break
         except ValueError:
             print('\nVeuillez saisir un entier positif!')
-    joueur = Joueur(nom, prenom, date_naissance, sexe, classement)
-    return joueur
+    return Joueur(nom, prenom, date_naissance, sexe, classement)
 
 
 def creer_tour(joueurs_selectionnes, numero_tour):
@@ -164,7 +162,7 @@ def selectionner_tournoi(liste_tournoi):
     choix_tournoi = ""
     while choix_tournoi not in listing_tournoi:
         choix_tournoi = input('Sélectionner le numéro du tournoi : ')
-    return liste_tournoi[int(choix_tournoi)]
+    return [liste_tournoi[int(choix_tournoi)], choix_tournoi]
 
 
 def main():
@@ -172,7 +170,7 @@ def main():
     joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7], ['j3', 'qsfh', '17', 'm', 8],
                       ['j4', 'qdhg', '7', 'm', 48], ['j5', 'qazeah', '36', 'f', 1], ['j6', 'ararh', '16', 'm', 21],
                       ['j7', 'qsfq', '3', 'm', 3], ['j8', 'kjqsg', '28', 'f', 9]]
-    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7']]]
+    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7'], []]]
     while True:
         choix = ""
         while choix not in ('1', '2', '3', '4'):
@@ -191,41 +189,44 @@ def main():
                 nouveau_tournoi.indices_joueurs.append(joueurs_tournoi[0])
             tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
                                        nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
-                                       nouveau_tournoi.description, nouveau_tournoi.indices_joueurs])
+                                       nouveau_tournoi.description, nouveau_tournoi.indices_joueurs,
+                                       nouveau_tournoi.tournee])
         elif choix == '2':
             tournoi_selectionne = selectionner_tournoi(tournois_existants)
-            print('\ntournoi selectionné: ', tournoi_selectionne)
+            print('\ntournoi selectionné: ', tournoi_selectionne[0])
 
             selection_joueurs = []
-            for p in range(len(tournoi_selectionne[6])):
-                selection_joueurs.append(joueurs_connus[int(tournoi_selectionne[6][p])])
+            for p in range(len(tournoi_selectionne[0][6])):
+                selection_joueurs.append(joueurs_connus[int(tournoi_selectionne[0][6][p])])
             print('liste des joueurs selectionnés: ', selection_joueurs)
 
-            resultat_rondes = []
-            for t in range(tournoi_selectionne[4]):
+            for t in range(tournoi_selectionne[0][4]):
                 print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
-                tour = creer_tour(selection_joueurs, t)
-                resultat_matchs = []
-                for m in range(len(tour.liste_matchs)):
+                ronde = creer_tour(selection_joueurs, t)
+                liste_match = list(ronde.liste_matchs)
+                ronde.liste_matchs.clear()
+                print('liste_match ', liste_match)
+                print('ronde.nom', ronde.nom)
+                for m in range(len(liste_match)):
                     score = 0
-                    print('Match numéro ' + str(m) + ': ' + tour.liste_matchs[m])
+                    print('\nMatch numéro ' + str(m+1) + ': ' + str(liste_match[m]))
                     while score == 0:
-                        score = input('\nChoississez le gagnant du match'
-                                      '\n tapez 1 pour: ' + str(tour.liste_matchs[m][0]) +
-                                      '\n tapez 2 pour: ' + str(tour.liste_matchs[m][1]) +
+                        score = input('Choississez le gagnant du match'
+                                      '\n tapez 1 pour: ' + str(liste_match[m][0]) +
+                                      '\n tapez 2 pour: ' + str(liste_match[m][1]) +
                                       '\n tapez 3 pour: Match nul'
                                       '\n votre choix: ')
                     if score == 1:
-                        resultat_matchs.append(([tour.liste_matchs[m][0], '1'],[tour.liste_matchs[m][1], '0']))
+                        ronde.liste_matchs.append(([liste_match[m][0], '1'], [liste_match[m][1], '0']))
                     if score == 2:
-                        resultat_matchs.append(([tour.liste_matchs[m][0], '0'],[tour.liste_matchs[m][1], '1']))
+                        ronde.liste_matchs.append(([liste_match[m][0], '0'],[liste_match[m][1], '1']))
                     if score == 3:
-                        resultat_matchs.append(([tour.liste_matchs[m][0], '1/2'],[tour.liste_matchs[m][1], '1/2']))
-                    resultat_rondes.append(resultat_matchs)
+                        ronde.liste_matchs.append(([liste_match[m][0], '1/2'],[liste_match[m][1], '1/2']))
+                print(ronde.liste_matchs)
                 tour_suivant = ""
-                while tour_suivant.lower() not in ('y', 'n'):
-                    tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y/N): ')
-
+                while tour_suivant.lower() != 'y':
+                    tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y): ')
+                """tournois_existants[tournoi_selectionne[1]]"""
         elif choix == '3':
             pass
         elif choix == '4':
