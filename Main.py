@@ -92,28 +92,6 @@ def creer_tournoi():  # créer le tournoi
     return tournoi
 
 
-def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
-    choix_joueur = -1
-    while choix_joueur == -1:
-        listing_joueur = []
-        print('\n---------- Liste des joueurs connus: ----------')
-        for a, elt in enumerate(liste_joueurs):
-            print(str(a) + ' : ' + str(elt))
-            listing_joueur.append(str(a))
-        choix_menu = ""
-        while choix_menu not in ('1', '2'):
-            choix_menu = input('\nSelectionner un joueur connu : 1'
-                               '\nAjouter un nouveau joueur : 2\n')
-            if choix_menu == '1':
-                while choix_joueur not in listing_joueur:
-                    choix_joueur = input('Sélectionner le numéro du joueur : ')
-            elif choix_menu == '2':
-                nouveau_joueur = creer_joueur()
-                liste_joueurs.append([nouveau_joueur.nom, nouveau_joueur.prenom, nouveau_joueur.date_naissance,
-                                      nouveau_joueur.sexe, nouveau_joueur.classement])
-    return [choix_joueur, liste_joueurs]
-
-
 def creer_joueur():
     nom = ""
     prenom = ""
@@ -140,10 +118,47 @@ def creer_joueur():
     return joueur
 
 
+def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
+    choix_joueur = -1
+    while choix_joueur == -1:
+        listing_joueur = []
+        print('\n---------- Liste des joueurs connus: ----------')
+        for a, elt in enumerate(liste_joueurs):
+            print(str(a) + ' : ' + str(elt))
+            listing_joueur.append(str(a))
+        choix_menu = ""
+        while choix_menu not in ('1', '2'):
+            choix_menu = input('\nSelectionner un joueur connu : 1'
+                               '\nAjouter un nouveau joueur : 2\n')
+            if choix_menu == '1':
+                while choix_joueur not in listing_joueur:
+                    choix_joueur = input('Sélectionner le numéro du joueur : ')
+            elif choix_menu == '2':
+                nouveau_joueur = creer_joueur()
+                liste_joueurs.append([nouveau_joueur.nom, nouveau_joueur.prenom, nouveau_joueur.date_naissance,
+                                      nouveau_joueur.sexe, nouveau_joueur.classement])
+    return [choix_joueur, liste_joueurs]
+
+
+def selectionner_tournoi(liste_tournoi):
+    listing_tournoi = []
+    print('\n---------- Liste des tournois enregistrés: ----------')
+    for a, elt in enumerate(liste_tournoi):
+        print(str(a) + ' : ' + str(elt))
+        listing_tournoi.append(str(a))
+    choix_tournoi = ""
+    while choix_tournoi not in listing_tournoi:
+        choix_tournoi = input('Sélectionner le numéro du tournoi : ')
+    joueurs_tournoi = listing_tournoi[int(choix_tournoi)][6]
+    return joueurs_tournoi
+
+
 def main():
     """Fonction principale d'exécution de l'application"""
-    joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7]]
-    tournois_existants = []
+    joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7], ['j3', 'qsfh', '17', 'm', 8],
+                      ['j4', 'qdhg', '7', 'm', 48], ['j5', 'qazeah', '36', 'f', 1], ['j6', 'ararh', '16', 'm', 21],
+                      ['j7', 'qsfq', '3', 'm', 3], ['j8', 'kjqsg', '28', 'f', 9]]
+    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7', '8']]]
     while True:
         choix = ""
         while choix not in ('1', '2', '3', '4'):
@@ -155,20 +170,19 @@ def main():
                           '\nSaisissez le Numéro de votre choix: ')
         if choix == '1':
             nouveau_tournoi = creer_tournoi()
-            for n in range(3):
+            for n in range(7):
                 print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
                 joueurs_tournoi = ajouter_joueur(joueurs_connus)
                 joueurs_connus = joueurs_tournoi[1]
-                """print('liste à jour : ', joueurs_connus)"""
                 nouveau_tournoi.indices_joueurs.append(joueurs_tournoi[0])
-                """print('numéro des joueurs choisis : ', nouveau_tournoi.indices_joueurs)"""
             tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
                                        nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
                                        nouveau_tournoi.description, nouveau_tournoi.indices_joueurs])
             print('\nliste des joueurs connus: ', joueurs_connus)
             print('liste des tournois connus: ', tournois_existants, '\n')
         elif choix == '2':
-            pass
+            joueurs_selectionnes = selectionner_tournoi(tournois_existants)
+            print(*joueurs_selectionnes)
         elif choix == '3':
             pass
         elif choix == '4':
