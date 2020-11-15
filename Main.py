@@ -183,7 +183,7 @@ def main():
                           '\nSaisissez le Numéro de votre choix: ')
         if choix == '1':
             nouveau_tournoi = creer_tournoi()
-            for n in range(7):
+            for n in range(8):
                 print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
                 joueurs_tournoi = ajouter_joueur(joueurs_connus)
                 joueurs_connus = joueurs_tournoi[1]
