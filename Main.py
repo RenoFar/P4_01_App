@@ -142,7 +142,8 @@ def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
         choix_menu = ""
         while choix_menu not in ('1', '2'):
             choix_menu = input('\nSelectionner un joueur connu : 1'
-                               '\nAjouter un nouveau joueur : 2\n')
+                               '\nAjouter un nouveau joueur : 2'
+                               '\nVotre choix:')
             if choix_menu == '1':
                 while choix_joueur not in listing_joueur:
                     choix_joueur = input('Sélectionner le numéro du joueur : ')
@@ -206,22 +207,21 @@ def main():
                 liste_match = list(ronde.liste_matchs)
                 ronde.liste_matchs.clear()
                 print('liste_match ', liste_match)
-                print('ronde.nom', ronde.nom)
                 for m in range(len(liste_match)):
                     score = 0
                     print('\nMatch numéro ' + str(m+1) + ': ' + str(liste_match[m]))
-                    while score == 0:
+                    while score not in ('1', '2', '3'):
                         score = input('Choississez le gagnant du match'
                                       '\n tapez 1 pour: ' + str(liste_match[m][0]) +
                                       '\n tapez 2 pour: ' + str(liste_match[m][1]) +
                                       '\n tapez 3 pour: Match nul'
                                       '\n votre choix: ')
-                    if score == 1:
+                    if score == '1':
                         ronde.liste_matchs.append(([liste_match[m][0], '1'], [liste_match[m][1], '0']))
-                    if score == 2:
-                        ronde.liste_matchs.append(([liste_match[m][0], '0'],[liste_match[m][1], '1']))
-                    if score == 3:
-                        ronde.liste_matchs.append(([liste_match[m][0], '1/2'],[liste_match[m][1], '1/2']))
+                    if score == '2':
+                        ronde.liste_matchs.append(([liste_match[m][0], '0'], [liste_match[m][1], '1']))
+                    if score == '3':
+                        ronde.liste_matchs.append(([liste_match[m][0], '1/2'], [liste_match[m][1], '1/2']))
                 print(ronde.liste_matchs)
                 tour_suivant = ""
                 while tour_suivant.lower() != 'y':
