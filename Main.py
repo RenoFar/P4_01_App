@@ -49,11 +49,11 @@ class Tour:  # Définition de la classe Tour
     - son heure de fin
     - sa liste de matchs"""
 
-    def __init__(self, nom, debut, fin):
+    def __init__(self, nom, debut, fin, liste_matchs):
         self.nom = nom
         self.debut = debut
         self.fin = fin
-        self.liste_matchs = []
+        self.liste_matchs = liste_matchs
 
 
 def creer_tournoi():  # créer le tournoi
@@ -116,11 +116,21 @@ def creer_joueur():
     return joueur
 
 
-def creer_tour(joueurs_selectionnes, numero_tour):
+def creer_tour(joueurs_selectionnes, numero_tour, score_tour):
     nom = "round " + str(numero_tour + 1)
-    debut = ""
-    fin = ""
-
+    debut = " "
+    fin = " "
+    liste_matchs = []
+    if numero_tour == 0:
+        list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[4])
+        print('\n liste joueurs classés: ', *list_classement, '\n')
+        for m in range(len(list_classement)//2):
+            joueur1 = list_classement[m][4]
+            """print('joueur1 ', joueur1)"""
+            joueur2 = list_classement[((len(list_classement)//2)+m)][4]
+            """print('joueur2 ', joueur2)"""
+            liste_matchs.append(([joueur1, '0'], [joueur2, '0']))
+    return Tour(nom, debut, fin, liste_matchs)
 
 
 def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
@@ -162,7 +172,7 @@ def main():
     joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7], ['j3', 'qsfh', '17', 'm', 8],
                       ['j4', 'qdhg', '7', 'm', 48], ['j5', 'qazeah', '36', 'f', 1], ['j6', 'ararh', '16', 'm', 21],
                       ['j7', 'qsfq', '3', 'm', 3], ['j8', 'kjqsg', '28', 'f', 9]]
-    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7', '8']]]
+    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7']]]
     while True:
         choix = ""
         while choix not in ('1', '2', '3', '4'):
@@ -182,13 +192,17 @@ def main():
             tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
                                        nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
                                        nouveau_tournoi.description, nouveau_tournoi.indices_joueurs])
-            print('\nliste des joueurs connus: ', joueurs_connus)
-            print('liste des tournois connus: ', tournois_existants, '\n')
         elif choix == '2':
-            tournoi_selectionnes = selectionner_tournoi(tournois_existants)
-            for t in range(tournois_selectionnes[4]):
-                print('\n---------- Exécution du tour numéro' + str(t + 1) + ' -----------')
-                creer_tour(tournoi_selectionnes[6], t)
+            tournoi_selectionne = selectionner_tournoi(tournois_existants)
+            print('\ntournoi selectionné: ', tournoi_selectionne)
+            selection_joueurs = []
+            for p in range(len(tournoi_selectionne[6])):
+                selection_joueurs.append(joueurs_connus[int(tournoi_selectionne[6][p])])
+            print('liste des joueurs selectionnés: ', selection_joueurs)
+            score_tour = []
+            for t in range(tournoi_selectionne[4]):
+                print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
+                score_tour = creer_tour(selection_joueurs, t, score_tour)
 
         elif choix == '3':
             pass
@@ -200,7 +214,6 @@ if __name__ == "__main__":
     main()
 
     # déterminer la liste des matchs
-
     # générer les paires de joueurs (instance de ronde)
     # lancer les matchs
     # entrer les résultats
