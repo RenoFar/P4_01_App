@@ -144,38 +144,39 @@ def main():
     """Fonction principale d'exécution de l'application"""
     joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7]]
     tournois_existants = []
-    choix = ""
-    while choix not in ('1', '2', '3', '4'):
-        choix = input('\n---------- Menu principal -----------'
-                      '\nCréer un tournoi : 1'
-                      '\nExécuter un tournoi: 2'
-                      '\nVoir les rapports : 3\n'
-                      '\nSaisissez le Numéro de votre choix: ')
-    if choix == '1':
-        nouveau_tournoi = creer_tournoi()
-        for n in range(3):
-            print('\n--------- Selectionner le joueur numéro ' + str(n+1) + ' ---------')
-            joueurs_tournoi = ajouter_joueur(joueurs_connus)
-            joueurs_connus = joueurs_tournoi[1]
-            print('liste à jour : ', joueurs_connus)
-            nouveau_tournoi.indices_joueurs.append(joueurs_tournoi[0])
-            print('numéro des joueurs choisis : ', nouveau_tournoi.indices_joueurs)
-        tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
-                                   nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
-                                   nouveau_tournoi.description, nouveau_tournoi.indices_joueurs])
-    elif choix == '2':
-        pass
-    elif choix == '3':
-        pass
-    elif choix == '4':
-        pass
-    print('\nliste des joueurs connus: ', joueurs_connus)
-    print('\nliste des tournois connus: ', tournois_existants, '\n')
+    while True:
+        choix = ""
+        while choix not in ('1', '2', '3', '4'):
+            choix = input('\n---------- Menu principal -----------'
+                          '\nCréer un tournoi : 1'
+                          '\nExécuter un tournoi: 2'
+                          '\nVoir les rapports : 3'
+                          '\nFermer l\'application : 4'
+                          '\nSaisissez le Numéro de votre choix: ')
+        if choix == '1':
+            nouveau_tournoi = creer_tournoi()
+            for n in range(3):
+                print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
+                joueurs_tournoi = ajouter_joueur(joueurs_connus)
+                joueurs_connus = joueurs_tournoi[1]
+                """print('liste à jour : ', joueurs_connus)"""
+                nouveau_tournoi.indices_joueurs.append(joueurs_tournoi[0])
+                """print('numéro des joueurs choisis : ', nouveau_tournoi.indices_joueurs)"""
+            tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
+                                       nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
+                                       nouveau_tournoi.description, nouveau_tournoi.indices_joueurs])
+            print('\nliste des joueurs connus: ', joueurs_connus)
+            print('liste des tournois connus: ', tournois_existants, '\n')
+        elif choix == '2':
+            pass
+        elif choix == '3':
+            pass
+        elif choix == '4':
+            break
 
 
 if __name__ == "__main__":
     main()
-
 
     # déterminer la liste des matchs
 
