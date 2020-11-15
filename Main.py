@@ -116,20 +116,20 @@ def creer_joueur():
     return joueur
 
 
-def creer_tour(joueurs_selectionnes, numero_tour, score_tour):
-    nom = "round " + str(numero_tour + 1)
-    debut = " "
+def creer_tour(joueurs_selectionnes, numero_tour):
+    debut = "debut"
     fin = " "
     liste_matchs = []
     if numero_tour == 0:
+        nom = "round " + str(numero_tour + 1)
         list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[4])
-        print('\n liste joueurs classés: ', *list_classement, '\n')
+        """print('\n liste joueurs classés: ', *list_classement, '\n')"""
         for m in range(len(list_classement)//2):
-            joueur1 = list_classement[m][4]
-            """print('joueur1 ', joueur1)"""
-            joueur2 = list_classement[((len(list_classement)//2)+m)][4]
-            """print('joueur2 ', joueur2)"""
-            liste_matchs.append(([joueur1, '0'], [joueur2, '0']))
+            joueur1 = list_classement[m][0]
+            joueur2 = list_classement[((len(list_classement)//2)+m)][0]
+            liste_matchs.append([joueur1, joueur2])
+    else:
+        nom = "round " + str(numero_tour + 1)
     return Tour(nom, debut, fin, liste_matchs)
 
 
@@ -195,14 +195,36 @@ def main():
         elif choix == '2':
             tournoi_selectionne = selectionner_tournoi(tournois_existants)
             print('\ntournoi selectionné: ', tournoi_selectionne)
+
             selection_joueurs = []
             for p in range(len(tournoi_selectionne[6])):
                 selection_joueurs.append(joueurs_connus[int(tournoi_selectionne[6][p])])
             print('liste des joueurs selectionnés: ', selection_joueurs)
-            score_tour = []
+
+            resultat_rondes = []
             for t in range(tournoi_selectionne[4]):
                 print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
-                score_tour = creer_tour(selection_joueurs, t, score_tour)
+                tour = creer_tour(selection_joueurs, t)
+                resultat_matchs = []
+                for m in range(len(tour.liste_matchs)):
+                    score = 0
+                    print('Match numéro ' + str(m) + ': ' + tour.liste_matchs[m])
+                    while score == 0:
+                        score = input('\nChoississez le gagnant du match'
+                                      '\n tapez 1 pour: ' + str(tour.liste_matchs[m][0]) +
+                                      '\n tapez 2 pour: ' + str(tour.liste_matchs[m][1]) +
+                                      '\n tapez 3 pour: Match nul'
+                                      '\n votre choix: ')
+                    if score == 1:
+                        resultat_matchs.append(([tour.liste_matchs[m][0], '1'],[tour.liste_matchs[m][1], '0']))
+                    if score == 2:
+                        resultat_matchs.append(([tour.liste_matchs[m][0], '0'],[tour.liste_matchs[m][1], '1']))
+                    if score == 3:
+                        resultat_matchs.append(([tour.liste_matchs[m][0], '1/2'],[tour.liste_matchs[m][1], '1/2']))
+                    resultat_rondes.append(resultat_matchs)
+                tour_suivant = ""
+                while tour_suivant.lower() not in ('y', 'n'):
+                    tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y/N): ')
 
         elif choix == '3':
             pass
