@@ -261,19 +261,21 @@ for n in range(8):
         joueur_choisi = joueur_tournoi.indice
     nouveau_tournoi.indices_joueurs.append(joueur_choisi)
 
-# Réaliser la ronde
+# réaliser la ronde
 for t in range(nouveau_tournoi.nbre_tour):
     print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
     ronde = creer_tour(t)
-    liste_classement = []
+    """liste_classement = []"""
     classement_actuel = []
     for c in range(len(nouveau_tournoi.indices_joueurs)):
         if t == 0:
-            classement_actuel.append(joueurs_connus[c][5])
-        """else:
-            classement_actuel ="""
-        liste_classement.append([str(c), classement_actuel])
-    liste_match = creer_match(liste_classement)
+            classement_actuel.append([str(c), [joueurs_connus[c][5]])
+        if t == 1:
+            classement_actuel[c][1] = 
+        else:
+            classement_actuel[c][1] =  classement_actuel[c][1] +
+       """ liste_classement.append([str(c), classement_actuel[c][1]])"""
+    liste_match = creer_match(classment_actuel)
 
     # saisir les résultats
     for m in range(len(liste_match)):
