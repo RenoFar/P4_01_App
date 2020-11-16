@@ -1,8 +1,6 @@
 #! /usr/bin/env python3
 # coding: utf-8
 
-import Package.fonctions
-
 
 class Tournoi:  # Définition de la classe Tournoi
     """Classe définissant un tournoi caractérisé par :
@@ -15,7 +13,8 @@ class Tournoi:  # Définition de la classe Tournoi
     - son controleur de temps
     - sa descrition"""
 
-    def __init__(self, nom, lieu, date, mode_jeu, nbre_tour=4, description=""):
+    def __init__(self, nom, lieu, date, mode_jeu, nbre_tour=4, description="description"):
+        """"Constructeur de la classe"""
         self.nom = nom
         self.lieu = lieu
         self.date = date
@@ -24,6 +23,43 @@ class Tournoi:  # Définition de la classe Tournoi
         self.description = description
         self.tournee = []
         self.indices_joueurs = []
+
+    def get_nom(self):
+        return self.nom
+
+    def get_lieu(self):
+        return self.lieu
+
+    def get_date(self):
+        return self.date
+
+    def get_nbre_tour(self):
+        return self.nbre_tour
+
+    def get_mode_jeu(self):
+        return self.mode_jeu
+
+    def get_description(self):
+        return self.description
+
+    def get_tournee(self):
+        return self.tournee
+
+    def get_indices_joueur(self):
+        return self.indices_joueurs
+
+    def set_tournee(self):
+        return
+
+    def set_indices_joueurs(self):
+        return
+
+    def set_description(self):
+        return
+
+    """tournee = property(set_tournee)
+    indices_joueurs = property(set_indices_joueurs)
+    description = property(set_description)"""
 
 
 class Joueur:  # Définition de la classe Joueur
@@ -34,12 +70,38 @@ class Joueur:  # Définition de la classe Joueur
     - son sexe
     - son classement"""
 
-    def __init__(self, nom, prenom, date_naissance, sexe, classement=0):
+    def __init__(self, nom, prenom, date_naissance, sexe, indice, classement=0):
+        """"Constructeur de la classe"""
         self.nom = nom
         self.prenom = prenom
         self.date_naissance = date_naissance
         self.sexe = sexe
+        self.indice = indice
         self.classement = classement
+
+    def get_nom(self):
+        return self.nom
+
+    def get_prenom(self):
+        return self.prenom
+
+    def get_date_naissance(self):
+        return self.date_naissance
+
+    def get_sexe(self):
+        return self.sexe
+
+    def get_indice(self):
+        return self.indice
+
+    def get_classement(self):
+        return self.classement
+
+    def set_indice(self):
+        return
+
+    def set_classement(self):
+        return
 
 
 class Tour:  # Définition de la classe Tour
@@ -49,11 +111,35 @@ class Tour:  # Définition de la classe Tour
     - son heure de fin
     - sa liste de matchs"""
 
-    def __init__(self, nom, debut, fin, liste_matchs):
+    def __init__(self, nom, debut, fin=""):
+        """"Constructeur de la classe"""
         self.nom = nom
         self.debut = debut
         self.fin = fin
-        self.liste_matchs = liste_matchs
+        self.liste_matchs = []
+
+    def get_nom(self):
+        return self.nom
+
+    def get_debut(self):
+        return self.debut
+
+    def get_fin(self):
+        return self.fin
+
+    def get_liste_matchs(self):
+        return self.liste_matchs
+
+    def set_fin(self):
+        return
+
+    def set_liste_matchs(self):
+        return
+
+    """nom = property(get_nom)
+    debut = property(get_debut)
+    fin = property(get_fin, set_fin)
+    liste_matchs = property(get_liste_matchs, set_liste_matchs)"""
 
 
 def creer_tournoi():  # créer le tournoi
@@ -89,6 +175,27 @@ def creer_tournoi():  # créer le tournoi
     return Tournoi(nom, lieu, date, mode_jeu, nbre_tour, description)
 
 
+def selectionner_joueur(liste_joueurs):  # ajouter les joueurs
+    choix_joueur = '-1'
+    while choix_joueur == '-1':
+        listing_joueur = []
+        print('\n---------- Liste des joueurs connus: ----------')
+        for a, elt in enumerate(liste_joueurs):
+            print(str(a) + ' : ' + str(elt))
+            listing_joueur.append(str(a))
+        choix_menu = ""
+        while choix_menu not in ('1', '2'):
+            choix_menu = input('\nSelectionner un joueur connu : 1'
+                               '\nAjouter un nouveau joueur : 2'
+                               '\nVotre choix:')
+            if choix_menu == '1':
+                while choix_joueur not in listing_joueur:
+                    choix_joueur = input('Sélectionner le numéro du joueur : ')
+            elif choix_menu == '2':
+                choix_joueur = '-2'
+    return choix_joueur
+
+
 def creer_joueur():
     nom = ""
     prenom = ""
@@ -114,139 +221,93 @@ def creer_joueur():
     return Joueur(nom, prenom, date_naissance, sexe, classement)
 
 
-def creer_tour(joueurs_selectionnes, numero_tour):
+def creer_tour(numero_tour):
+    nom = "round " + str(numero_tour + 1)
     debut = "debut"
     fin = " "
+    return Tour(nom, debut, fin)
+
+
+def creer_match(joueurs_selectionnes, numero_tour):
     liste_matchs = []
     if numero_tour == 0:
-        nom = "round " + str(numero_tour + 1)
         list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[4])
         """print('\n liste joueurs classés: ', *list_classement, '\n')"""
-        for m in range(len(list_classement)//2):
+        for m in range(len(list_classement) // 2):
             joueur1 = list_classement[m][0]
-            joueur2 = list_classement[((len(list_classement)//2)+m)][0]
+            joueur2 = list_classement[((len(list_classement) // 2) + m)][0]
             liste_matchs.append([joueur1, joueur2])
     else:
-        nom = "round " + str(numero_tour + 1)
-    return Tour(nom, debut, fin, liste_matchs)
-
-
-def ajouter_joueur(liste_joueurs):  # ajouter les joueurs
-    choix_joueur = -1
-    while choix_joueur == -1:
-        listing_joueur = []
-        print('\n---------- Liste des joueurs connus: ----------')
-        for a, elt in enumerate(liste_joueurs):
-            print(str(a) + ' : ' + str(elt))
-            listing_joueur.append(str(a))
-        choix_menu = ""
-        while choix_menu not in ('1', '2'):
-            choix_menu = input('\nSelectionner un joueur connu : 1'
-                               '\nAjouter un nouveau joueur : 2'
-                               '\nVotre choix:')
-            if choix_menu == '1':
-                while choix_joueur not in listing_joueur:
-                    choix_joueur = input('Sélectionner le numéro du joueur : ')
-            elif choix_menu == '2':
-                nouveau_joueur = creer_joueur()
-                liste_joueurs.append([nouveau_joueur.nom, nouveau_joueur.prenom, nouveau_joueur.date_naissance,
-                                      nouveau_joueur.sexe, nouveau_joueur.classement])
-    return [choix_joueur, liste_joueurs]
-
-
-def selectionner_tournoi(liste_tournoi):
-    listing_tournoi = []
-    print('\n---------- Liste des tournois enregistrés: ----------')
-    for a, elt in enumerate(liste_tournoi):
-        print(str(a) + ' : ' + str(elt))
-        listing_tournoi.append(str(a))
-    choix_tournoi = ""
-    while choix_tournoi not in listing_tournoi:
-        choix_tournoi = input('Sélectionner le numéro du tournoi : ')
-    return [liste_tournoi[int(choix_tournoi)], choix_tournoi]
+        pass
+    return liste_matchs
 
 
 def main():
     """Fonction principale d'exécution de l'application"""
-    joueurs_connus = [['j1', 'qhh', '12', 'f', 18], ['j2', 'qgth', '14', 'm', 7], ['j3', 'qsfh', '17', 'm', 8],
-                      ['j4', 'qdhg', '7', 'm', 48], ['j5', 'qazeah', '36', 'f', 1], ['j6', 'ararh', '16', 'm', 21],
-                      ['j7', 'qsfq', '3', 'm', 3], ['j8', 'kjqsg', '28', 'f', 9]]
-    tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7'], []]]
-    while True:
-        choix = ""
-        while choix not in ('1', '2', '3', '4'):
-            choix = input('\n---------- Menu principal -----------'
-                          '\nCréer un tournoi : 1'
-                          '\nExécuter un tournoi: 2'
-                          '\nVoir les rapports : 3'
-                          '\nFermer l\'application : 4'
-                          '\nSaisissez le Numéro de votre choix: ')
-        if choix == '1':
-            nouveau_tournoi = creer_tournoi()
-            for n in range(8):
-                print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
-                joueurs_tournoi = ajouter_joueur(joueurs_connus)
-                joueurs_connus = joueurs_tournoi[1]
-                nouveau_tournoi.indices_joueurs.append(joueurs_tournoi[0])
-            tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
-                                       nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
-                                       nouveau_tournoi.description, nouveau_tournoi.indices_joueurs,
-                                       nouveau_tournoi.tournee])
-        elif choix == '2':
-            tournoi_selectionne = selectionner_tournoi(tournois_existants)
-            print('\ntournoi selectionné: ', tournoi_selectionne[0])
 
-            selection_joueurs = []
-            for p in range(len(tournoi_selectionne[0][6])):
-                selection_joueurs.append(joueurs_connus[int(tournoi_selectionne[0][6][p])])
-            print('liste des joueurs selectionnés: ', selection_joueurs)
 
-            for t in range(tournoi_selectionne[0][4]):
-                print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
-                ronde = creer_tour(selection_joueurs, t)
-                liste_match = list(ronde.liste_matchs)
-                ronde.liste_matchs.clear()
-                print('liste_match ', liste_match)
-                for m in range(len(liste_match)):
-                    score = 0
-                    print('\nMatch numéro ' + str(m+1) + ': ' + str(liste_match[m]))
-                    while score not in ('1', '2', '3'):
-                        score = input('Choississez le gagnant du match'
-                                      '\n tapez 1 pour: ' + str(liste_match[m][0]) +
-                                      '\n tapez 2 pour: ' + str(liste_match[m][1]) +
-                                      '\n tapez 3 pour: Match nul'
-                                      '\n votre choix: ')
-                    if score == '1':
-                        ronde.liste_matchs.append(([liste_match[m][0], '1'], [liste_match[m][1], '0']))
-                    if score == '2':
-                        ronde.liste_matchs.append(([liste_match[m][0], '0'], [liste_match[m][1], '1']))
-                    if score == '3':
-                        ronde.liste_matchs.append(([liste_match[m][0], '1/2'], [liste_match[m][1], '1/2']))
-                print(ronde.liste_matchs)
-                tour_suivant = ""
-                while tour_suivant.lower() != 'y':
-                    tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y): ')
-                """tournois_existants[tournoi_selectionne[1]]"""
-        elif choix == '3':
-            pass
-        elif choix == '4':
-            break
+# initialisation des variables
+joueurs_connus = [['j1', 'qhh', '12', 'f', '0', 18], ['j2', 'qgth', '14', 'm', '1', 7],
+                  ['j3', 'qsfh', '17', 'm', '2', 8], ['j4', 'qdhg', '7', 'm', '3', 48],
+                  ['j5', 'qazeah', '36', 'f', '4', 1], ['j6', 'ararh', '16', 'm', '5', 21],
+                  ['j7', 'qsfq', '3', 'm', '6', 3], ['j8', 'kjqsg', '28', 'f', '7', 9]]
+tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7'], []]]
+nouveau_tournoi = creer_tournoi()
+
+# selection des joueurs
+liste_indices_joueurs = []
+for n in range(8):
+    print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
+    joueur_choisi = selectionner_joueur(joueurs_connus)
+    if joueur_choisi == '-2':
+        joueur_tournoi = creer_joueur()
+        joueur_tournoi.indice = str(len(joueurs_connus) + 1)
+        joueurs_connus.append(joueur_tournoi)
+        joueur_choisi = joueur_tournoi.indice
+    liste_indices_joueurs.append(joueur_choisi)
+
+# Réaliser la ronde
+for t in range(nouveau_tournoi.nbre_tour):
+    print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
+    ronde = creer_tour(t)
+    liste_classement = []
+    for c in range(len(liste_indices_joueurs)):
+        liste_classement.append(joueurs_connus[c])
+        """if t > 1: liste_classement[c][6] = score_actuel"""
+    liste_match = creer_match(liste_classement, t)
+    """ronde.liste_matchs.clear()"""
+
+    """# saisir les résultats
+    for m in range(len(liste_match)):
+        score = 0
+        print('\nMatch numéro ' + str(m+1) + ': ' + str(liste_match[m]))
+        while score not in ('1', '2', '3'):
+            score = input('Choississez le gagnant du match'
+                          '\n tapez 1 pour: ' + str(liste_match[m][0]) +
+                          '\n tapez 2 pour: ' + str(liste_match[m][1]) +
+                          '\n tapez 3 pour: Match nul'
+                          '\n votre choix: ')
+        if score == '1':
+            ronde.liste_matchs.append(([liste_match[m][0], '1'], [liste_match[m][1], '0']))
+        if score == '2':
+            ronde.liste_matchs.append(([liste_match[m][0], '0'], [liste_match[m][1], '1']))
+        if score == '3':
+            ronde.liste_matchs.append(([liste_match[m][0], '1/2'], [liste_match[m][1], '1/2']))
+    print(ronde.liste_matchs)"""
+
+    # finir le tour
+    tour_suivant = ""
+    while tour_suivant.lower() != 'y':
+        tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y): ')
+    ronde.fin = "fin"
+
+# sauvegarder la ronde
+"""tournois_existants[tournoi_selectionne[1]]"""
+
+# mettre à jour le classement
+
+# afficher le classement
 
 
 if __name__ == "__main__":
     main()
-
-    # déterminer la liste des matchs
-    # générer les paires de joueurs (instance de ronde)
-    # lancer les matchs
-    # entrer les résultats
-    # sauvegarder le controleur de temps
-    # mise a jour manuel du classement
-    # afficher les résultats
-
-# générer des rapports
-# lister les acteurs
-# lister les joueurs du tournoi
-# lister les tournois
-# lister les matchs du tournoi
-# Remarque du directeur
