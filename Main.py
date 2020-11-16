@@ -230,15 +230,12 @@ def creer_tour(numero_tour):
 
 def creer_match(joueurs_selectionnes, numero_tour):
     liste_matchs = []
-    if numero_tour == 0:
-        list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[4])
-        """print('\n liste joueurs classés: ', *list_classement, '\n')"""
-        for m in range(len(list_classement) // 2):
-            joueur1 = list_classement[m][0]
-            joueur2 = list_classement[((len(list_classement) // 2) + m)][0]
-            liste_matchs.append([joueur1, joueur2])
-    else:
-        pass
+    list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[1])
+    """print('\n liste joueurs classés: ', *list_classement, '\n')"""
+    for m in range(len(list_classement) // 2):
+        joueur1 = list_classement[m][0]
+        joueur2 = list_classement[((len(list_classement) // 2) + m)][0]
+        liste_matchs.append([joueur1, joueur2])
     return liste_matchs
 
 
@@ -255,32 +252,32 @@ tournois_existants = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '
 nouveau_tournoi = creer_tournoi()
 
 # selection des joueurs
-liste_indices_joueurs = []
+"""nouveau_tournoi_indices_joueurs = []"""
 for n in range(8):
     print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
     joueur_choisi = selectionner_joueur(joueurs_connus)
     if joueur_choisi == '-2':
         joueur_tournoi = creer_joueur()
         joueur_tournoi.indice = str(len(joueurs_connus) + 1)
-        joueurs_connus.append(joueur_tournoi)
+        joueurs_connus.append([joueur_tournoi.nom, joueur_tournoi.prenom, joueur_tournoi.date_naissance,
+                               joueur_tournoi.sexe, joueur_tournoi.indice, joueur_tournoi.classement])
         joueur_choisi = joueur_tournoi.indice
-    liste_indices_joueurs.append(joueur_choisi)
+    nouveau_tournoi.indices_joueurs.append(joueur_choisi)
 
 # Réaliser la ronde
 for t in range(nouveau_tournoi.nbre_tour):
     print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
     ronde = creer_tour(t)
     liste_classement = []
-    for c in range(len(liste_indices_joueurs)):
-        liste_classement.append(joueurs_connus[c])
-        """if t > 1: liste_classement[c][6] = score_actuel"""
+    for c in range(len(nouveau_tournoi.indices_joueurs)):
+        liste_classement.append([str(c), joueurs_connus[c][6]])
+        """if t > 1: liste_classement[c][1] = score_actuel"""
     liste_match = creer_match(liste_classement, t)
-    """ronde.liste_matchs.clear()"""
 
-    """# saisir les résultats
+    # saisir les résultats
     for m in range(len(liste_match)):
         score = 0
-        print('\nMatch numéro ' + str(m+1) + ': ' + str(liste_match[m]))
+        print('\nMatch numéro ' + str(m + 1) + ': ' + str(liste_match[m]))
         while score not in ('1', '2', '3'):
             score = input('Choississez le gagnant du match'
                           '\n tapez 1 pour: ' + str(liste_match[m][0]) +
@@ -293,17 +290,20 @@ for t in range(nouveau_tournoi.nbre_tour):
             ronde.liste_matchs.append(([liste_match[m][0], '0'], [liste_match[m][1], '1']))
         if score == '3':
             ronde.liste_matchs.append(([liste_match[m][0], '1/2'], [liste_match[m][1], '1/2']))
-    print(ronde.liste_matchs)"""
+    print(ronde.liste_matchs)
 
     # finir le tour
     tour_suivant = ""
     while tour_suivant.lower() != 'y':
         tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y): ')
     ronde.fin = "fin"
+    nouveau_tournoi.tournee.append([ronde.nom, ronde.debut, ronde.fin, ronde.liste_matchs])
 
-# sauvegarder la ronde
-"""tournois_existants[tournoi_selectionne[1]]"""
-
+# sauvegarder le tournoi
+tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
+                           nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
+                           nouveau_tournoi.description, nouveau_tournoi.indices_joueurs,
+                           nouveau_tournoi.tournee])
 # mettre à jour le classement
 
 # afficher le classement
