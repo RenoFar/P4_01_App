@@ -70,7 +70,7 @@ class Joueur:  # Définition de la classe Joueur
     - son sexe
     - son classement"""
 
-    def __init__(self, nom, prenom, date_naissance, sexe, indice, classement=0):
+    def __init__(self, nom, prenom, date_naissance, sexe, indice, classement):
         """"Constructeur de la classe"""
         self.nom = nom
         self.prenom = prenom
@@ -147,15 +147,13 @@ def creer_tournoi():  # créer le tournoi
     lieu = ""
     date = ""
     mode_jeu = ""
-    description = ""
     while len(nom) < 1 or not nom.isalnum():
         nom = input("\nVeuillez saisir le nom du tournoi: ")
     while len(lieu) < 1:
         lieu = input("Veuillez saisir le Lieu du tournoi: ")
     while len(date) < 1:
         date = input("Date du tournoi: ")
-    while len(description) < 1:
-        description = input("Veuillez saisir la Description du tournoi: ")
+    description = input("Veuillez saisir la Description du tournoi: ")
     while True:
         nbre_tour = input('le nombre de tours par défaut est de 4,\n'
                           '  saisissez un autre nombre ou Entrée pour valider: ')
@@ -196,7 +194,7 @@ def selectionner_joueur(liste_joueurs):  # ajouter les joueurs
     return choix_joueur
 
 
-def creer_joueur():
+def creer_joueur(indice):
     nom = ""
     prenom = ""
     date_naissance = ""
@@ -218,7 +216,7 @@ def creer_joueur():
             if classement > 0: break
         except ValueError:
             print('\nVeuillez saisir un entier positif!')
-    return Joueur(nom, prenom, date_naissance, sexe, classement)
+    return Joueur(nom, prenom, date_naissance, sexe, indice, classement)
 
 
 def creer_tour(numero_tour):
@@ -257,8 +255,7 @@ for n in range(8):
     print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
     joueur_choisi = selectionner_joueur(joueurs_connus)
     if joueur_choisi == '-2':
-        joueur_tournoi = creer_joueur()
-        joueur_tournoi.indice = str(len(joueurs_connus) + 1)
+        joueur_tournoi = creer_joueur(str(len(joueurs_connus)))
         joueurs_connus.append([joueur_tournoi.nom, joueur_tournoi.prenom, joueur_tournoi.date_naissance,
                                joueur_tournoi.sexe, joueur_tournoi.indice, joueur_tournoi.classement])
         joueur_choisi = joueur_tournoi.indice
@@ -272,9 +269,9 @@ for t in range(nouveau_tournoi.nbre_tour):
     classement_actuel = []
     for c in range(len(nouveau_tournoi.indices_joueurs)):
         if t == 0:
-            classement_actuel.append(joueurs_connus[c][6])
-        else:
-            classement_actuel =
+            classement_actuel.append(joueurs_connus[c][5])
+        """else:
+            classement_actuel ="""
         liste_classement.append([str(c), classement_actuel])
     liste_match = creer_match(liste_classement)
 
@@ -304,11 +301,16 @@ for t in range(nouveau_tournoi.nbre_tour):
     nouveau_tournoi.tournee.append([ronde.nom, ronde.debut, ronde.fin, ronde.liste_matchs])
 
 # sauvegarder le tournoi
+print('\n---------- Sauvegarde du tournoi -----------')
 tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
                            nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
                            nouveau_tournoi.description, nouveau_tournoi.indices_joueurs,
                            nouveau_tournoi.tournee])
+
 # mettre à jour le classement
+nouveau_classement = ""
+    while nouveau_classement.lower() != 'y':
+        nouveau_classement = input('\nSouhaitez vous mettre à jour le classement? (Y): ')
 
 # afficher le classement
 
