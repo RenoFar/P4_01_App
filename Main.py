@@ -228,7 +228,7 @@ def creer_tour(numero_tour):
     return Tour(nom, debut, fin)
 
 
-def creer_match(joueurs_selectionnes, numero_tour):
+def creer_match(joueurs_selectionnes):
     liste_matchs = []
     list_classement = sorted(joueurs_selectionnes, key=lambda classement: classement[1])
     """print('\n liste joueurs classés: ', *list_classement, '\n')"""
@@ -269,10 +269,14 @@ for t in range(nouveau_tournoi.nbre_tour):
     print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
     ronde = creer_tour(t)
     liste_classement = []
+    classement_actuel = []
     for c in range(len(nouveau_tournoi.indices_joueurs)):
-        liste_classement.append([str(c), joueurs_connus[c][6]])
-        """if t > 1: liste_classement[c][1] = score_actuel"""
-    liste_match = creer_match(liste_classement, t)
+        if t == 0:
+            classement_actuel.append(joueurs_connus[c][6])
+        else:
+            classement_actuel =
+        liste_classement.append([str(c), classement_actuel])
+    liste_match = creer_match(liste_classement)
 
     # saisir les résultats
     for m in range(len(liste_match)):
@@ -285,11 +289,11 @@ for t in range(nouveau_tournoi.nbre_tour):
                           '\n tapez 3 pour: Match nul'
                           '\n votre choix: ')
         if score == '1':
-            ronde.liste_matchs.append(([liste_match[m][0], '1'], [liste_match[m][1], '0']))
+            ronde.liste_matchs.append(([liste_match[m][0], 1], [liste_match[m][1], 0]))
         if score == '2':
-            ronde.liste_matchs.append(([liste_match[m][0], '0'], [liste_match[m][1], '1']))
+            ronde.liste_matchs.append(([liste_match[m][0], 0], [liste_match[m][1], 1]))
         if score == '3':
-            ronde.liste_matchs.append(([liste_match[m][0], '1/2'], [liste_match[m][1], '1/2']))
+            ronde.liste_matchs.append(([liste_match[m][0], 1/2], [liste_match[m][1], 1/2]))
     print(ronde.liste_matchs)
 
     # finir le tour
