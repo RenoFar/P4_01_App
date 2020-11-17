@@ -304,7 +304,7 @@ for t in range(nouveau_tournoi.nbre_tour):
     # finir le tour
     tour_suivant = ""
     while tour_suivant.lower() != 'y':
-        tour_suivant = input('\nSouhaitez vous exécuter la ronde suivante? (Y): ')
+        tour_suivant = input('\nSouhaitez vous valider la ronde? (Y): ')
     ronde.fin = "fin"
     nouveau_tournoi.tournee.append([ronde.nom, ronde.debut, ronde.fin, ronde.liste_matchs])
 
@@ -322,7 +322,7 @@ while miseajour_classement.lower() != 'y':
 
 print('\n---------- tableau des scores du tournoi -----------')
 for num, point in tableau_score.items():
-    print("le joueur {} obtient le score de {}.".format(num, point))
+    print("le joueur {} classé {} ;obtient le score de {}.".format(num, str(joueurs_connus[int(num)][5]), point))
 
 print('\n---------- Saisissez le nouveau classement -----------')
 for numero in tableau_score.keys():
@@ -333,14 +333,13 @@ for numero in tableau_score.keys():
             if nouveau_classement > 0: break
         except ValueError:
             print('\nVeuillez saisir un entier positif!')
-    joueurs_connus[tableau_score[numero]][5] = nouveau_classement
+    joueurs_connus[int(numero)][5] = nouveau_classement
 
 # afficher le classement
 print('\n---------- Nouveau classement -----------')
 classement_trie = sorted(joueurs_connus, key=lambda classement: classement[5])
-for tri in classement_trie:
-    print('N° {} du classement: joueur {} '.format(str(classement_trie[tri][5]), classement_trie[tri][0])
-
+for tri in range(len(classement_trie)):
+    print('N° {} du classement: joueur {} '.format(str(classement_trie[tri][5]), classement_trie[tri][4]))
 
 
 if __name__ == "__main__":
