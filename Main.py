@@ -277,7 +277,6 @@ for t in range(nouveau_tournoi.nbre_tour):
         else: # prendre le score total des tours précédents
             classement_actuel.append([nouveau_tournoi.indices_joueurs[c],
                                       tableau_score[nouveau_tournoi.indices_joueurs[c]]])
-
     liste_match = creer_match(classement_actuel)
 
     # saisir les résultats
@@ -317,15 +316,28 @@ tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_to
                            nouveau_tournoi.tournee])
 
 # mettre à jour le classement
-nouveau_classement = ""
-while nouveau_classement.lower() != 'y':
-    nouveau_classement = input('\nSouhaitez vous mettre à jour le classement? (Y): ')
+miseajour_classement = ""
+while miseajour_classement.lower() != 'y':
+    miseajour_classement = input('\nSouhaitez vous mettre à jour le classement? (Y): ')
 
 print('\n---------- tableau des scores du tournoi -----------')
 for num, point in tableau_score.items():
     print("le joueur {} obtient le score de {}.".format(num, point))
 
+print('\n---------- Saisissez le nouveau classement -----------')
+for numero in tableau_score.keys():
+    while True:
+        nouveau_classement = input("Veuillez saisir le nouveau classement du joueur numéro " + str(numero) + ": ")
+        try:
+            nouveau_classement = int(nouveau_classement)
+            if nouveau_classement > 0: break
+        except ValueError:
+            print('\nVeuillez saisir un entier positif!')
+    joueurs_connus[tableau_score[numero]][5] = nouveau_classement
+
 # afficher le classement
+print('\n---------- Nouveau classement -----------')
+print(*sorted(joueurs_connus, key=lambda classement: classement[5]))
 
 
 if __name__ == "__main__":
