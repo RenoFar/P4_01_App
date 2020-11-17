@@ -269,13 +269,12 @@ for t in range(nouveau_tournoi.nbre_tour):
     classement_actuel = []
     for c in range(len(nouveau_tournoi.indices_joueurs)):
         if t == 0:
-            classement_actuel.append([str(c), [joueurs_connus[c][5]])
+            classement_actuel.append([str(c), [joueurs_connus[c][5]]])
         if t == 1:
             classement_actuel[c][1] = 
         else:
             classement_actuel[c][1] =  classement_actuel[c][1] +
-       """ liste_classement.append([str(c), classement_actuel[c][1]])"""
-    liste_match = creer_match(classment_actuel)
+    liste_match = creer_match(classement_actuel)
 
     # saisir les résultats
     for m in range(len(liste_match)):
