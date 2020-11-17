@@ -252,7 +252,7 @@ nouveau_tournoi = creer_tournoi()
 # selection des joueurs
 """nouveau_tournoi_indices_joueurs = []"""
 for n in range(8):
-    print('\n--------- Selectionner le joueur numéro ' + str(n + 1) + ' ---------')
+    print('\n--------- Sélectionner le joueur numéro ' + str(n + 1) + ' ---------')
     joueur_choisi = selectionner_joueur(joueurs_connus)
     if joueur_choisi == '-2':
         joueur_tournoi = creer_joueur(str(len(joueurs_connus)))
@@ -262,18 +262,22 @@ for n in range(8):
     nouveau_tournoi.indices_joueurs.append(joueur_choisi)
 
 # réaliser la ronde
+tableau_score = {} # initialisation du tableau des scores du tournoi
 for t in range(nouveau_tournoi.nbre_tour):
     print('\n---------- Exécution du tour numéro ' + str(t + 1) + ' -----------')
     ronde = creer_tour(t)
-    """liste_classement = []"""
+
+    # générer les matchs
     classement_actuel = []
     for c in range(len(nouveau_tournoi.indices_joueurs)):
-        if t == 0:
-            classement_actuel.append([str(c), [joueurs_connus[c][5]]])
-        if t == 1:
-            classement_actuel[c][1] = 
-        else:
-            classement_actuel[c][1] =  classement_actuel[c][1] +
+        if t == 0:  # prendre le classement connu
+            tableau_score[nouveau_tournoi.indices_joueurs[c]] = 0
+            classement_actuel.append([nouveau_tournoi.indices_joueurs[c],
+                                      joueurs_connus[int(nouveau_tournoi.indices_joueurs[c])][5]])
+        else: # prendre le score total des tours précédents
+            classement_actuel.append([nouveau_tournoi.indices_joueurs[c],
+                                      tableau_score[nouveau_tournoi.indices_joueurs[c]]])
+
     liste_match = creer_match(classement_actuel)
 
     # saisir les résultats
@@ -288,10 +292,14 @@ for t in range(nouveau_tournoi.nbre_tour):
                           '\n votre choix: ')
         if score == '1':
             ronde.liste_matchs.append(([liste_match[m][0], 1], [liste_match[m][1], 0]))
+            tableau_score[liste_match[m][0]] += 1
         if score == '2':
             ronde.liste_matchs.append(([liste_match[m][0], 0], [liste_match[m][1], 1]))
+            tableau_score[liste_match[m][1]] += 1
         if score == '3':
             ronde.liste_matchs.append(([liste_match[m][0], 1/2], [liste_match[m][1], 1/2]))
+            tableau_score[liste_match[m][0]] += 1/2
+            tableau_score[liste_match[m][1]] += 1/2
     print(ronde.liste_matchs)
 
     # finir le tour
@@ -302,7 +310,7 @@ for t in range(nouveau_tournoi.nbre_tour):
     nouveau_tournoi.tournee.append([ronde.nom, ronde.debut, ronde.fin, ronde.liste_matchs])
 
 # sauvegarder le tournoi
-print('\n---------- Sauvegarde du tournoi -----------')
+print('\n---------- Tournoi sauvegardé -----------\n')
 tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_tournoi.date,
                            nouveau_tournoi.mode_jeu, nouveau_tournoi.nbre_tour,
                            nouveau_tournoi.description, nouveau_tournoi.indices_joueurs,
@@ -310,8 +318,12 @@ tournois_existants.append([nouveau_tournoi.nom, nouveau_tournoi.lieu, nouveau_to
 
 # mettre à jour le classement
 nouveau_classement = ""
-    while nouveau_classement.lower() != 'y':
-        nouveau_classement = input('\nSouhaitez vous mettre à jour le classement? (Y): ')
+while nouveau_classement.lower() != 'y':
+    nouveau_classement = input('\nSouhaitez vous mettre à jour le classement? (Y): ')
+
+print('\n---------- tableau des scores du tournoi -----------')
+for num, point in tableau_score.items():
+    print("le joueur {} obtient le score de {}.".format(num, point))
 
 # afficher le classement
 
