@@ -337,7 +337,10 @@ for numero in tableau_score.keys():
 
 # afficher le classement
 print('\n---------- Nouveau classement -----------')
-print(*sorted(joueurs_connus, key=lambda classement: classement[5]))
+classement_trie = sorted(joueurs_connus, key=lambda classement: classement[5])
+for tri in classement_trie:
+    print('N° {} du classement: joueur {} '.format(str(classement_trie[tri][5]), classement_trie[tri][0])
+
 
 
 if __name__ == "__main__":
