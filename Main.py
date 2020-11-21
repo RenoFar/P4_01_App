@@ -2,9 +2,9 @@
 # coding: utf-8
 
 
-from models.Tournament import Tournament
-from models.Player import Player
-from models.Round import Round
+from models.tournament import Tournament
+from models.player import Player
+from models.round import Round
 from views.view import view
 
 

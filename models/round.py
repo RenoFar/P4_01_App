@@ -1,4 +1,7 @@
-class Round:  # Definition of class Round
+from models.builder import Builder
+
+
+class Round(Builder):  # Definition of class Round
     """Class defining a tour characterized by:
     - its name
     - its start time
@@ -7,7 +10,7 @@ class Round:  # Definition of class Round
 
     def __init__(self):
         """" Constructor of the class """
-        self._name = None
+        super().__init__()
         self._start = None
         self._end = None
         self._match_list = []

@@ -1,4 +1,7 @@
-class Player:  # Definition of the Player class
+from models.builder import Builder
+
+
+class Player(Builder):  # Definition of the Player class
     """Class defining a player characterized by:
     - its name
     - its firstname
@@ -8,7 +11,7 @@ class Player:  # Definition of the Player class
 
     def __init__(self):
         """ Constructor of the class """
-        self._name = None
+        super().__init__()
         self._firstname = None
         self._date_birth = None
         self._gender = None

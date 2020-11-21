@@ -1,4 +1,7 @@
-class Tournament:  # Definition of the Tournament class
+from models.builder import Builder
+
+
+class Tournament(Builder):  # Definition of the Tournament class
     """Class defining a tournament characterized by:
     - its name
     - its place
@@ -11,22 +14,13 @@ class Tournament:  # Definition of the Tournament class
 
     def __init__(self):
         """" Constructor of the class """
-        self._name = None
-        self._place = None
+        super().__init__()
         self._date = None
         self._nb_turn = None
         self._mode_game = None
         self._description = None
         self._rounds_list = []
         self._players_index = []
-
-    @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
 
     @property
     def place(self):
