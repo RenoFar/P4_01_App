@@ -5,7 +5,7 @@
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
-"""from views.view import view"""
+from views.view import *
 
 
 def create_tournament():  # create the tournament
@@ -14,15 +14,21 @@ def create_tournament():  # create the tournament
     date = ""
     game_mode = ""
     while len(name) < 1 or not name.isalnum():
-        name = input("\nPlease enter the tournament name: ")
+        name = input_data('Please enter the tournament name: ', '\n')
+        # input("\nPlease enter the tournament name: ")
     while len(place) < 1:
-        place = input("Please enter the tournament place: ")
+        place = input_data('Please enter the tournament place: ')
+        # input("Please enter the tournament place: ")
     while len(date) < 1:
-        date = input("Tournament date: ")
-    description = input("Please enter the tournament description: ")
+        date = input_data('Tournament date: ')
+        # input("Tournament date: ")
+    description = input_data('Please enter the tournament description: ')
+    # input("Please enter the tournament description: ")
     while True:
-        nb_turn = input('The number of laps by default is 4, '
-                        '\ntype another number or Enter to validate: ')
+        nb_turn = input_data('The number of laps by default is 4, '
+                             '\n type another number or Enter to validate: ')
+        # input('The number of laps by default is 4, '
+        #       '\n type another number or Enter to validate: ')"""
         if len(nb_turn) < 1:  # if nothing is entered
             nb_turn = 4
             break
@@ -30,12 +36,15 @@ def create_tournament():  # create the tournament
             try:
                 nb_turn = int(nb_turn)  # conversion to integer
                 if nb_turn > 0:
-                    print('The number of turns is changed to: ' + str(nb_turn))
+                    print_info('The number of turns is changed to: ' + str(nb_turn))
+                    # print('The number of turns is changed to: ' + str(nb_turn))
                     break
             except ValueError:
-                print('\nPlease enter a positive integer!')
+                print_info('Please enter a positive integer!', '\n')
+                # print('\nPlease enter a positive integer!')
     while game_mode.lower() not in ('bullet', 'blitz', 'fast'):
-        game_mode = input("Please enter the tournament mode (bullet / blitz / quick): ")
+        game_mode = input_data('Please enter the tournament mode (bullet / blitz / quick): ')
+        # input("Please enter the tournament mode (bullet / blitz / quick): ")
     return name, place, date, game_mode, nb_turn, description
 
 
@@ -43,18 +52,24 @@ def player_select(player_list):  # Select player
     player_choice = '-1'
     while player_choice == '-1':
         player_listing = []
-        print('\n ---------- List of known players: ----------')
+        print_menu('List of known players:', '\n')
+        # print('\n ---------- List of known players: ----------')
         for a, elt in enumerate(player_list):
-            print(str(a) + ': ' + str(elt))
+            print_info(str(a) + ': ' + str(elt))
+            # print(str(a) + ': ' + str(elt))
             player_listing.append(str(a))
         menu_choice = ""
         while menu_choice not in ('1', '2'):
-            menu_choice = input('\nSelect a known player: 1'
-                                '\nAdd a new player: 2'
-                                '\nYour choice: ')
+            menu_choice = input_data('Select a known player: 1'
+                                     '\nAdd a new player: 2'
+                                     '\nYour choice: ', '\n')
+            # input('\nSelect a known player: 1'
+            # '\nAdd a new player: 2'
+            # '\nYour choice: ')
             if menu_choice == '1':
                 while player_choice not in player_listing:
-                    player_choice = input('Select a player number: ')
+                    player_choice = input_data('Select a player number: ')
+                    # input('Select a player number: ')
             elif menu_choice == '2':
                 player_choice = 'new'
     return player_choice
@@ -67,21 +82,27 @@ def create_player(index):
     gender = ""
     ranking = 0
     while len(name) < 1 or not name.isalnum():
-        name = input("\nPlease enter player name: ")
+        name = input_data('Please enter player name: ', '\n')
+        # input("\nPlease enter player name: ")
     while len(firstname) < 1 or not firstname.isalnum():
-        firstname = input("Please enter the player's firstname: ")
+        firstname = input_data('Please enter the player\'s firstname: ')
+        # input("Please enter the player's firstname: ")
 
-    birthdate = input("Please enter player's date of birth: ")
+    birthdate = input_data('Please enter player\'s date of birth: ')
+    # input("Please enter player's date of birth: ")
 
     while gender.lower() not in ('f', 'm'):
-        gender = input("Please enter the player's gender (F / M): ")
+        gender = input_data('Please enter the player\'s gender (F / M): ')
+        # input("Please enter the player's gender (F / M): ")
     while True:
-        ranking = input("Please enter player ranking: ")
+        ranking = input_data('Please enter player ranking: ')
+        # input("Please enter player ranking: ")
         try:
             ranking = int(ranking)
             if ranking > 0: break
         except ValueError:
-            print('\nPlease enter a positive integer!')
+            print_info('Please enter a positive integer!', '\n')
+            # print('\nPlease enter a positive integer!')
     return name, firstname, birthdate, gender, index, ranking
 
 
@@ -124,7 +145,8 @@ new_tournament.description = new_tournament_data[5]
 
 # players selection
 for n in range(8):
-    print('\n --------- Select player number ' + str(n + 1) + ' ---------')
+    print_menu('Select player number ' + str(n + 1), '\n')
+    # print('\n --------- Select player number ' + str(n + 1) + ' --------- ')
     selected_player = player_select(known_players)
     if selected_player == 'new':
         tournament_player_data = create_player(str(len(known_players)))
@@ -145,7 +167,8 @@ for n in range(8):
 # make the rounds
 scoreboard = {}  # initialization of the tournament scoreboard
 for t in range(new_tournament.nb_turn):
-    print('\n ---------- Execution of round number ' + str(t + 1) + ' -----------')
+    print_menu('Execution of round number ' + str(t + 1), '\n')
+    # print('\n ---------- Execution of round number ' + str(t + 1) + ' ----------- ')
     turn_data = create_round(t)
     turn = Round()
     turn.name = turn_data[0]
@@ -167,13 +190,19 @@ for t in range(new_tournament.nb_turn):
     # enter the results
     for m in range(len(list_match)):
         score = 0
-        print('\nMatch number ' + str(m + 1) + ' : ' + str(list_match[m]))
+        print_info('Match number ' + str(m + 1) + ' : ' + str(list_match[m]), '\n')
+        # print('\nMatch number ' + str(m + 1) + ' : ' + str(list_match[m]))
         while score not in ('1', '2', '3'):
-            score = input('Choose the winner of the match'
-                          '\n Type 1 for: ' + str(list_match[m][0]) +
-                          '\n Type 2 for: ' + str(list_match[m][1]) +
-                          '\n Type 3 for: Draw'
-                          '\n Your choice: ')
+            score = input_data('Choose the winner of the match'
+                               '\n Type 1 for: ' + str(list_match[m][0]) +
+                               '\n Type 2 for: ' + str(list_match[m][1]) +
+                               '\n Type 3 for: Draw'
+                               '\n Your choice: ')
+            # input('Choose the winner of the match'
+            # '\n Type 1 for: ' + str(list_match[m][0]) +
+            # '\n Type 2 for: ' + str(list_match[m][1]) +
+            # '\n Type 3 for: Draw'
+            # '\n Your choice: ')
         if score == '1':
             turn.match_list.append(([list_match[m][0], 1], [list_match[m][1], 0]))
             scoreboard[list_match[m][0]] += 1
@@ -189,12 +218,14 @@ for t in range(new_tournament.nb_turn):
     # finish the turn
     next_turn = ""
     while next_turn.lower() != 'y':
-        next_turn = input('\nDo you want to validate the turn? (Y): ')
+        next_turn = input_data('Do you want to validate the turn? (Y): ', '\n')
+        # input('\nDo you want to validate the turn? (Y): ')
     turn.end = "end"
     new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
 # save tournament
-print('\n ---------- Tournament saved ----------- \n')
+print_menu('Tournament saved', '\n', '\n')
+# print('\n ---------- Tournament saved ----------- \n')
 existing_tournaments.append([new_tournament.name, new_tournament.place, new_tournament.date,
                              new_tournament.mode_game, new_tournament.nb_turn,
                              new_tournament.description, new_tournament.players_index,
@@ -205,11 +236,14 @@ update_ranking = ""
 while update_ranking.lower() != 'y':
     update_ranking = input('\nDo you want to update the ranking? (Y): ')
 
-print('\n---------- tournament scoreboard -----------')
+print_menu('Tournament scoreboard', '\n')
+# print('\n---------- tournament scoreboard ----------- ')
 for num, point in scoreboard.items():
+
     print("Player {} ranked {} scores {}.".format(num, str(known_players[int(num)][5]), point))
 
-print('\n ---------- Enter the new ranking -----------')
+print_menu('Enter the new ranking', '\n')
+# print('\n ---------- Enter the new ranking ----------- ')
 for number in scoreboard.keys():
     while True:
         new_ranking = input("Please enter the new ranking of player number " + str(number) + " : ")
@@ -221,7 +255,8 @@ for number in scoreboard.keys():
     known_players[int(number)][5] = new_ranking
 
 # show ranking
-print('\n ---------- New ranking -----------')
+print_menu('New ranking', '\n')
+# print('\n ---------- New ranking -----------')
 sorted_ranking = sorted(known_players, key=lambda ranking: ranking[5])
 for sort in range(len(sorted_ranking)):
     print('N° {} of the ranking: player {}'.format(str(sorted_ranking[sort][5]), sorted_ranking[sort][4]))
