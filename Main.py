@@ -4,7 +4,7 @@
 
 class Tournament:  # Definition of the Tournament class
     """Class defining a tournament characterized by:
-    - v name
+    - its name
     - its place
     - its place
     - its number of turns
@@ -69,9 +69,9 @@ def create_tournament():  # create the tournament
         place = input("Please enter the tournament place: ")
     while len(date) < 1:
         date = input("Tournament date: ")
-    description = input("Please enter the tournament Description: ")
+    description = input("Please enter the tournament description: ")
     while True:
-        nb_turn = input('the number of laps by default is 4, '
+        nb_turn = input('The number of laps by default is 4, '
                         '\ntype another number or Enter to validate: ')
         if len(nb_turn) < 1:  # if nothing is entered
             nb_turn = 4
@@ -80,7 +80,7 @@ def create_tournament():  # create the tournament
             try:
                 nb_turn = int(nb_turn)  # conversion to integer
                 if nb_turn > 0:
-                    print('the number of turns is changed to: ' + str(nb_turn))
+                    print('The number of turns is changed to: ' + str(nb_turn))
                     break
             except ValueError:
                 print('\nPlease enter a positive integer!')
@@ -145,7 +145,6 @@ def create_round(number_turn):
 def create_match(selected_players):
     match_list = []
     ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
-    """print ('\n ranked players list:', *ranking_list, '\n')"""
     for index in range(len(ranking_list) // 2):
         player1 = ranking_list[index][0]
         player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
@@ -166,7 +165,6 @@ existing_tournaments = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1',
 new_tournament = create_tournament()
 
 # players selection
-"""new_tournament_player_indices = []"""
 for n in range(8):
     print('\n --------- Select player number ' + str(n + 1) + ' ---------')
     selected_player = player_select(known_players)
@@ -201,10 +199,10 @@ for t in range(new_tournament.nb_turn):
         print('\nMatch number ' + str(m + 1) + ' : ' + str(list_match[m]))
         while score not in ('1', '2', '3'):
             score = input('Choose the winner of the match'
-                          '\n type 1 for: ' + str(list_match[m][0]) +
-                          '\n type 2 for: ' + str(list_match[m][1]) +
-                          '\n type 3 for: Draw'
-                          '\n your choice: ')
+                          '\n Type 1 for: ' + str(list_match[m][0]) +
+                          '\n Type 2 for: ' + str(list_match[m][1]) +
+                          '\n Type 3 for: Draw'
+                          '\n Your choice: ')
         if score == '1':
             round.match_list.append(([list_match[m][0], 1], [list_match[m][1], 0]))
             scoreboard[list_match[m][0]] += 1
@@ -238,7 +236,7 @@ while update_ranking.lower() != 'y':
 
 print('\n---------- tournament scoreboard -----------')
 for num, point in scoreboard.items():
-    print("player {} ranked {} scores {}.".format(num, str(known_players[int(num)][5]), point))
+    print("Player {} ranked {} scores {}.".format(num, str(known_players[int(num)][5]), point))
 
 print('\n ---------- Enter the new ranking -----------')
 for number in scoreboard.keys():
