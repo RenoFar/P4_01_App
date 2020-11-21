@@ -262,7 +262,7 @@ print_menu('New ranking', '\n')
 # print('\n ---------- New ranking -----------')
 sorted_ranking = sorted(known_players, key=lambda ranking: ranking[5])
 for sort in range(len(sorted_ranking)):
-    print_board(str(sorted_ranking[sort][5]), sorted_ranking[sort][4])
+    print_board(str(sorted_ranking[sort][4]), sorted_ranking[sort][5])
     # print('N° {} of the ranking: player {}'.format(str(sorted_ranking[sort][5]), sorted_ranking[sort][4]))
 
 if __name__ == "__main__":
