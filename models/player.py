@@ -19,14 +19,6 @@ class Player(Builder):  # Definition of the Player class
         self._ranking = None
 
     @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
-
-    @property
     def firstname(self):
         return self._firstname
 

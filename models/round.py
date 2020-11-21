@@ -16,14 +16,6 @@ class Round(Builder):  # Definition of class Round
         self._match_list = []
 
     @property
-    def name(self):
-        return self._name
-
-    @name.setter
-    def name(self, value):
-        self._name = value
-
-    @property
     def start(self):
         return self._start
 

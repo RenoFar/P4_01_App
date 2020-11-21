@@ -15,6 +15,7 @@ class Tournament(Builder):  # Definition of the Tournament class
     def __init__(self):
         """" Constructor of the class """
         super().__init__()
+        self._place = None
         self._date = None
         self._nb_turn = None
         self._mode_game = None

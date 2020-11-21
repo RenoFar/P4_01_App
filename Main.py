@@ -5,7 +5,7 @@
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
-from views.view import view
+"""from views.view import view"""
 
 
 def create_tournament():  # create the tournament
@@ -89,7 +89,7 @@ def create_round(number_turn):
     name = "round " + str(number_turn + 1)
     start = "start"
     end = ""
-    return Round(name, start, end)
+    return name, start, end
 
 
 def create_match(selected_players):
@@ -142,11 +142,15 @@ for n in range(8):
 
     new_tournament.players_index.append(selected_player)
 
-# make the round
+# make the rounds
 scoreboard = {}  # initialization of the tournament scoreboard
 for t in range(new_tournament.nb_turn):
     print('\n ---------- Execution of round number ' + str(t + 1) + ' -----------')
-    round = create_round(t)
+    turn_data = create_round(t)
+    turn = Round()
+    turn.name = turn_data[0]
+    turn.start = turn_data[1]
+    turn.end = turn_data[2]
 
     # generate matches
     current_classification = []
@@ -171,23 +175,23 @@ for t in range(new_tournament.nb_turn):
                           '\n Type 3 for: Draw'
                           '\n Your choice: ')
         if score == '1':
-            round.match_list.append(([list_match[m][0], 1], [list_match[m][1], 0]))
+            turn.match_list.append(([list_match[m][0], 1], [list_match[m][1], 0]))
             scoreboard[list_match[m][0]] += 1
         if score == '2':
-            round.match_list.append(([list_match[m][0], 0], [list_match[m][1], 1]))
+            turn.match_list.append(([list_match[m][0], 0], [list_match[m][1], 1]))
             scoreboard[list_match[m][1]] += 1
         if score == '3':
-            round.match_list.append(([list_match[m][0], 1 / 2], [list_match[m][1], 1 / 2]))
+            turn.match_list.append(([list_match[m][0], 1 / 2], [list_match[m][1], 1 / 2]))
             scoreboard[list_match[m][0]] += 1 / 2
             scoreboard[list_match[m][1]] += 1 / 2
-    print(round.match_list)
+    print(turn.match_list)
 
     # finish the turn
     next_turn = ""
     while next_turn.lower() != 'y':
         next_turn = input('\nDo you want to validate the turn? (Y): ')
-    round.end = "end"
-    new_tournament.rounds_list.append([round.name, round.start, round.end, round.match_list])
+    turn.end = "end"
+    new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
 # save tournament
 print('\n ---------- Tournament saved ----------- \n')
