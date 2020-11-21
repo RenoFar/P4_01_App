@@ -8,33 +8,9 @@ class Round(Builder):  # Definition of class Round
     - its end time
     - its list of matches """
 
-    def __init__(self):
+    def __init__(self, name=None, start=None, end=None):
         """" Constructor of the class """
-        super().__init__()
-        self._start = None
-        self._end = None
-        self._match_list = []
-
-    @property
-    def start(self):
-        return self._start
-
-    @start.setter
-    def start(self, value):
-        self._start = value
-
-    @property
-    def end(self):
-        return self._end
-
-    @end.setter
-    def end(self, value):
-        self._end = value
-
-    @property
-    def match_list(self):
-        return self._match_list
-
-    @match_list.setter
-    def match_list(self, value):
-        self._match_list = value
+        super().__init__(name)
+        self.start = start
+        self.end = end
+        self.match_list = []
