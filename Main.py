@@ -1,61 +1,11 @@
-#! / usr / bin / env python3
+#! /usr/bin/env python3
 # coding: utf-8
 
 
-class Tournament:  # Definition of the Tournament class
-    """Class defining a tournament characterized by:
-    - its name
-    - its place
-    - its place
-    - its number of turns
-    - its list of rounds
-    - its list of players
-    - its time controller
-    - its description """
-
-    def __init__(self, name, place, date, mode_game, nb_turn=4, description="description"):
-        """" Constructor of the class """
-        self.name = name
-        self.place = place
-        self.date = date
-        self.nb_turn = nb_turn
-        self.mode_game = mode_game
-        self.description = description
-        self.rounds_list = []
-        self.players_index = []
-
-
-class Player:  # Definition of the Player class
-    """Class defining a player characterized by:
-    - its name
-    - its firstname
-    - its date of birth
-    - its gender
-    - its classification """
-
-    def __init__(self, name, firstname, date_birth, gender, index, ranking):
-        """ Constructor of the class """
-        self.name = name
-        self.firstname = firstname
-        self.date_birth = date_birth
-        self.gender = gender
-        self.index = index
-        self.ranking = ranking
-
-
-class Round:  # Definition of class Round
-    """Class defining a tour characterized by:
-    - its name
-    - its start time
-    - its end time
-    - its list of matches """
-
-    def __init__(self, name, start, end=""):
-        """" Constructor of the class """
-        self.name = name
-        self.start = start
-        self.end = end
-        self.match_list = []
+from models.Tournament import Tournament
+from models.Player import Player
+from models.Round import Round
+from views.view import view
 
 
 def create_tournament():  # create the tournament
@@ -86,7 +36,7 @@ def create_tournament():  # create the tournament
                 print('\nPlease enter a positive integer!')
     while game_mode.lower() not in ('bullet', 'blitz', 'fast'):
         game_mode = input("Please enter the tournament mode (bullet / blitz / quick): ")
-    return Tournament(name, place, date, game_mode, nb_turn, description)
+    return name, place, date, game_mode, nb_turn, description
 
 
 def player_select(player_list):  # Select player
@@ -132,7 +82,7 @@ def create_player(index):
             if ranking > 0: break
         except ValueError:
             print('\nPlease enter a positive integer!')
-    return Player(name, firstname, birthdate, gender, index, ranking)
+    return name, firstname, birthdate, gender, index, ranking
 
 
 def create_round(number_turn):
@@ -162,17 +112,34 @@ known_players = [['j1', 'qhh', '12', 'f', '0', 18], ['j2', 'qgth', '14', 'm', '1
                  ['j5', 'qazeah', '36', 'f', '4', 1], ['j6', 'ararh', '16', 'm', '5', 21],
                  ['j7', 'qsfq', '3', 'm', '6', 3], ['j8', 'kjqsg', '28', 'f', '7', 9]]
 existing_tournaments = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7'], []]]
-new_tournament = create_tournament()
+
+new_tournament_data = create_tournament()
+new_tournament = Tournament()
+new_tournament.name = new_tournament_data[0]
+new_tournament.place = new_tournament_data[1]
+new_tournament.date = new_tournament_data[2]
+new_tournament.mode_game = new_tournament_data[3]
+new_tournament.nb_turn = new_tournament_data[4]
+new_tournament.description = new_tournament_data[5]
 
 # players selection
 for n in range(8):
     print('\n --------- Select player number ' + str(n + 1) + ' ---------')
     selected_player = player_select(known_players)
     if selected_player == 'new':
-        tournament_player = create_player(str(len(known_players)))
+        tournament_player_data = create_player(str(len(known_players)))
+        tournament_player = Player()
+        tournament_player.name = tournament_player_data[0]
+        tournament_player.firstname = tournament_player_data[1]
+        tournament_player.date_birth = tournament_player_data[2]
+        tournament_player.gender = tournament_player_data[3]
+        tournament_player.index = tournament_player_data[4]
+        tournament_player.ranking = tournament_player_data[5]
+
         known_players.append([tournament_player.name, tournament_player.firstname, tournament_player.date_birth,
                               tournament_player.gender, tournament_player.index, tournament_player.ranking])
         selected_player = tournament_player.index
+
     new_tournament.players_index.append(selected_player)
 
 # make the round
