@@ -5,7 +5,7 @@
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
-from views.view import *
+from views.terminal_views import *
 
 
 def create_tournament():  # create the tournament
@@ -234,24 +234,27 @@ existing_tournaments.append([new_tournament.name, new_tournament.place, new_tour
 # update the ranking
 update_ranking = ""
 while update_ranking.lower() != 'y':
-    update_ranking = input('\nDo you want to update the ranking? (Y): ')
+    update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
+    # input('\nDo you want to update the ranking? (Y): ')
 
 print_menu('Tournament scoreboard', '\n')
 # print('\n---------- tournament scoreboard ----------- ')
 for num, point in scoreboard.items():
-
-    print("Player {} ranked {} scores {}.".format(num, str(known_players[int(num)][5]), point))
+    print_board(num, str(known_players[int(num)][5]), 'scores '+str(point))
+    # print("Player {} ranked {} scores {}.".format(num, str(known_players[int(num)][5]), point))
 
 print_menu('Enter the new ranking', '\n')
 # print('\n ---------- Enter the new ranking ----------- ')
 for number in scoreboard.keys():
     while True:
-        new_ranking = input("Please enter the new ranking of player number " + str(number) + " : ")
+        new_ranking = input_data('Please enter the new ranking of player number ' + str(number) + ' : ')
+        # input("Please enter the new ranking of player number " + str(number) + " : ")
         try:
             new_ranking = int(new_ranking)
             if new_ranking > 0: break
         except ValueError:
-            print('\nPlease enter a positive integer!')
+            print_info('Please enter a positive integer!', '\n')
+            # print('\nPlease enter a positive integer!')
     known_players[int(number)][5] = new_ranking
 
 # show ranking
@@ -259,7 +262,8 @@ print_menu('New ranking', '\n')
 # print('\n ---------- New ranking -----------')
 sorted_ranking = sorted(known_players, key=lambda ranking: ranking[5])
 for sort in range(len(sorted_ranking)):
-    print('N° {} of the ranking: player {}'.format(str(sorted_ranking[sort][5]), sorted_ranking[sort][4]))
+    print_board(str(sorted_ranking[sort][5]), sorted_ranking[sort][4])
+    # print('N° {} of the ranking: player {}'.format(str(sorted_ranking[sort][5]), sorted_ranking[sort][4]))
 
 if __name__ == "__main__":
     main()
