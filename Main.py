@@ -2,6 +2,9 @@
 # coding: utf-8
 
 
+import json
+from tinydb import TinyDB, Query
+from tinydb.operations import delete
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
@@ -103,17 +106,50 @@ def create_match(selected_players):
     return match_list
 
 
+def insert_db(table, data_dict):
+    database.table(table).insert_multiple(data_dict)
+
+
+"""def search_db(table, key, value):
+    return database.table(table).search(Query()[key] == value)
+
+
+def db_get(table, data_id_list):
+    return database.table(table).get(doc_ids=data_id_list)"""
+
+
+def db_update(table, key, value, data_id_list):
+    database.table(table).update({key: value}, doc_ids=data_id_list)
+
+
 def main():
     """Main execution function of the application"""
 
 
 # initialization of variables
-known_players = [['j1', 'qhh', '12', 'f', '0', 18], ['j2', 'qgth', '14', 'm', '1', 7],
-                 ['j3', 'qsfh', '17', 'm', '2', 8], ['j4', 'qdhg', '7', 'm', '3', 48],
-                 ['j5', 'qazeah', '36', 'f', '4', 1], ['j6', 'ararh', '16', 'm', '5', 21],
-                 ['j7', 'qsfq', '3', 'm', '6', 3], ['j8', 'kjqsg', '28', 'f', '7', 9]]
-existing_tournaments = [['t1', 'shqshq', '26', 'bullet', 4, 'qsdggq', ['0', '1', '2', '3', '4', '5', '6', '7'], []]]
+known_players = [
+    {'name': 'Martin', 'firstname': 'Lucie', 'date_birth': '2000', 'gender': 'f', 'ranking': 18},
+    {'name': 'Petit', 'firstname': 'Lucas', 'date_birth': '2001', 'gender': 'm', 'ranking': 7},
+    {'name': 'Dubois', 'firstname': 'Samuel', 'date_birth': '2002', 'gender': 'm', 'ranking': 8},
+    {'name': 'Durand', 'firstname': 'Lily', 'date_birth': '1999', 'gender': 'f', 'ranking': 12},
+    {'name': 'Leroy', 'firstname': 'Alina', 'date_birth': '1995', 'gender': 'f', 'ranking': 1},
+    {'name': 'Moreau', 'firstname': 'Nolan', 'date_birth': '1998', 'gender': 'm', 'ranking': 20},
+    {'name': 'Garcia', 'firstname': 'Julian', 'date_birth': '1992', 'gender': 'm', 'ranking': 3},
+    {'name': 'Roux', 'firstname': 'Marie', 'date_birth': '1977', 'gender': 'f', 'ranking': 9}]
+existing_tournaments = [
+    {'name': 't1', 'place': 'Paris', 'date': '26', 'mode_game': 'bullet', 'nb_turn': 4, 'description': 'First',
+     'players_index': ['1', '2', '3', '4', '5', '6', '7', '8'], 'rounds_list': []}]
 
+database = TinyDB('database.json')
+database.truncate()
+
+players_table = database.table('known_players')
+tournaments_table = database.table('existing_tournaments')
+
+insert_db(players_table.name, known_players)
+insert_db(tournaments_table.name, existing_tournaments)
+
+"""# creation of the tournament
 new_tournament_data = create_tournament()
 new_tournament = Tournament()
 new_tournament.name = new_tournament_data[0]
@@ -186,7 +222,7 @@ for t in range(new_tournament.nb_turn):
             turn.match_list.append(([list_match[m][0], 1 / 2], [list_match[m][1], 1 / 2]))
             scoreboard[list_match[m][0]] += 1 / 2
             scoreboard[list_match[m][1]] += 1 / 2
-    """print(turn.match_list)"""
+    # print(turn.match_list)
 
     # finish the turn
     next_turn = ""
@@ -227,6 +263,6 @@ print_menu('New ranking', '\n')
 sorted_ranking = sorted(known_players, key=lambda ranking: ranking[5])
 for sort in range(len(sorted_ranking)):
     print_board(str(sorted_ranking[sort][4]), sorted_ranking[sort][5])
-
+"""
 if __name__ == "__main__":
     main()

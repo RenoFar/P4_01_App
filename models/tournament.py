@@ -24,5 +24,5 @@ class Tournament(Builder):  # Definition of the Tournament class
         self.nb_turn = nb_turn
         self.mode_game = mode_game
         self.description = description
-        self.rounds_list = []
         self.players_index = []
+        self.rounds_list = []
