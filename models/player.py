@@ -13,11 +13,10 @@ class Player(Builder):  # Definition of the Player class
     - its gender
     - its ranking """
 
-    def __init__(self, name=None, firstname=None, date_birth=None, gender=None, index=None, ranking=None):
+    def __init__(self, name=None, firstname=None, date_birth=None, gender=None, ranking=None):
         """ Constructor of the class """
         super().__init__(name)
         self.firstname = firstname
         self.date_birth = date_birth
         self.gender = gender
-        self.index = index
         self.ranking = ranking

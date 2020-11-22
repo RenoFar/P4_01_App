@@ -2,9 +2,7 @@
 # coding: utf-8
 
 
-import json
-from tinydb import TinyDB, Query
-from tinydb.operations import delete
+from tinydb import TinyDB
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
@@ -48,14 +46,12 @@ def player_select(player_list):  # Select player
         player_listing = []
         print_menu('List of known players:', '\n')
         for a, elt in enumerate(player_list):
-            print_info(str(a) + ': ' + str(elt))
+            print_info(str(a+1) + ': ' + str(elt))
             # print(str(a) + ': ' + str(elt))
-            player_listing.append(str(a))
+            player_listing.append(str(a+1))
         menu_choice = ""
         while menu_choice not in ('1', '2'):
-            menu_choice = input_data('Select a known player: 1'
-                                     '\nAdd a new player: 2'
-                                     '\nYour choice: ', '\n')
+            menu_choice = input_data('Select a known player (1) or add a new player (2): ', '\n')
             if menu_choice == '1':
                 while player_choice not in player_listing:
                     player_choice = input_data('Select a player number: ')
@@ -64,7 +60,7 @@ def player_select(player_list):  # Select player
     return player_choice
 
 
-def create_player(index):
+def create_player():
     name = ""
     firstname = ""
     birthdate = ""
@@ -86,7 +82,7 @@ def create_player(index):
             if ranking > 0: break
         except ValueError:
             print_info('Please enter a positive integer!', '\n')
-    return name, firstname, birthdate, gender, index, ranking
+    return name, firstname, birthdate, gender, ranking
 
 
 def create_round(number_turn):
@@ -106,16 +102,33 @@ def create_match(selected_players):
     return match_list
 
 
+def serialized_player(player):
+    return {'name': player.name, 'firstname': player.firstname, 'date_birth': player.date_birth,
+            'gender': player.gender, 'ranking': player.ranking}
+
+
+def serialized_tournament(tournament):
+    return {'name': tournament.name, 'place': tournament.place, 'date': tournament.date,
+            'mode_game': tournament.mode_game,'nb_turn': tournament.nb_turn,
+            'description': tournament.description, 'players_index': tournament.players_index,
+            'rounds_list': tournament.rounds_list}
+
+
+
 def insert_db(table, data_dict):
     database.table(table).insert_multiple(data_dict)
 
 
 """def search_db(table, key, value):
-    return database.table(table).search(Query()[key] == value)
+    return database.table(table).search(Query()[key] == value)"""
 
 
-def db_get(table, data_id_list):
-    return database.table(table).get(doc_ids=data_id_list)"""
+def db_get(table, info, nb=None):
+    if info == 'index':
+        result = table.all()[len(table)].doc_id
+    else:
+        result = table.all()[nb][info]
+    return result
 
 
 def db_update(table, key, value, data_id_list):
@@ -127,7 +140,13 @@ def main():
 
 
 # initialization of variables
-known_players = [
+database = TinyDB('database.json')
+"""database.truncate()"""
+
+players_table = database.table('known_players')
+tournaments_table = database.table('existing_tournaments')
+
+"""known_players = [
     {'name': 'Martin', 'firstname': 'Lucie', 'date_birth': '2000', 'gender': 'f', 'ranking': 18},
     {'name': 'Petit', 'firstname': 'Lucas', 'date_birth': '2001', 'gender': 'm', 'ranking': 7},
     {'name': 'Dubois', 'firstname': 'Samuel', 'date_birth': '2002', 'gender': 'm', 'ranking': 8},
@@ -140,55 +159,39 @@ existing_tournaments = [
     {'name': 't1', 'place': 'Paris', 'date': '26', 'mode_game': 'bullet', 'nb_turn': 4, 'description': 'First',
      'players_index': ['1', '2', '3', '4', '5', '6', '7', '8'], 'rounds_list': []}]
 
-database = TinyDB('database.json')
-database.truncate()
-
-players_table = database.table('known_players')
-tournaments_table = database.table('existing_tournaments')
-
 insert_db(players_table.name, known_players)
-insert_db(tournaments_table.name, existing_tournaments)
+insert_db(tournaments_table.name, existing_tournaments)"""
 
-"""# creation of the tournament
+# creation of the tournament
 new_tournament_data = create_tournament()
-new_tournament = Tournament()
-new_tournament.name = new_tournament_data[0]
-new_tournament.place = new_tournament_data[1]
-new_tournament.date = new_tournament_data[2]
-new_tournament.mode_game = new_tournament_data[3]
-new_tournament.nb_turn = new_tournament_data[4]
-new_tournament.description = new_tournament_data[5]
+new_tournament = Tournament(new_tournament_data[0], new_tournament_data[1], new_tournament_data[2],
+                            new_tournament_data[3], new_tournament_data[4], new_tournament_data[5])
 
 # players selection
 for n in range(8):
     print_menu('Select player number ' + str(n + 1), '\n')
-    selected_player = player_select(known_players)
+    selected_player = player_select(players_table)
     # creation of a new player
     if selected_player == 'new':
-        tournament_player_data = create_player(str(len(known_players)))
-        tournament_player = Player()
-        tournament_player.name = tournament_player_data[0]
-        tournament_player.firstname = tournament_player_data[1]
-        tournament_player.date_birth = tournament_player_data[2]
-        tournament_player.gender = tournament_player_data[3]
-        tournament_player.index = tournament_player_data[4]
-        tournament_player.ranking = tournament_player_data[5]
+        tournament_player_data = create_player()
+        tournament_player = Player(tournament_player_data[0], tournament_player_data[1],
+                                   tournament_player_data[2], tournament_player_data[3],
+                                   tournament_player_data[4])
+
         # save new player
-        known_players.append([tournament_player.name, tournament_player.firstname, tournament_player.date_birth,
-                              tournament_player.gender, tournament_player.index, tournament_player.ranking])
-        selected_player = tournament_player.index
+        insert_db(players_table.name, serialized_player(tournament_player))
+        """known_players.append([tournament_player.name, tournament_player.firstname, tournament_player.date_birth,
+                              tournament_player.gender, tournament_player.index, tournament_player.ranking])"""
+        selected_player = db_get(players_table, 'index')
 
     new_tournament.players_index.append(selected_player)
-
+print(new_tournament.players_index)
 # make the rounds
 scoreboard = {}  # initialization of the tournament scoreboard
-for t in range(new_tournament.nb_turn):
+for t in range(int(new_tournament.nb_turn)):
     print_menu('Execution of round number ' + str(t + 1), '\n')
     turn_data = create_round(t)
-    turn = Round()
-    turn.name = turn_data[0]
-    turn.start = turn_data[1]
-    turn.end = turn_data[2]
+    turn = Round(turn_data[0], turn_data[1], turn_data[2])
 
     # generate matches
     current_classification = []
@@ -196,7 +199,7 @@ for t in range(new_tournament.nb_turn):
         if t == 0:  # take the known ranking
             scoreboard[new_tournament.players_index[c]] = 0
             current_classification.append([new_tournament.players_index[c],
-                                           known_players[int(new_tournament.players_index[c])][5]])
+                                           db_get(players_table, 'ranking', new_tournament.players_index[c])])
         else:  # take the total score of the previous rounds
             current_classification.append([new_tournament.players_index[c],
                                            scoreboard[new_tournament.players_index[c]]])
@@ -232,10 +235,11 @@ for t in range(new_tournament.nb_turn):
     new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
 # save tournament
-existing_tournaments.append([new_tournament.name, new_tournament.place, new_tournament.date,
+insert_db(tournaments_table.name, serialized_tournament(new_tournament))
+"""existing_tournaments.append([new_tournament.name, new_tournament.place, new_tournament.date,
                              new_tournament.mode_game, new_tournament.nb_turn,
                              new_tournament.description, new_tournament.players_index,
-                             new_tournament.rounds_list])
+                             new_tournament.rounds_list])"""
 print_menu('Tournament saved', '\n', '\n')
 
 # update the ranking
@@ -245,7 +249,7 @@ while update_ranking.lower() != 'y':
 
 print_menu('Tournament scoreboard', '\n')
 for num, point in scoreboard.items():
-    print_board(num, str(known_players[int(num)][5]), 'scores '+str(point))
+    print_board(num, db_get(players_table, 'ranking', str(num+1)), 'scores '+str(point))
 
 print_menu('Enter the new ranking', '\n')
 for number in scoreboard.keys():
@@ -256,13 +260,15 @@ for number in scoreboard.keys():
             if new_ranking > 0: break
         except ValueError:
             print_info('Please enter a positive integer!', '\n')
-    known_players[int(number)][5] = new_ranking
+    db_update(players_table, 'ranking', new_ranking, str(number))
+    """known_players[int(number)][5] = new_ranking"""
 
 # show ranking
 print_menu('New ranking', '\n')
-sorted_ranking = sorted(known_players, key=lambda ranking: ranking[5])
+sorted_ranking = sorted(players_table.all(), key=lambda ranking: ranking['ranking'])
 for sort in range(len(sorted_ranking)):
     print_board(str(sorted_ranking[sort][4]), sorted_ranking[sort][5])
-"""
+
+
 if __name__ == "__main__":
     main()
