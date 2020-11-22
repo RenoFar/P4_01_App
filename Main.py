@@ -109,10 +109,9 @@ def serialized_player(player):
 
 def serialized_tournament(tournament):
     return {'name': tournament.name, 'place': tournament.place, 'date': tournament.date,
-            'mode_game': tournament.mode_game,'nb_turn': tournament.nb_turn,
+            'mode_game': tournament.mode_game, 'nb_turn': tournament.nb_turn,
             'description': tournament.description, 'players_index': tournament.players_index,
             'rounds_list': tournament.rounds_list}
-
 
 
 def insert_db(table, data_dict):
@@ -185,10 +184,10 @@ for n in range(8):
         selected_player = db_get(players_table, 'index')
 
     new_tournament.players_index.append(selected_player)
-print(new_tournament.players_index)
+
 # make the rounds
 scoreboard = {}  # initialization of the tournament scoreboard
-for t in range(int(new_tournament.nb_turn)):
+for t in range(new_tournament.nb_turn):
     print_menu('Execution of round number ' + str(t + 1), '\n')
     turn_data = create_round(t)
     turn = Round(turn_data[0], turn_data[1], turn_data[2])
@@ -199,7 +198,7 @@ for t in range(int(new_tournament.nb_turn)):
         if t == 0:  # take the known ranking
             scoreboard[new_tournament.players_index[c]] = 0
             current_classification.append([new_tournament.players_index[c],
-                                           db_get(players_table, 'ranking', new_tournament.players_index[c])])
+                                           db_get(players_table, 'ranking', c)])
         else:  # take the total score of the previous rounds
             current_classification.append([new_tournament.players_index[c],
                                            scoreboard[new_tournament.players_index[c]]])
