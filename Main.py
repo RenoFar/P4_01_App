@@ -5,7 +5,7 @@
 from models.tournament import Tournament
 from models.player import Player
 from models.round import Round
-from views.terminal_views import *
+from views.tournament_views import *
 
 
 def create_tournament():  # create the tournament
@@ -127,6 +127,7 @@ new_tournament.description = new_tournament_data[5]
 for n in range(8):
     print_menu('Select player number ' + str(n + 1), '\n')
     selected_player = player_select(known_players)
+    # creation of a new player
     if selected_player == 'new':
         tournament_player_data = create_player(str(len(known_players)))
         tournament_player = Player()
@@ -136,7 +137,7 @@ for n in range(8):
         tournament_player.gender = tournament_player_data[3]
         tournament_player.index = tournament_player_data[4]
         tournament_player.ranking = tournament_player_data[5]
-
+        # save new player
         known_players.append([tournament_player.name, tournament_player.firstname, tournament_player.date_birth,
                               tournament_player.gender, tournament_player.index, tournament_player.ranking])
         selected_player = tournament_player.index
@@ -165,7 +166,7 @@ for t in range(new_tournament.nb_turn):
                                            scoreboard[new_tournament.players_index[c]]])
     list_match = create_match(current_classification)
 
-    # enter the results
+    # enter the results of the turn
     for m in range(len(list_match)):
         score = 0
         print_info('Match number ' + str(m + 1) + ' : ' + str(list_match[m]), '\n')
@@ -185,7 +186,7 @@ for t in range(new_tournament.nb_turn):
             turn.match_list.append(([list_match[m][0], 1 / 2], [list_match[m][1], 1 / 2]))
             scoreboard[list_match[m][0]] += 1 / 2
             scoreboard[list_match[m][1]] += 1 / 2
-    print(turn.match_list)
+    """print(turn.match_list)"""
 
     # finish the turn
     next_turn = ""
@@ -195,11 +196,11 @@ for t in range(new_tournament.nb_turn):
     new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
 # save tournament
-print_menu('Tournament saved', '\n', '\n')
 existing_tournaments.append([new_tournament.name, new_tournament.place, new_tournament.date,
                              new_tournament.mode_game, new_tournament.nb_turn,
                              new_tournament.description, new_tournament.players_index,
                              new_tournament.rounds_list])
+print_menu('Tournament saved', '\n', '\n')
 
 # update the ranking
 update_ranking = ""
