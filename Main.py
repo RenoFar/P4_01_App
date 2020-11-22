@@ -35,8 +35,8 @@ def create_tournament():  # create the tournament
                     break
             except ValueError:
                 print_info('Please enter a positive integer!', '\n')
-    while game_mode.lower() not in ('bullet', 'blitz', 'fast'):
-        game_mode = input_data('Please enter the tournament mode (bullet / blitz / quick): ')
+    while game_mode.lower() not in ('bullet', 'blitz', 'speed'):
+        game_mode = input_data('Please enter the tournament mode (bullet / blitz / speed): ')
     return name, place, date, game_mode, nb_turn, description
 
 
