@@ -46,9 +46,9 @@ def player_select(player_list):  # Select player
         player_listing = []
         print_menu('List of known players:', '\n')
         for a, elt in enumerate(player_list):
-            print_info(str(a+1) + ': ' + str(elt))
+            print_info(str(a + 1) + ': ' + str(elt))
             # print(str(a) + ': ' + str(elt))
-            player_listing.append(str(a+1))
+            player_listing.append(str(a + 1))
         menu_choice = ""
         while menu_choice not in ('1', '2'):
             menu_choice = input_data('Select a known player (1) or add a new player (2): ', '\n')
@@ -120,7 +120,7 @@ def insert_db(table, data_dict):
 
 def db_get(table, info, nb=None):
     if info == 'index':
-        result = str(table.all()[len(table)-1].doc_id)
+        result = str(table.all()[len(table) - 1].doc_id)
     else:
         result = table.all()[nb][info]
     return result
@@ -244,7 +244,7 @@ while update_ranking.lower() != 'y':
 
 print_menu('Tournament scoreboard', '\n')
 for num, point in scoreboard.items():
-    print_board(num, db_get(players_table, 'ranking', str(int(num)+1)), 'scores '+str(point))
+    print_board(num, db_get(players_table, 'ranking', int(num)-1), 'scores ' + str(point))
 
 print_menu('Enter the new ranking', '\n')
 for number in scoreboard.keys():
@@ -263,7 +263,6 @@ print_menu('New ranking', '\n')
 sorted_ranking = sorted(players_table.all(), key=lambda ranking: ranking['ranking'])
 for sort in range(len(sorted_ranking)):
     print_board(str(sorted_ranking[sort][4]), sorted_ranking[sort][5])
-
 
 if __name__ == "__main__":
     main()
