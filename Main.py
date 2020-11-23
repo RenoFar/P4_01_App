@@ -120,7 +120,7 @@ def insert_db(table, data_dict):
 
 def db_get(table, info, nb=None):
     if info == 'index':
-        result = table.all()[len(table)].doc_id
+        result = table.all()[len(table)-1].doc_id
     else:
         result = table.all()[nb][info]
     return result
@@ -244,7 +244,7 @@ while update_ranking.lower() != 'y':
 
 print_menu('Tournament scoreboard', '\n')
 for num, point in scoreboard.items():
-    print_board(num, db_get(players_table, 'ranking', str(num+1)), 'scores '+str(point))
+    print_board(num, db_get(players_table, 'ranking', str(int(num)+1)), 'scores '+str(point))
 
 print_menu('Enter the new ranking', '\n')
 for number in scoreboard.keys():
