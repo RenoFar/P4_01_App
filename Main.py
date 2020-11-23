@@ -120,7 +120,7 @@ def insert_db(table, data_dict):
 
 def db_get(table, info, nb=None):
     if info == 'index':
-        result = table.all()[len(table)-1].doc_id
+        result = str(table.all()[len(table)-1].doc_id)
     else:
         result = table.all()[nb][info]
     return result
