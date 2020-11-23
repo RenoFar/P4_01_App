@@ -126,6 +126,10 @@ def db_get(table, info, nb=None):
     return result
 
 
+def insert_db(table, data_dict):
+    database.table(table).insert(data_dict)
+
+
 def db_update(table, key, value, data_id_list):
     database.table(table).update({key: value}, doc_ids=data_id_list)
 
@@ -241,11 +245,9 @@ print_menu('Tournament saved', '\n', '\n')
 update_ranking = ""
 while update_ranking.lower() != 'y':
     update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
-
 print_menu('Tournament scoreboard', '\n')
 for num, point in scoreboard.items():
     print_board(num, db_get(players_table, 'ranking', int(num)-1), 'scores ' + str(point))
-
 print_menu('Enter the new ranking', '\n')
 for number in scoreboard.keys():
     while True:
@@ -255,7 +257,7 @@ for number in scoreboard.keys():
             if new_ranking > 0: break
         except ValueError:
             print_info('Please enter a positive integer!', '\n')
-    db_update(players_table, 'ranking', new_ranking, str(number))
+    db_update(players_table.name, 'ranking', new_ranking, [int(number)])
     """known_players[int(number)][5] = new_ranking"""
 
 # show ranking
