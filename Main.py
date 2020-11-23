@@ -179,8 +179,6 @@ for n in range(8):
 
         # save new player
         insert_db(players_table.name, serialized_player(tournament_player))
-        """known_players.append([tournament_player.name, tournament_player.firstname, tournament_player.date_birth,
-                              tournament_player.gender, tournament_player.index, tournament_player.ranking])"""
         selected_player = db_get(players_table, 'index')
 
     new_tournament.players_index.append(selected_player)
@@ -235,10 +233,6 @@ for t in range(new_tournament.nb_turn):
 
 # save tournament
 insert_db(tournaments_table.name, serialized_tournament(new_tournament))
-"""existing_tournaments.append([new_tournament.name, new_tournament.place, new_tournament.date,
-                             new_tournament.mode_game, new_tournament.nb_turn,
-                             new_tournament.description, new_tournament.players_index,
-                             new_tournament.rounds_list])"""
 print_menu('Tournament saved', '\n', '\n')
 
 # update the ranking
@@ -258,13 +252,13 @@ for number in scoreboard.keys():
         except ValueError:
             print_info('Please enter a positive integer!', '\n')
     db_update(players_table.name, 'ranking', new_ranking, [int(number)])
-    """known_players[int(number)][5] = new_ranking"""
 
 # show ranking
 print_menu('New ranking', '\n')
 sorted_ranking = sorted(players_table.all(), key=lambda ranking: ranking['ranking'])
 for sort in range(len(sorted_ranking)):
-    print_board(str(sorted_ranking[sort][4]), sorted_ranking[sort][5])
+    print_board(str(sorted_ranking[sort]['name']), str(sorted_ranking[sort]['ranking']))
+
 
 if __name__ == "__main__":
     main()
