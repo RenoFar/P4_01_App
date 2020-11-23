@@ -115,11 +115,7 @@ def serialized_tournament(tournament):
 
 
 def insert_db(table, data_dict):
-    database.table(table).insert_multiple(data_dict)
-
-
-"""def search_db(table, key, value):
-    return database.table(table).search(Query()[key] == value)"""
+    database.table(table).insert(data_dict)
 
 
 def db_get(table, info, nb=None):
