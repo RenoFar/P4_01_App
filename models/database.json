@@ -1,0 +1,12 @@
+{"_default": {}, "known_players": {
+  "1": {"name": "Martin", "firstname": "Lucie", "date_birth": "2000", "gender": "f", "ranking": 19},
+  "2": {"name": "Petit", "firstname": "Lucas", "date_birth": "2001", "gender": "m", "ranking": 6},
+  "3": {"name": "Dubois", "firstname": "Samuel", "date_birth": "2002", "gender": "m", "ranking": 5},
+  "4": {"name": "Durand", "firstname": "Lily", "date_birth": "1999", "gender": "f", "ranking": 17},
+  "5": {"name": "Leroy", "firstname": "Alina", "date_birth": "1995", "gender": "f", "ranking": 1},
+  "6": {"name": "Moreau", "firstname": "Nolan", "date_birth": "1998", "gender": "m", "ranking": 20},
+  "7": {"name": "Garcia", "firstname": "Julian", "date_birth": "1992", "gender": "m", "ranking": 2},
+  "8": {"name": "Roux", "firstname": "Marie", "date_birth": "1977", "gender": "f", "ranking": 7}},
+  "existing_tournaments": {
+    "1": {"name": "t1", "place": "Paris", "date": "26", "mode_game": "bullet", "nb_turn": 4,
+      "description": "First", "players_index": ["1", "2", "3", "4", "5", "6", "7", "8"], "rounds_list": []}}}
