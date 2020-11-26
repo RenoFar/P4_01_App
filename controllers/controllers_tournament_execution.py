@@ -20,8 +20,8 @@ def tournament_execution():
 
     # initialization of the tournament scoreboard
     scoreboard = {}
-    for index in new_tournament.players_index:
-        scoreboard[new_tournament.players_index[index]] = 0
+    for numb in range(len(new_tournament.players_index)):
+        scoreboard[new_tournament.players_index[numb]] = 0
 
     # Play the rounds
     for t in range(new_tournament.nb_turn):
@@ -32,14 +32,21 @@ def tournament_execution():
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
         # generate matches
         list_match = create_match(current_classification)
-
+        print(f'list_match {list_match}')
         for m in range(len(list_match)):
             # enter the results of the matches
+            print(f'list_match[m] {list_match[m]}')
             match_results = turn_results(list_match, m)
+            print(f'match_results {match_results}')
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
+            print(f'turn.match_list {turn.match_list}')
+            print(f'scoreboard[list_match[m][0]] {scoreboard[list_match[m][0]]}')
             scoreboard[list_match[m][0]] += match_results[0]
+            print(f'scoreboard[list_match[m][0]] actu {scoreboard[list_match[m][0]]}')
+            print(f'scoreboard[list_match[m][1]] {scoreboard[list_match[m][1]]}')
             scoreboard[list_match[m][1]] += match_results[1]
+            print(f'scoreboard[list_match[m][1]] actu {scoreboard[list_match[m][1]]}')
 
         # finish the turn
         next_turn = ""
@@ -128,13 +135,14 @@ def create_match(selected_players):
 
 
 def turn_results(list_turn, num_turn):
+    print(f'list_turn, num_turn {list_turn, num_turn}')
     score = 0
     match_result = []
     print_info(f'Match number {str(num_turn + 1)}: '
                f'playerID {(list_turn[num_turn][0])} '
-               f'{db_get("known_players", "name", int(list_turn[num_turn][0]))}'
+               f'{db_get("known_players", "name", int(list_turn[num_turn][0])-1)}'
                f' VS playerID {(list_turn[num_turn][1])} '
-               f'{db_get("known_players", "name", int(list_turn[num_turn][1]))}', '\n')
+               f'{db_get("known_players", "name", int(list_turn[num_turn][1])-1)}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match:'
                    f'\nType 1 for ID: {str(list_turn[num_turn][0])}'
