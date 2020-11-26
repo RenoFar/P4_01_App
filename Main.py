@@ -23,7 +23,7 @@ def main():
     # Play the rounds
     scoreboard = {}  # initialization of the tournament scoreboard
     for t in range(new_tournament.nb_turn):
-        print_menu('Execution of round number ' + str(t + 1), '\n')
+        print_menu(f'Execution of round number {str(t + 1)}', '\n')
         # creation of a new round
         turn = create_round(t)
         # find the current ranking
@@ -56,11 +56,11 @@ def main():
         update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
     print_menu('Tournament scoreboard', '\n')
     for num, point in scoreboard.items():
-        print_board(num, db_get('known_players', 'ranking', int(num) - 1), 'scores ' + str(point))
+        print_board(num, db_get('known_players', 'ranking', int(num) - 1), f'scores {str(point)}')
     print_menu('Enter the new ranking', '\n')
     for number in scoreboard.keys():
         while True:
-            new_ranking = input_data('Please enter the new ranking of player number ' + str(number) + ' : ')
+            new_ranking = input_data(f'Please enter the new ranking of player number {str(number)} : ')
             try:
                 new_ranking = int(new_ranking)
                 if new_ranking > 0: break

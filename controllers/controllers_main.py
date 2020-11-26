@@ -59,7 +59,7 @@ def current_ranking(players_nb, actual_scoreboard, turn_nb):
 def turn_results(list_turn, num_turn):
     score = 0
     match_result = []
-    print_info('Match number ' + str(num_turn + 1) + ' : ' + str(list_turn[num_turn]), '\n')
+    print_info(f'Match number {str(num_turn + 1)} : {str(list_turn[num_turn])}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match'
                    f'\n Type 1 for: {str(list_turn[num_turn][0])}'
