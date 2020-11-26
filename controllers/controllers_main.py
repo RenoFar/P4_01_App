@@ -74,10 +74,10 @@ def create_match(selected_players):
 def turn_results(list_turn, num_turn):
     score = 0
     match_result = []
-    print_info(f'Match number {str(num_turn + 1)} : '
-               f'player ID {(list_turn[num_turn][0])} : '
+    print_info(f'Match number {str(num_turn + 1)}: '
+               f'player ID {(list_turn[num_turn][0])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][0]))}'
-               f' vs player ID {(list_turn[num_turn][1])} : '
+               f' vs player ID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1]))}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match'
