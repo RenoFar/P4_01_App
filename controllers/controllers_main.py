@@ -12,7 +12,6 @@ def players_selection():
     list_players = []
     for n in range(8):
         print_menu(f'Select player number {str(n + 1)}', '\n')
-        print(f'joueur deja choisi {list_players}')
         selected_player = player_select('known_players', list_players)
 
         # creation of a new player
@@ -23,23 +22,21 @@ def players_selection():
             selected_player = db_get('known_players', 'index')
 
         list_players.append(selected_player)
-        print(f'joueur choisi {list_players}')
     return list_players
 
 
 def player_select(table, chosen_players):  # Selection of player
-    print(f'joueur choisi récupéré {chosen_players}')
     # get all known players
     player_list = db_get(table, 'all')
     player_choice = '-1'
     while player_choice == '-1':
         # initialize available players
         player_listing = []
-        print_menu('List of available players:', '\n')
+        print_menu('List of available players:')
         for a, elt in enumerate(player_list):
             # exclude players already chosen
             if str(a + 1) not in chosen_players:
-                print_info(f'{str(a + 1)} : {elt}')
+                print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
                 player_listing.append(str(a + 1))
         # choose a player
         menu_choice = ""
@@ -78,15 +75,15 @@ def turn_results(list_turn, num_turn):
     score = 0
     match_result = []
     print_info(f'Match number {str(num_turn + 1)}: '
-               f'player ID {(list_turn[num_turn][0])} '
+               f'playerID {(list_turn[num_turn][0])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][0]))}'
-               f' VS player ID {(list_turn[num_turn][1])} '
+               f' VS playerID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1]))}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match'
                    f'\n Type 1 for: {str(list_turn[num_turn][0])}'
-                   f'\n Type 2 for: {str(list_turn[num_turn][1])}'
-                   f'\n Type 3 for: Draw')
+                   f', 2 for: {str(list_turn[num_turn][1])}'
+                   f', 3 for: Draw')
         score = input_data(f' Your choice: ', '\n')
     if score == '1':
         match_result = [1, 0]
