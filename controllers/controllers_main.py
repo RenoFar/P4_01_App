@@ -49,7 +49,6 @@ def current_ranking(players_nb, actual_scoreboard, turn_nb):
     actual_ranking = []
     for c in range(len(players_nb)):
         if turn_nb == 0:  # take the known ranking
-            actual_scoreboard[players_nb[c]] = 0
             actual_ranking.append([players_nb[c], db_get('known_players', 'ranking', c)])
         else:  # take the total of the score of the previous rounds
             actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])

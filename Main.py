@@ -17,8 +17,7 @@ def main():
     """db_insert('existing_tournaments', serialized_tournament(new_tournament))"""
 
     # selection of 8 players
-    selected_players = players_selection()
-    new_tournament.players_index.append(selected_players)
+    new_tournament.players_index = players_selection()
 
     # Play the rounds
     scoreboard = {}  # initialization of the tournament scoreboard
@@ -31,8 +30,8 @@ def main():
         # generate matches
         list_match = create_match(current_classification)
 
-        # enter the results of the turn
         for m in range(len(list_match)):
+            # enter the results of the matches
             match_results = turn_results(list_match, m)
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
@@ -60,7 +59,7 @@ def main():
     print_menu('Enter the new ranking', '\n')
     for number in scoreboard.keys():
         while True:
-            new_ranking = input_data(f'Please enter the new ranking of player number {str(number)} : ')
+            new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
             try:
                 new_ranking = int(new_ranking)
                 if new_ranking > 0: break
