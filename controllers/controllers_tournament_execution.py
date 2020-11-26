@@ -41,10 +41,10 @@ def tournament_execution():
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             print(f'turn.match_list {turn.match_list}')
-            print(f'scoreboard[list_match[m][0]] {scoreboard[list_match[m][0]]}')
+            print(f'scoreboard[list_match[m][0]] {list_match[m][0]} {scoreboard[list_match[m][0]]}')
             scoreboard[list_match[m][0]] += match_results[0]
             print(f'scoreboard[list_match[m][0]] actu {scoreboard[list_match[m][0]]}')
-            print(f'scoreboard[list_match[m][1]] {scoreboard[list_match[m][1]]}')
+            print(f'scoreboard[list_match[m][1]] {list_match[m][1]} {scoreboard[list_match[m][1]]}')
             scoreboard[list_match[m][1]] += match_results[1]
             print(f'scoreboard[list_match[m][1]] actu {scoreboard[list_match[m][1]]}')
 
@@ -152,7 +152,7 @@ def turn_results(list_turn, num_turn):
     if score == '1':
         match_result = [1, 0]
     if score == '2':
-        match_result = [0, 0]
+        match_result = [0, 1]
     if score == '3':
         match_result = [1 / 2, 1 / 2]
     return match_result
