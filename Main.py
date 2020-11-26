@@ -8,6 +8,7 @@ from views.tournament_views import *
 
 def main():
     """Main execution function of the application"""
+
     tournament_execution()
 
 

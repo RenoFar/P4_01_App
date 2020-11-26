@@ -18,8 +18,12 @@ def tournament_execution():
     # selection of 8 players
     new_tournament.players_index = players_selection()
 
+    # initialization of the tournament scoreboard
+    scoreboard = {}
+    for index in new_tournament.players_index:
+        scoreboard[new_tournament.players_index[index]] = 0
+
     # Play the rounds
-    scoreboard = {}  # initialization of the tournament scoreboard
     for t in range(new_tournament.nb_turn):
         print_menu(f'Execution of round number {str(t + 1)}', '\n')
         # creation of a new round
@@ -49,28 +53,14 @@ def tournament_execution():
     print_menu('Tournament saved', '\n', '\n')
 
     # update the ranking
-    update_ranking = ""
-    while update_ranking.lower() != 'y':
-        update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
-    print_menu('Tournament scoreboard', '\n')
-    for num, point in scoreboard.items():
-        print_board(num, db_get('known_players', 'ranking', int(num) - 1), f'scores {str(point)}')
-    print_menu('Enter the new ranking', '\n')
-    for number in scoreboard.keys():
-        while True:
-            new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
-            try:
-                new_ranking = int(new_ranking)
-                if new_ranking > 0: break
-            except ValueError:
-                print_info('Please enter a positive integer!', '\n')
-        db_update('known_players', 'ranking', new_ranking, [int(number)])
+    ranking_update(scoreboard)
 
     # show ranking
     print_menu('New ranking', '\n')
     sorted_ranking = sorted(db_get('known_players', 'all'), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
         print_board(f'{str(sorted_ranking[sort]["name"])}', f'{str(sorted_ranking[sort]["ranking"])}')
+    return
 
 
 def players_selection():
@@ -146,10 +136,10 @@ def turn_results(list_turn, num_turn):
                f' VS playerID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1]))}', '\n')
     while score not in ('1', '2', '3'):
-        print_info(f'Choose the winner of the match'
-                   f'\n Type 1 for: {str(list_turn[num_turn][0])}'
-                   f', 2 for: {str(list_turn[num_turn][1])}'
-                   f', 3 for: Draw')
+        print_info(f'Choose the winner of the match:'
+                   f'\nType 1 for ID: {str(list_turn[num_turn][0])}'
+                   f', 2 for ID: {str(list_turn[num_turn][1])}'
+                   f', 3 for : Draw')
         score = input_data(f' Your choice: ', '\n')
     if score == '1':
         match_result = [1, 0]
@@ -158,3 +148,29 @@ def turn_results(list_turn, num_turn):
     if score == '3':
         match_result = [1 / 2, 1 / 2]
     return match_result
+
+
+def ranking_update(board):
+    update_ranking = ""
+    while update_ranking.lower() != 'y':
+        update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
+    print_menu('Tournament scoreboard', '\n')
+    for num, point in board.items():
+        print_board(num, db_get('known_players', 'ranking', int(num) - 1), f'scores {str(point)}')
+    print_menu('Enter the new ranking', '\n')
+    # enter the new ranking
+    new_ranking_list = []
+    for number in board.keys():
+        # check for duplicate ranks
+        new_ranking = None
+        while str(new_ranking) in new_ranking_list:
+            # control the format
+            while True:
+                new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
+                try:
+                    new_ranking = int(new_ranking)
+                    if new_ranking > 0: break
+                except ValueError:
+                    print_info('Please enter a positive integer!', '\n')
+            new_ranking_list.append(new_ranking)
+        db_update('known_players', 'ranking', new_ranking, [int(number)])
