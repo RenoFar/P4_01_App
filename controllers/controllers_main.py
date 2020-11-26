@@ -61,11 +61,11 @@ def turn_results(list_turn, num_turn):
     match_result = []
     print_info('Match number ' + str(num_turn + 1) + ' : ' + str(list_turn[num_turn]), '\n')
     while score not in ('1', '2', '3'):
-        score = input_data('Choose the winner of the match'
-                           '\n Type 1 for: ' + str(list_turn[num_turn][0]) +
-                           '\n Type 2 for: ' + str(list_turn[num_turn][1]) +
-                           '\n Type 3 for: Draw'
-                           '\n Your choice: ')
+        print_info(f'Choose the winner of the match'
+                   f'\n Type 1 for: {str(list_turn[num_turn][0])}'
+                   f'\n Type 2 for: {str(list_turn[num_turn][1])}'
+                   f'\n Type 3 for: Draw')
+        score = input_data(f'\n Your choice: ')
     if score == '1':
         match_result = [1, 0]
     if score == '2':
