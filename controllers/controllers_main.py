@@ -12,6 +12,7 @@ def players_selection():
     list_players = []
     for n in range(8):
         print_menu(f'Select player number {str(n + 1)}', '\n')
+        print(f'joueur deja choisi {list_players}')
         selected_player = player_select('known_players', list_players)
 
         # creation of a new player
@@ -22,10 +23,12 @@ def players_selection():
             selected_player = db_get('known_players', 'index')
 
         list_players.append(selected_player)
+        print(f'joueur choisi {list_players}')
     return list_players
 
 
 def player_select(table, chosen_players):  # Selection of player
+    print(f'joueur choisi récupéré {chosen_players}')
     # get all known players
     player_list = db_get(table, 'all')
     player_choice = '-1'
@@ -35,7 +38,7 @@ def player_select(table, chosen_players):  # Selection of player
         print_menu('List of available players:', '\n')
         for a, elt in enumerate(player_list):
             # exclude players already chosen
-            if elt not in chosen_players:
+            if str(a + 1) not in chosen_players:
                 print_info(f'{str(a + 1)} : {elt}')
                 player_listing.append(str(a + 1))
         # choose a player
@@ -77,7 +80,7 @@ def turn_results(list_turn, num_turn):
     print_info(f'Match number {str(num_turn + 1)}: '
                f'player ID {(list_turn[num_turn][0])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][0]))}'
-               f' vs player ID {(list_turn[num_turn][1])} '
+               f' VS player ID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1]))}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match'
