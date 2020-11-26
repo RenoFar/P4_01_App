@@ -11,7 +11,7 @@ def players_selection():
     # selection of 8 players
     list_players = []
     for n in range(8):
-        print_menu('Select player number ' + str(n + 1), '\n')
+        print_menu(f'Select player number {str(n + 1)}', '\n')
         selected_player = player_select('known_players')
 
         # creation of a new player
@@ -65,7 +65,7 @@ def turn_results(list_turn, num_turn):
                    f'\n Type 1 for: {str(list_turn[num_turn][0])}'
                    f'\n Type 2 for: {str(list_turn[num_turn][1])}'
                    f'\n Type 3 for: Draw')
-        score = input_data(f'\n Your choice: ')
+        score = input_data(f' Your choice: ', '\n')
     if score == '1':
         match_result = [1, 0]
     if score == '2':

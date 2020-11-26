@@ -72,7 +72,7 @@ def main():
     print_menu('New ranking', '\n')
     sorted_ranking = sorted(db_get('known_players', 'all'), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(str(sorted_ranking[sort]['name']), str(sorted_ranking[sort]['ranking']))
+        print_board(f'{str(sorted_ranking[sort]["name"])}', f'{str(sorted_ranking[sort]["ranking"])}')
 
 
 if __name__ == "__main__":
