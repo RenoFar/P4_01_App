@@ -25,8 +25,8 @@ def players_selection():
     return list_players
 
 
-def player_select(player_list):  # Selection of player
-    player_list = db_get(player_list, 'all')
+def player_select(table):  # Selection of player
+    player_list = db_get(table, 'all')
     player_choice = '-1'
     while player_choice == '-1':
         player_listing = []
