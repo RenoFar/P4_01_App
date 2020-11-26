@@ -26,19 +26,25 @@ def players_selection():
 
 
 def player_select(table):  # Selection of player
+    # get all known players
     player_list = db_get(table, 'all')
     player_choice = '-1'
     while player_choice == '-1':
-        player_listing = []
-        print_menu('List of known players:', '\n')
+        # initialize available players
+        players_available = []
+        print_menu('List of available players:', '\n')
         for a, elt in enumerate(player_list):
-            print_info(str(a + 1) + ': ' + str(elt))
-            player_listing.append(str(a + 1))
+            # exclude players already chosen
+            if elt not in players_available:
+                print_info(f'{str(a + 1)} : {str(elt)}')
+                players_available.append(str(a + 1))
+        # choose a player
         menu_choice = ""
         while menu_choice not in ('1', '2'):
-            menu_choice = input_data('Select a known player (1) or add a new player (2): ', '\n')
+            menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n')
             if menu_choice == '1':
-                while player_choice not in player_listing:
+                # test the available players
+                while player_choice not in players_available:
                     player_choice = input_data('Select a player number: ')
             elif menu_choice == '2':
                 player_choice = 'new'
