@@ -32,21 +32,13 @@ def tournament_execution():
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
         # generate matches
         list_match = create_match(current_classification)
-        print(f'list_match {list_match}')
         for m in range(len(list_match)):
             # enter the results of the matches
-            print(f'list_match[m] {list_match[m]}')
             match_results = turn_results(list_match, m)
-            print(f'match_results {match_results}')
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
-            print(f'turn.match_list {turn.match_list}')
-            print(f'scoreboard[list_match[m][0]] {list_match[m][0]} {scoreboard[list_match[m][0]]}')
             scoreboard[list_match[m][0]] += match_results[0]
-            print(f'scoreboard[list_match[m][0]] actu {scoreboard[list_match[m][0]]}')
-            print(f'scoreboard[list_match[m][1]] {list_match[m][1]} {scoreboard[list_match[m][1]]}')
             scoreboard[list_match[m][1]] += match_results[1]
-            print(f'scoreboard[list_match[m][1]] actu {scoreboard[list_match[m][1]]}')
 
         # finish the turn
         next_turn = ""
@@ -135,7 +127,6 @@ def create_match(selected_players):
 
 
 def turn_results(list_turn, num_turn):
-    print(f'list_turn, num_turn {list_turn, num_turn}')
     score = 0
     match_result = []
     print_info(f'Match number {str(num_turn + 1)}: '
