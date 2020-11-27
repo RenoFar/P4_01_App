@@ -54,8 +54,10 @@ def tournament_execution():
         new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
     # update the tournament
-    """db_insert('existing_tournaments', serialized_tournament(new_tournament))"""
-
+    db_update('existing_tournaments', 'players_index', new_tournament.players_index,
+              db_get('existing_tournaments', 'index'))
+    db_update('existing_tournaments', 'rounds_list', new_tournament.rounds_list,
+              db_get('existing_tournaments', 'index'))
     print_menu('Tournament players & rounds updating', '\n', '\n')
 
     # update the ranking
