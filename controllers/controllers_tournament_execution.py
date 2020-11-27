@@ -58,7 +58,8 @@ def tournament_execution():
     print_menu('New ranking', '\n')
     sorted_ranking = sorted(db_get('known_players', 'all'), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(f'{str(sorted_ranking[sort]["name"])}', f'{str(sorted_ranking[sort]["ranking"])}')
+        print_board(f'{db_get("known_players", "index", sort)} {str(sorted_ranking[sort]["name"])}',
+                    f'{str(sorted_ranking[sort]["ranking"])}')
     return
 
 
@@ -136,9 +137,9 @@ def turn_results(list_turn, num_turn):
                f'{db_get("known_players", "name", int(list_turn[num_turn][1])-1)}', '\n')
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match:'
-                   f'\nType 1 for ID: {str(list_turn[num_turn][0])}'
-                   f', 2 for ID: {str(list_turn[num_turn][1])}'
-                   f', 3 for : Draw')
+                   f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
+                   f', (2) for ID: {str(list_turn[num_turn][1])}'
+                   f', (3) for : Draw')
         score = input_data(f' Your choice: ', '\n')
     if score == '1':
         match_result = [1, 0]
@@ -160,9 +161,7 @@ def ranking_update(board):
     # enter the new ranking
     new_ranking_list = []
     for number in board.keys():
-        # check for duplicate ranks
-        new_ranking = None
-        while str(new_ranking) in new_ranking_list:
+        while True:
             # control the format
             while True:
                 new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
@@ -171,5 +170,10 @@ def ranking_update(board):
                     if new_ranking > 0: break
                 except ValueError:
                     print_info('Please enter a positive integer!', '\n')
-            new_ranking_list.append(new_ranking)
+            # check for duplicate ranks
+            if str(new_ranking) not in new_ranking_list:
+                new_ranking_list.append(new_ranking)
+                break
+            else:
+                print_info(f'new ranking {str(new_ranking)} already chosen', '\n')
         db_update('known_players', 'ranking', new_ranking, [int(number)])

@@ -20,7 +20,10 @@ def db_update(table, key, value, data_id_list):
 def db_get(table_name, info, nb=None):
     table = TinyDB('database.json').table(table_name)
     if info == 'index':
-        result = str(table.all()[len(table) - 1].doc_id)
+        if nb is None:
+            result = str(table.all()[len(table) - 1].doc_id)
+        else:
+            result = str(table.all()[nb].doc_id)
     elif info == 'all':
         result = table.all()
     else:
