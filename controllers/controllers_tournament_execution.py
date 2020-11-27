@@ -13,7 +13,8 @@ def tournament_execution():
 
     # creation of the tournament
     new_tournament = create_tournament()
-    """db_insert('existing_tournaments', serialized_tournament(new_tournament))"""
+    db_insert('existing_tournaments', serialized_tournament(new_tournament))
+    print_menu('Tournament created', '\n', '\n')
 
     # selection of 8 players
     new_tournament.players_index = players_selection()
@@ -25,7 +26,7 @@ def tournament_execution():
 
     # Play the rounds
     for t in range(new_tournament.nb_turn):
-        print_menu(f'Execution of round number {str(t + 1)}', '\n')
+        print_menu(f'Execution of round N° {str(t + 1)}', '\n')
 
         # creation of a new round
         turn = create_round(t)
@@ -52,9 +53,10 @@ def tournament_execution():
         turn.end = "end"
         new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
-    # save tournament
-    db_insert('existing_tournaments', serialized_tournament(new_tournament))
-    print_menu('Tournament saved', '\n', '\n')
+    # update the tournament
+    """db_insert('existing_tournaments', serialized_tournament(new_tournament))"""
+
+    print_menu('Tournament players & rounds updating', '\n', '\n')
 
     # update the ranking
     ranking_update(scoreboard)
@@ -72,7 +74,7 @@ def players_selection():
     # selection of 8 players
     list_players = []
     for n in range(8):
-        print_menu(f'Select player number {str(n + 1)}', '\n')
+        print_menu(f'Select player N° {str(n + 1)}', '\n')
         selected_player = player_select('known_players', list_players)
 
         # creation of a new player
@@ -86,8 +88,7 @@ def players_selection():
     return list_players
 
 
-def player_select(table, chosen_players):  # Selection of player
-
+def player_select(table, chosen_players):
     # get all known players
     player_list = db_get(table, 'all')
     player_choice = '-1'
@@ -138,10 +139,10 @@ def turn_results(list_turn, num_turn):
     match_result = []
 
     # show the match details
-    print_info(f'Match number {str(num_turn + 1)}: '
+    print_info(f'Match N° {str(num_turn + 1)}: '
                f'playerID {(list_turn[num_turn][0])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][0])-1)}'
-               f' VS playerID {(list_turn[num_turn][1])} '
+               f' -VS- playerID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1])-1)}', '\n')
 
     # choose the result
@@ -177,7 +178,7 @@ def ranking_update(board):
         while True:  # control the chosen ranking
             while True:  # control the format
                 new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
-                try:
+                try:  # conversion on a positive integer for ranking
                     new_ranking = int(new_ranking)
                     if new_ranking > 0: break
                 except ValueError:
