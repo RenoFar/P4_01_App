@@ -172,7 +172,7 @@ def ranking_update(board):
                     print_info('Please enter a positive integer!', '\n')
             # check for duplicate ranks
             if str(new_ranking) not in new_ranking_list:
-                new_ranking_list.append(new_ranking)
+                new_ranking_list.append(str(new_ranking))
                 break
             else:
                 print_info(f'new ranking {str(new_ranking)} already chosen', '\n')
