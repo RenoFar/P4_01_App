@@ -26,15 +26,20 @@ def tournament_execution():
     # Play the rounds
     for t in range(new_tournament.nb_turn):
         print_menu(f'Execution of round number {str(t + 1)}', '\n')
+
         # creation of a new round
         turn = create_round(t)
+
         # find the current ranking
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
+
         # generate matches
         list_match = create_match(current_classification)
+
+        # enter the results of the matches
         for m in range(len(list_match)):
-            # enter the results of the matches
             match_results = turn_results(list_match, m)
+
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             scoreboard[list_match[m][0]] += match_results[0]
@@ -82,25 +87,26 @@ def players_selection():
 
 
 def player_select(table, chosen_players):  # Selection of player
+
     # get all known players
     player_list = db_get(table, 'all')
     player_choice = '-1'
     while player_choice == '-1':
+
         # initialize available players
         player_listing = []
         print_menu('List of available players:')
         for a, elt in enumerate(player_list):
-            # exclude players already chosen
-            if str(a + 1) not in chosen_players:
+            if str(a + 1) not in chosen_players:  # exclude players already chosen
                 print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
                 player_listing.append(str(a + 1))
+
         # choose a player
         menu_choice = ""
         while menu_choice not in ('1', '2'):
             menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n')
             if menu_choice == '1':
-                # test the available players
-                while player_choice not in player_listing:
+                while player_choice not in player_listing:  # test the available players
                     player_choice = input_data('Select a player number: ')
             elif menu_choice == '2':
                 player_choice = 'new'
@@ -130,11 +136,15 @@ def create_match(selected_players):
 def turn_results(list_turn, num_turn):
     score = 0
     match_result = []
+
+    # show the match details
     print_info(f'Match number {str(num_turn + 1)}: '
                f'playerID {(list_turn[num_turn][0])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][0])-1)}'
                f' VS playerID {(list_turn[num_turn][1])} '
                f'{db_get("known_players", "name", int(list_turn[num_turn][1])-1)}', '\n')
+
+    # choose the result
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match:'
                    f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
@@ -154,26 +164,28 @@ def ranking_update(board):
     update_ranking = ""
     while update_ranking.lower() != 'y':
         update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
+
+    # show the Tournament scoreboard
     print_menu('Tournament scoreboard', '\n')
     for num, point in board.items():
         print_board(num, db_get('known_players', 'ranking', int(num) - 1), f'scores {str(point)}')
-    print_menu('Enter the new ranking', '\n')
+
     # enter the new ranking
+    print_menu('Enter the new ranking', '\n')
     new_ranking_list = []
     for number in board.keys():
-        while True:
-            # control the format
-            while True:
+        while True:  # control the chosen ranking
+            while True:  # control the format
                 new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
                 try:
                     new_ranking = int(new_ranking)
                     if new_ranking > 0: break
                 except ValueError:
                     print_info('Please enter a positive integer!', '\n')
-            # check for duplicate ranks
-            if str(new_ranking) not in new_ranking_list:
+            if str(new_ranking) not in new_ranking_list:  # check for duplicate ranking
                 new_ranking_list.append(str(new_ranking))
                 break
             else:
                 print_info(f'new ranking {str(new_ranking)} already chosen', '\n')
+        # update the database
         db_update('known_players', 'ranking', new_ranking, [int(number)])
