@@ -29,7 +29,7 @@ def db_get(table_name, info, nb=None):
 
 
 def db_search_id(rank):
-    players_id = TinyDB('database.json').table('known_players').get(Query()['ranking'] == rank).doc_id
+    players_id = TinyDB('database.json').table('known_players').get(Query()['ranking'] == int(rank)).doc_id
     return players_id
 
 
