@@ -55,9 +55,9 @@ def tournament_execution():
 
     # update the tournament
     db_update('existing_tournaments', 'players_index', new_tournament.players_index,
-              db_get('existing_tournaments', 'index'))
+              [int(db_get('existing_tournaments', 'index'))])
     db_update('existing_tournaments', 'rounds_list', new_tournament.rounds_list,
-              db_get('existing_tournaments', 'index'))
+              [int(db_get('existing_tournaments', 'index'))])
     print_menu('Tournament players & rounds updating', '\n', '\n')
 
     # update the ranking
@@ -67,7 +67,7 @@ def tournament_execution():
     print_menu('New ranking', '\n')
     sorted_ranking = sorted(db_get('known_players', 'all'), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(f'{db_get("known_players", "index", sort)} {str(sorted_ranking[sort]["name"])}',
+        print_board(f'{db_search_id(str(sorted_ranking[sort]["ranking"]))} {sorted_ranking[sort]["name"]}',
                     f'{str(sorted_ranking[sort]["ranking"])}')
     return
 
@@ -153,7 +153,7 @@ def turn_results(list_turn, num_turn):
                    f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
                    f', (2) for ID: {str(list_turn[num_turn][1])}'
                    f', (3) for : Draw')
-        score = input_data(f' Your choice: ', '\n')
+        score = input_data(f' Result: ', '\n')
     if score == '1':
         match_result = [1, 0]
     if score == '2':
@@ -179,7 +179,7 @@ def ranking_update(board):
     for number in board.keys():
         while True:  # control the chosen ranking
             while True:  # control the format
-                new_ranking = input_data(f'Please enter the new ranking of player ID {str(number)} : ')
+                new_ranking = input_data(f'New ranking of player ID {str(number)} : ')
                 try:  # conversion on a positive integer for ranking
                     new_ranking = int(new_ranking)
                     if new_ranking > 0: break

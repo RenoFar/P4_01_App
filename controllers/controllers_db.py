@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-from tinydb import TinyDB
+from tinydb import TinyDB, Query
 
 
 def initialize_db():
@@ -13,22 +13,24 @@ def db_insert(table, data_dict):
     TinyDB('database.json').table(table).insert(data_dict)
 
 
-def db_update(table, key, value, data_id_list):
-    TinyDB('database.json').table(table).update({key: value}, doc_ids=data_id_list)
+def db_update(table, key, value, id_list):
+    TinyDB('database.json').table(table).update({key: value}, doc_ids= id_list)
 
 
 def db_get(table_name, info, nb=None):
     table = TinyDB('database.json').table(table_name)
     if info == 'index':
-        if nb is None:
-            result = str(table.all()[len(table) - 1].doc_id)
-        else:
-            result = str(table.all()[nb].doc_id)
+        result = str(table.all()[len(table) - 1].doc_id)
     elif info == 'all':
         result = table.all()
     else:
         result = table.all()[nb][info]
     return result
+
+
+def db_search_id(rank):
+    players_id = TinyDB('database.json').table('known_players').get(Query()['ranking'] == rank).doc_id
+    return players_id
 
 
 def serialized_player(player):
