@@ -107,8 +107,8 @@ def player_select(table, chosen_players):
         # choose a player
         menu_choice = ""
         while menu_choice not in ('1', '2'):
-            menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n')
-            if menu_choice == '1':
+            menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n', '\n')
+            if menu_choice == '1' and len(player_listing) > 0:
                 while player_choice not in player_listing:  # test the available players
                     player_choice = input_data('Select a player number: ')
             elif menu_choice == '2':
