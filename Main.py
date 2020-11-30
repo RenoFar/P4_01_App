@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-from controllers.controllers_tournament_execution import *
+from controllers.controllers_execution import *
 from views.tournament_views import *
 
 

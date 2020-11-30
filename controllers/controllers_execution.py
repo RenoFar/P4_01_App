@@ -3,22 +3,17 @@
 
 
 from controllers.controllers_models import *
-from controllers.controllers_db import *
 from views.tournament_views import *
 
 
 def tournament_execution():
-    # initialization of variables
-    initialize_db()
-
     # creation of the tournament
     new_tournament = create_tournament()
-    db_insert('existing_tournaments', serialized_tournament(new_tournament))
+    # registration in the database
+    new_tournament.insert(new_tournament.serialize())
     print_menu('Tournament created', '\n', '\n')
-
     # selection of 8 players
     new_tournament.players_index = players_selection()
-
     # initialization of the tournament scoreboard
     scoreboard = {}
     for numb in range(len(new_tournament.players_index)):
@@ -54,10 +49,8 @@ def tournament_execution():
         new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
 
     # update the tournament
-    db_update('existing_tournaments', 'players_index', new_tournament.players_index,
-              [int(db_get('existing_tournaments', 'index'))])
-    db_update('existing_tournaments', 'rounds_list', new_tournament.rounds_list,
-              [int(db_get('existing_tournaments', 'index'))])
+    new_tournament.update('players_index', new_tournament.players_index, [int(new_tournament.get_last())])
+    new_tournament.update('rounds_list', new_tournament.rounds_list, [int(new_tournament.get_last())])
     print_menu('Tournament players & rounds updating', '\n', '\n')
 
     # update the ranking
@@ -65,11 +58,7 @@ def tournament_execution():
 
     # show ranking
     print_menu('New ranking', '\n')
-    sorted_ranking = sorted(db_get('known_players', 'all'), key=lambda ranking: ranking['ranking'])
-    for sort in range(len(sorted_ranking)):
-        print_board(f'{db_search_id(str(sorted_ranking[sort]["ranking"]))} {sorted_ranking[sort]["name"]}',
-                    f'{str(sorted_ranking[sort]["ranking"])}')
-    return
+    players_sorted()
 
 
 def players_selection():
@@ -77,22 +66,21 @@ def players_selection():
     list_players = []
     for n in range(8):
         print_menu(f'Select player N° {str(n + 1)}', '\n')
-        selected_player = player_select('known_players', list_players)
+        selected_player = player_select(list_players)
 
         # creation of a new player
         if selected_player == 'new':
             tournament_player = create_player()
             # save new player
-            db_insert('known_players', serialized_player(tournament_player))
-            selected_player = db_get('known_players', 'index')
-
+            tournament_player.insert(tournament_player.serialize())
+            selected_player = tournament_player.get_last()
         list_players.append(selected_player)
     return list_players
 
 
-def player_select(table, chosen_players):
+def player_select(chosen_players):
     # get all known players
-    player_list = db_get(table, 'all')
+    player_list = Player.all()
     player_choice = '-1'
     while player_choice == '-1':
 
@@ -192,3 +180,11 @@ def ranking_update(board):
                 print_info(f'new ranking {str(new_ranking)} already chosen', '\n')
         # update the database
         db_update('known_players', 'ranking', new_ranking, [int(number)])
+
+
+def players_sorted():
+    players_db = Player()
+    sorted_ranking = sorted(players_db.all(), key=lambda ranking: ranking['ranking'])
+    for sort in range(len(sorted_ranking)):
+        print_board(f'{str(players_db.search_by_rank(sort))} {sorted_ranking[sort]["name"]}',
+                    f'{str(sorted_ranking[sort]["ranking"])}')
