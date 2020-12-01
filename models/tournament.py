@@ -2,6 +2,7 @@
 # coding: utf-8
 
 
+from tinydb import TinyDB
 from models.builder import Builder
 
 
@@ -28,3 +29,10 @@ class Tournament(Builder):  # Definition of the Tournament class
         self.description = description
         self.players_index = []
         self.rounds_list = []
+
+    def insert(self):
+        serialized = {}
+        for attr, value in self.__dict__.items():
+            if attr != "table_name":
+                serialized[attr] = value
+        return TinyDB('database.json').table(self.table_name).insert(serialized)

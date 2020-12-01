@@ -2,15 +2,19 @@
 # coding: utf-8
 
 
+from models.TableDB import TableDB
 from controllers.controllers_models import *
 from views.tournament_views import *
 
 
 def tournament_execution():
+    # Initialize DB
+    table_players = TableDB('1', 'known_players')
+    table_tournaments = TableDB('2', 'existing_tournaments')
     # creation of the tournament
     new_tournament = create_tournament()
     # registration in the database
-    new_tournament.insert(new_tournament.serialize())
+    new_tournament.insert()
     print_menu('Tournament created', '\n', '\n')
     # selection of 8 players
     new_tournament.players_index = players_selection()
@@ -18,44 +22,34 @@ def tournament_execution():
     scoreboard = {}
     for numb in range(len(new_tournament.players_index)):
         scoreboard[new_tournament.players_index[numb]] = 0
-
     # Play the rounds
     for t in range(new_tournament.nb_turn):
         print_menu(f'Execution of round N° {str(t + 1)}', '\n')
-
         # creation of a new round
         turn = create_round(t)
-
         # find the current ranking
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
-
         # generate matches
         list_match = create_match(current_classification)
-
         # enter the results of the matches
         for m in range(len(list_match)):
             match_results = turn_results(list_match, m)
-
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             scoreboard[list_match[m][0]] += match_results[0]
             scoreboard[list_match[m][1]] += match_results[1]
-
         # finish the turn
         next_turn = ""
         while next_turn.lower() != 'y':
             next_turn = input_data('Do you want to validate the turn? (Y): ', '\n')
         turn.end = "end"
         new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
-
     # update the tournament
-    new_tournament.update('players_index', new_tournament.players_index, [int(new_tournament.get_last())])
-    new_tournament.update('rounds_list', new_tournament.rounds_list, [int(new_tournament.get_last())])
+    table_tournaments.update('players_index', new_tournament.players_index, [int(table_players.get_last())])
+    table_tournaments.update('rounds_list', new_tournament.rounds_list, [int(table_tournaments.get_last())])
     print_menu('Tournament players & rounds updating', '\n', '\n')
-
     # update the ranking
     ranking_update(scoreboard)
-
     # show ranking
     print_menu('New ranking', '\n')
     players_sorted()
@@ -63,27 +57,27 @@ def tournament_execution():
 
 def players_selection():
     # selection of 8 players
+    table_players = TableDB('1', 'known_players')
     list_players = []
     for n in range(8):
         print_menu(f'Select player N° {str(n + 1)}', '\n')
         selected_player = player_select(list_players)
-
         # creation of a new player
         if selected_player == 'new':
             tournament_player = create_player()
             # save new player
-            tournament_player.insert(tournament_player.serialize())
-            selected_player = tournament_player.get_last()
+            tournament_player.insert()
+            selected_player = table_players.get_last()
         list_players.append(selected_player)
     return list_players
 
 
 def player_select(chosen_players):
     # get all known players
-    player_list = Player.all()
+    table_players = TableDB('1', 'known_players')
+    player_list = table_players.all()
     player_choice = '-1'
     while player_choice == '-1':
-
         # initialize available players
         player_listing = []
         print_menu('List of available players:')
@@ -91,7 +85,6 @@ def player_select(chosen_players):
             if str(a + 1) not in chosen_players:  # exclude players already chosen
                 print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
                 player_listing.append(str(a + 1))
-
         # choose a player
         menu_choice = ""
         while menu_choice not in ('1', '2'):
@@ -105,10 +98,11 @@ def player_select(chosen_players):
 
 
 def current_ranking(players_nb, actual_scoreboard, turn_nb):
+    table_players = TableDB('1', 'known_players')
     actual_ranking = []
     for c in range(len(players_nb)):
         if turn_nb == 0:  # take the known ranking
-            actual_ranking.append([players_nb[c], db_get('known_players', 'ranking', c)])
+            actual_ranking.append([players_nb[c], table_players.search_by_rank(c)])
         else:  # take the total of the score of the previous rounds
             actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
     return actual_ranking
@@ -125,16 +119,15 @@ def create_match(selected_players):
 
 
 def turn_results(list_turn, num_turn):
+    table_players = TableDB('1', 'known_players')
     score = 0
     match_result = []
-
     # show the match details
     print_info(f'Match N° {str(num_turn + 1)}: '
                f'playerID {(list_turn[num_turn][0])} '
-               f'{db_get("known_players", "name", int(list_turn[num_turn][0])-1)}'
+               f'{table_players.search_by("name", int(list_turn[num_turn][0]) - 1)}'
                f' -VS- playerID {(list_turn[num_turn][1])} '
-               f'{db_get("known_players", "name", int(list_turn[num_turn][1])-1)}', '\n')
-
+               f'{table_players.search_by("name", int(list_turn[num_turn][1]) - 1)}', '\n')
     # choose the result
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match:'
@@ -152,15 +145,14 @@ def turn_results(list_turn, num_turn):
 
 
 def ranking_update(board):
+    table_players = TableDB('1', 'known_players')
     update_ranking = ""
     while update_ranking.lower() != 'y':
         update_ranking = input_data('Do you want to update the ranking? (Y): ', '\n')
-
     # show the Tournament scoreboard
     print_menu('Tournament scoreboard', '\n')
     for num, point in board.items():
-        print_board(num, db_get('known_players', 'ranking', int(num) - 1), f'scores {str(point)}')
-
+        print_board(num, table_players.search_by_rank('ranking', int(num) - 1), f'scores {str(point)}')
     # enter the new ranking
     print_menu('Enter the new ranking', '\n')
     new_ranking_list = []
@@ -170,7 +162,8 @@ def ranking_update(board):
                 new_ranking = input_data(f'New ranking of player ID {str(number)} : ')
                 try:  # conversion on a positive integer for ranking
                     new_ranking = int(new_ranking)
-                    if new_ranking > 0: break
+                    if new_ranking > 0:
+                        break
                 except ValueError:
                     print_info('Please enter a positive integer!', '\n')
             if str(new_ranking) not in new_ranking_list:  # check for duplicate ranking
@@ -179,12 +172,12 @@ def ranking_update(board):
             else:
                 print_info(f'new ranking {str(new_ranking)} already chosen', '\n')
         # update the database
-        db_update('known_players', 'ranking', new_ranking, [int(number)])
+        table_players.update('ranking', new_ranking, [int(number)])
 
 
 def players_sorted():
-    players_db = Player()
-    sorted_ranking = sorted(players_db.all(), key=lambda ranking: ranking['ranking'])
+    table_players = TableDB('1', 'known_players')
+    sorted_ranking = sorted(table_players.all(), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(f'{str(players_db.search_by_rank(sort))} {sorted_ranking[sort]["name"]}',
+        print_board(f'{str(table_players[sort])} {sorted_ranking[sort]["name"]}',
                     f'{str(sorted_ranking[sort]["ranking"])}')

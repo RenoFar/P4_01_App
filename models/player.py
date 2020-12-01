@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-from tinydb import TinyDB, Query
+from tinydb import TinyDB
 from models.builder import Builder
 
 
@@ -24,6 +24,9 @@ class Player(Builder):  # Definition of the Player class
         self.gender = gender
         self.ranking = ranking
 
-    def search_by_rank(self, rank):
-        player = TinyDB('database.json').table(self.table_name).get(Query()['ranking'] == int(rank))
-        return Player(player)
+    def insert(self):
+        serialized = {}
+        for attr, value in self.__dict__.items():
+            if attr != "table_name":
+                serialized[attr] = value
+        return TinyDB('database.json').table(self.table_name).insert(serialized)
