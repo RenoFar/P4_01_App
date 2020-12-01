@@ -19,8 +19,9 @@ def tournament_execution():
     # selection of 8 players
     new_tournament.players_index = players_selection()
     # update the tournament
-    table_tournaments.update('players_index', new_tournament.players_index, [int(table_players.get_last())])
+    table_tournaments.update('players_index', new_tournament.players_index, [int(table_tournaments.get_last())])
     print_menu('Tournament players updating', '\n', '\n')
+
     # initialization of the tournament scoreboard
     scoreboard = {}
     for numb in range(len(new_tournament.players_index)):
@@ -32,8 +33,11 @@ def tournament_execution():
         turn = create_round(t)
         # find the current ranking
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
+        print(f'current_classification {current_classification}')
         # generate matches
         list_match = create_match(current_classification)
+        print(f'list_match {list_match}')
+
         # enter the results of the matches
         for m in range(len(list_match)):
             match_results = turn_results(list_match, m)
@@ -41,6 +45,7 @@ def tournament_execution():
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             scoreboard[list_match[m][0]] += match_results[0]
             scoreboard[list_match[m][1]] += match_results[1]
+
         # finish the turn
         next_turn = ""
         while next_turn.lower() != 'y':
@@ -50,6 +55,7 @@ def tournament_execution():
     # update the tournament
     table_tournaments.update('rounds_list', new_tournament.rounds_list, [int(table_tournaments.get_last())])
     print_menu('Tournament rounds updating', '\n', '\n')
+
     # update the ranking
     ranking_update(scoreboard)
     # show ranking
@@ -113,6 +119,7 @@ def current_ranking(players_nb, actual_scoreboard, turn_nb):
 def create_match(selected_players):
     match_list = []
     ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
+    print(f'ranking_list {ranking_list}')
     for index in range(len(ranking_list) // 2):
         player1 = ranking_list[index][0]
         player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
