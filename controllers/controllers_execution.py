@@ -8,9 +8,6 @@ from views.tournament_views import *
 
 
 def tournament_execution():
-    # Initialize DB
-    table_players = TableDB('1', 'known_players')
-    table_tournaments = TableDB('2', 'existing_tournaments')
     # creation of the tournament
     new_tournament = create_tournament()
     # registration in the database
@@ -19,6 +16,7 @@ def tournament_execution():
     # selection of 8 players
     new_tournament.players_index = players_selection()
     # update the tournament
+    table_tournaments = TableDB('2', 'existing_tournaments')
     table_tournaments.update('players_index', new_tournament.players_index, [int(table_tournaments.get_last())])
     print_menu('Tournament players updating', '\n', '\n')
 
