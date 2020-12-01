@@ -39,12 +39,11 @@ def tournament_execution():
         # enter the results of the matches
         for m in range(len(list_match)):
             match_results = turn_results(list_match, m)
-            print(f'match_results {match_results}')
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             scoreboard[list_match[m][0]] += match_results[0]
             scoreboard[list_match[m][1]] += match_results[1]
-            print(f'scoreboard {scoreboard}')
+
         # finish the turn
         next_turn = ""
         while next_turn.lower() != 'y':
@@ -159,7 +158,7 @@ def ranking_update(board):
     # show the Tournament scoreboard
     print_menu('Tournament scoreboard', '\n')
     for num, point in board.items():
-        print_board(num, table_players.search_by_rank('ranking', int(num) - 1), f'scores {str(point)}')
+        print_board(num, table_players.search_by_id(int(num))["ranking"], f'scores {str(point)}')
     # enter the new ranking
     print_menu('Enter the new ranking', '\n')
     new_ranking_list = []
@@ -186,5 +185,6 @@ def players_sorted():
     table_players = TableDB('1', 'known_players')
     sorted_ranking = sorted(table_players.all(), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(f'{str(table_players.all()[sort])} {sorted_ranking[sort]["name"]}',
+        print_board(f'{table_players.search_by_rank(sorted_ranking[sort]["ranking"]).doc_id} '
+                    f'{sorted_ranking[sort]["name"]} ',
                     f'{str(sorted_ranking[sort]["ranking"])}')
