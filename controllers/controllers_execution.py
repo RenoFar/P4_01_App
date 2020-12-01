@@ -11,11 +11,13 @@ def tournament_execution():
     # Initialize DB
     table_players = TableDB('1', 'known_players')
     table_tournaments = TableDB('2', 'existing_tournaments')
+    print(f'test table_players {table_players.all()}')
+    print(f'test table_tournaments {table_tournaments.all()}')
     # creation of the tournament
     new_tournament = create_tournament()
     # registration in the database
     new_tournament.insert()
-    print_menu('Tournament created', '\n', '\n')
+    print_menu('Tournament created', '\n')
     # selection of 8 players
     new_tournament.players_index = players_selection()
     # initialization of the tournament scoreboard
@@ -75,7 +77,9 @@ def players_selection():
 def player_select(chosen_players):
     # get all known players
     table_players = TableDB('1', 'known_players')
+    print(f'test table_players {table_players.all()}')
     player_list = table_players.all()
+    print(f'test player_list {player_list}')
     player_choice = '-1'
     while player_choice == '-1':
         # initialize available players
@@ -179,5 +183,5 @@ def players_sorted():
     table_players = TableDB('1', 'known_players')
     sorted_ranking = sorted(table_players.all(), key=lambda ranking: ranking['ranking'])
     for sort in range(len(sorted_ranking)):
-        print_board(f'{str(table_players[sort])} {sorted_ranking[sort]["name"]}',
+        print_board(f'{str(table_players.all()[sort])} {sorted_ranking[sort]["name"]}',
                     f'{str(sorted_ranking[sort]["ranking"])}')
