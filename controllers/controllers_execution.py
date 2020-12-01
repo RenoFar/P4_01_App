@@ -33,19 +33,18 @@ def tournament_execution():
         turn = create_round(t)
         # find the current ranking
         current_classification = current_ranking(new_tournament.players_index, scoreboard, t)
-        print(f'current_classification {current_classification}')
         # generate matches
         list_match = create_match(current_classification)
-        print(f'list_match {list_match}')
 
         # enter the results of the matches
         for m in range(len(list_match)):
             match_results = turn_results(list_match, m)
+            print(f'match_results {match_results}')
             # save the results
             turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
             scoreboard[list_match[m][0]] += match_results[0]
             scoreboard[list_match[m][1]] += match_results[1]
-
+            print(f'scoreboard {scoreboard}')
         # finish the turn
         next_turn = ""
         while next_turn.lower() != 'y':
@@ -119,7 +118,6 @@ def current_ranking(players_nb, actual_scoreboard, turn_nb):
 def create_match(selected_players):
     match_list = []
     ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
-    print(f'ranking_list {ranking_list}')
     for index in range(len(ranking_list) // 2):
         player1 = ranking_list[index][0]
         player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
@@ -134,9 +132,9 @@ def turn_results(list_turn, num_turn):
     # show the match details
     print_info(f'Match N° {str(num_turn + 1)}: '
                f'playerID {(list_turn[num_turn][0])} '
-               f'{table_players.search_by("name", int(list_turn[num_turn][0]) - 1)}'
+               f'{table_players.search_by_id(int(list_turn[num_turn][0]))["name"]}'
                f' -VS- playerID {(list_turn[num_turn][1])} '
-               f'{table_players.search_by("name", int(list_turn[num_turn][1]) - 1)}', '\n')
+               f'{table_players.search_by_id(int(list_turn[num_turn][1]))["name"]}', '\n')
     # choose the result
     while score not in ('1', '2', '3'):
         print_info(f'Choose the winner of the match:'

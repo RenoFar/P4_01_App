@@ -29,3 +29,6 @@ class TableDB(Builder):
 
     def search_by_rank(self, rank):
         return TinyDB(self.path).table(self.table_name).get(Query()['ranking'] == int(rank))
+
+    def search_by_id(self, id_number):
+        return TinyDB(self.path).table(self.table_name).get(doc_id=id_number)
