@@ -12,7 +12,7 @@ class TableDB(Builder):
     def __init__(self, name=None, table_name=None):
         """" Constructor of the class """
         super().__init__(name, table_name)
-        self.path = '/models/database.json'
+        self.path = 'database.json'
 
     def update(self, key, value, id_list):
         TinyDB(self.path).table(self.table_name).update({key: value}, doc_ids=id_list)

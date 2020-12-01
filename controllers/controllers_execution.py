@@ -11,8 +11,6 @@ def tournament_execution():
     # Initialize DB
     table_players = TableDB('1', 'known_players')
     table_tournaments = TableDB('2', 'existing_tournaments')
-    print(f'test table_players {table_players.all()}')
-    print(f'test table_tournaments {table_tournaments.all()}')
     # creation of the tournament
     new_tournament = create_tournament()
     # registration in the database
@@ -20,6 +18,9 @@ def tournament_execution():
     print_menu('Tournament created', '\n')
     # selection of 8 players
     new_tournament.players_index = players_selection()
+    # update the tournament
+    table_tournaments.update('players_index', new_tournament.players_index, [int(table_players.get_last())])
+    print_menu('Tournament players updating', '\n', '\n')
     # initialization of the tournament scoreboard
     scoreboard = {}
     for numb in range(len(new_tournament.players_index)):
@@ -47,9 +48,8 @@ def tournament_execution():
         turn.end = "end"
         new_tournament.rounds_list.append([turn.name, turn.start, turn.end, turn.match_list])
     # update the tournament
-    table_tournaments.update('players_index', new_tournament.players_index, [int(table_players.get_last())])
     table_tournaments.update('rounds_list', new_tournament.rounds_list, [int(table_tournaments.get_last())])
-    print_menu('Tournament players & rounds updating', '\n', '\n')
+    print_menu('Tournament rounds updating', '\n', '\n')
     # update the ranking
     ranking_update(scoreboard)
     # show ranking
@@ -77,9 +77,7 @@ def players_selection():
 def player_select(chosen_players):
     # get all known players
     table_players = TableDB('1', 'known_players')
-    print(f'test table_players {table_players.all()}')
     player_list = table_players.all()
-    print(f'test player_list {player_list}')
     player_choice = '-1'
     while player_choice == '-1':
         # initialize available players
@@ -92,7 +90,7 @@ def player_select(chosen_players):
         # choose a player
         menu_choice = ""
         while menu_choice not in ('1', '2'):
-            menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n', '\n')
+            menu_choice = input_data('Select an available player (1) or add a new player (2): ', '\n')
             if menu_choice == '1' and len(player_listing) > 0:
                 while player_choice not in player_listing:  # test the available players
                     player_choice = input_data('Select a player number: ')
@@ -106,7 +104,7 @@ def current_ranking(players_nb, actual_scoreboard, turn_nb):
     actual_ranking = []
     for c in range(len(players_nb)):
         if turn_nb == 0:  # take the known ranking
-            actual_ranking.append([players_nb[c], table_players.search_by_rank(c)])
+            actual_ranking.append([players_nb[c], table_players.all()[c]['ranking']])
         else:  # take the total of the score of the previous rounds
             actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
     return actual_ranking
