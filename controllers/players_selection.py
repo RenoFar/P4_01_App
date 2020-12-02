@@ -18,7 +18,7 @@ def players_selection():
         if selected_player == 'new':
             tournament_player = create_player()
             # save new player
-            tournament_player.insert()
+            table_players.insert(tournament_player.serialize())
             selected_player = table_players.get_last()
         list_players.append(selected_player)
     return list_players

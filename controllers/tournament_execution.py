@@ -11,15 +11,16 @@ from views.menu_view import *
 
 
 def tournament_execution():
+    # initialize the database
+    table_tournaments = TableDB('2', 'existing_tournaments')
     # creation of the tournament
     new_tournament = create_tournament()
     # registration in the database
-    new_tournament.insert()
+    table_tournaments.insert(new_tournament.serialize())
     print_menu('Tournament created', '\n')
     # selection of 8 players
     new_tournament.players_index = players_selection()
     # update the tournament
-    table_tournaments = TableDB('2', 'existing_tournaments')
     table_tournaments.update('players_index', new_tournament.players_index, [int(table_tournaments.get_last())])
     print_menu('Tournament players updating', '\n', '\n')
     # play the turns

@@ -19,9 +19,9 @@ class Tournament(Builder):  # Definition of the Tournament class
     - its table_name """
 
     def __init__(self, name=None, place=None, date=None,
-                 mode_game=None, nb_turn=None, description=None, table_name='existing_tournaments'):
+                 mode_game=None, nb_turn=None, description=None):
         """" Constructor of the class """
-        super().__init__(name, table_name)
+        super().__init__(name)
         self.place = place
         self.date = date
         self.mode_game = mode_game
@@ -30,9 +30,8 @@ class Tournament(Builder):  # Definition of the Tournament class
         self.players_index = []
         self.rounds_list = []
 
-    def insert(self):
+    def serialize(self):
         serialized = {}
         for attr, value in self.__dict__.items():
-            if attr != "table_name":
-                serialized[attr] = value
-        return TinyDB('database.json').table(self.table_name).insert(serialized)
+            serialized[attr] = value
+        return serialized

@@ -9,10 +9,14 @@ from models.builder import Builder
 class TableDB(Builder):
     """Class TableDB"""
 
-    def __init__(self, name=None, table_name=None):
+    def __init__(self, name=None, table_name=None, path='database.json'):
         """" Constructor of the class """
-        super().__init__(name, table_name)
-        self.path = 'database.json'
+        super().__init__(name)
+        self.path = path
+        self.table_name = table_name
+
+    def insert(self, serialized):
+        return TinyDB(self.path).table(self.table_name).insert(serialized)
 
     def update(self, key, value, id_list):
         TinyDB(self.path).table(self.table_name).update({key: value}, doc_ids=id_list)
