@@ -3,6 +3,8 @@
 
 
 from models.TableDB import *
+from views.input_view import *
+from views.info_view import *
 
 
 def turn_results(list_turn, num_turn):
