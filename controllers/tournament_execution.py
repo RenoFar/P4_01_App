@@ -34,20 +34,3 @@ def tournament_execution():
     # show ranking
     MenuView.print_menu('New ranking', '\n')
     players_sorted()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -10,8 +10,3 @@ def create_round(number_turn):
     start = "start"
     end = ""
     return Round(name, start, end)
-
-
-
-
-
