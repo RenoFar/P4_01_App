@@ -2,7 +2,6 @@
 # coding: utf-8
 
 
-from models.TableDB import TableDB
 from controllers.player_select import *
 from controllers.create_player import *
 from views.menu_view import *
