@@ -2,9 +2,6 @@
 # coding: utf-8
 
 
-from tinydb import TinyDB
-
-
 class Builder(object):
     """Class Builder"""
 

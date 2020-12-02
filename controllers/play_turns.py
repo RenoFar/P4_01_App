@@ -18,7 +18,7 @@ def play_turns(new_tournament):
         scoreboard[new_tournament.players_index[numb]] = 0
     # Play the rounds
     for t in range(new_tournament.nb_turn):
-        print_menu(f'Execution of round N° {str(t + 1)}', '\n')
+        MenuView.print_menu(f'Execution of round N° {str(t + 1)}', '\n')
         # creation of a new round
         turn = create_round(t)
         # find the current ranking
@@ -35,9 +35,7 @@ def play_turns(new_tournament):
         # finish the turn
         next_turn = ""
         while next_turn.lower() != 'y':
-            next_turn = input_data('Do you want to validate the turn? (Y): ', '\n')
+            next_turn = InputView.input_data('Do you want to validate the turn? (Y): ', '\n')
         turn.end = "end"
-        print(f'turn {turn}')
         list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
-    print(f'list_turns {list_turns}')
     return [list_turns, scoreboard]

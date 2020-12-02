@@ -13,20 +13,20 @@ def create_player():
     birthdate = ""
     gender = ""
     while len(name) < 1 or not name.isalnum():
-        name = input_data('Please enter player name: ', '\n')
+        name = InputView.input_data('Please enter player name: ', '\n')
     while len(firstname) < 1 or not firstname.isalnum():
-        firstname = input_data('Please enter the player\'s firstname: ')
+        firstname = InputView.input_data('Please enter the player\'s firstname: ')
 
-    birthdate = input_data('Please enter player\'s date of birth: ')
+    birthdate = InputView.input_data('Please enter player\'s date of birth: ')
 
     while gender.lower() not in ('f', 'm'):
-        gender = input_data('Please enter the player\'s gender (F / M): ')
+        gender = InputView.input_data('Please enter the player\'s gender (F / M): ')
     while True:
-        ranking = input_data('Please enter player ranking: ')
+        ranking = InputView.input_data('Please enter player ranking: ')
         try:
             ranking = int(ranking)
             if ranking > 0:
                 break
         except ValueError:
-            print_info('Please enter a positive integer!', '\n')
+            InfoView.print_info('Please enter a positive integer!', '\n')
     return Player(name, firstname, birthdate, gender, ranking)

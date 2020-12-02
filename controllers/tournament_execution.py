@@ -17,23 +17,22 @@ def tournament_execution():
     new_tournament = create_tournament()
     # registration in the database
     table_tournaments.insert(new_tournament.serialize())
-    print_menu('Tournament created', '\n')
+    MenuView.print_menu('Tournament created', '\n')
     # selection of 8 players
     new_tournament.players_index = players_selection()
     # update the tournament
     table_tournaments.update('players_index', new_tournament.players_index, [int(table_tournaments.get_last())])
-    print_menu('Tournament players updating', '\n', '\n')
+    MenuView.print_menu('Tournament players updating', '\n', '\n')
     # play the turns
     turns = play_turns(new_tournament)
     # update the tournament
     new_tournament.rounds_list = turns[0].copy()
-    print(f'new_tournament.rounds_list {new_tournament.rounds_list}')
     table_tournaments.update('rounds_list', new_tournament.rounds_list, [int(table_tournaments.get_last())])
-    print_menu('Tournament rounds updating', '\n', '\n')
+    MenuView.print_menu('Tournament rounds updating', '\n', '\n')
     # update the ranking
     ranking_update(turns[1])
     # show ranking
-    print_menu('New ranking', '\n')
+    MenuView.print_menu('New ranking', '\n')
     players_sorted()
 
 

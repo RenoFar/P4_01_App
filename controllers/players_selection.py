@@ -12,7 +12,7 @@ def players_selection():
     table_players = TableDB('1', 'known_players')
     list_players = []
     for n in range(8):
-        print_menu(f'Select player N° {str(n + 1)}', '\n')
+        MenuView.print_menu(f'Select player N° {str(n + 1)}', '\n')
         selected_player = player_select(list_players)
         # creation of a new player
         if selected_player == 'new':
