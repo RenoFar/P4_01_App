@@ -37,5 +37,7 @@ def play_turns(new_tournament):
         while next_turn.lower() != 'y':
             next_turn = input_data('Do you want to validate the turn? (Y): ', '\n')
         turn.end = "end"
-        list_turns.append(turn)
+        print(f'turn {turn}')
+        list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
+    print(f'list_turns {list_turns}')
     return [list_turns, scoreboard]

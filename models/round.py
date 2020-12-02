@@ -15,4 +15,3 @@ class Round:  # Definition of class Round
         self.start = start
         self.end = end
         self.match_list = []
-        self.scoreboard = []

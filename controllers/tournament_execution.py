@@ -26,7 +26,8 @@ def tournament_execution():
     # play the turns
     turns = play_turns(new_tournament)
     # update the tournament
-    new_tournament.rounds_list.append(turns[0])
+    new_tournament.rounds_list = turns[0].copy()
+    print(f'new_tournament.rounds_list {new_tournament.rounds_list}')
     table_tournaments.update('rounds_list', new_tournament.rounds_list, [int(table_tournaments.get_last())])
     print_menu('Tournament rounds updating', '\n', '\n')
     # update the ranking
