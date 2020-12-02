@@ -3,9 +3,8 @@
 
 
 from models.tournament import Tournament
-from models.player import Player
-from models.round import Round
-from views.tournament_views import *
+from views.input_view import *
+from views.info_view import *
 
 
 def create_tournament():  # create the tournament
@@ -37,40 +36,3 @@ def create_tournament():  # create the tournament
     while game_mode.lower() not in ('bullet', 'blitz', 'speed'):
         game_mode = input_data('Please enter the tournament mode (bullet / blitz / speed): ')
     return Tournament(name, place, date, game_mode, nb_turn, description)
-
-
-def create_player():
-    name = ""
-    firstname = ""
-    birthdate = ""
-    gender = ""
-    ranking = 0
-    while len(name) < 1 or not name.isalnum():
-        name = input_data('Please enter player name: ', '\n')
-    while len(firstname) < 1 or not firstname.isalnum():
-        firstname = input_data('Please enter the player\'s firstname: ')
-
-    birthdate = input_data('Please enter player\'s date of birth: ')
-
-    while gender.lower() not in ('f', 'm'):
-        gender = input_data('Please enter the player\'s gender (F / M): ')
-    while True:
-        ranking = input_data('Please enter player ranking: ')
-        try:
-            ranking = int(ranking)
-            if ranking > 0: break
-        except ValueError:
-            print_info('Please enter a positive integer!', '\n')
-    return Player(name, firstname, birthdate, gender, ranking)
-
-
-def create_round(number_turn):
-    name = "round " + str(number_turn + 1)
-    start = "start"
-    end = ""
-    return Round(name, start, end)
-
-
-
-
-
