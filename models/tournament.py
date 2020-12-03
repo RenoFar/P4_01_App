@@ -15,8 +15,7 @@ class Tournament(Builder):  # Definition of the Tournament class
     - its number of turns
     - its description
     - its list of rounds
-    - its list of players
-    - its table_name """
+    - its list of players"""
 
     def __init__(self, name=None, place=None, date=None,
                  mode_game=None, nb_turn=None, description=None):
@@ -29,9 +28,3 @@ class Tournament(Builder):  # Definition of the Tournament class
         self.description = description
         self.players_index = []
         self.rounds_list = []
-
-    def serialize(self):
-        serialized = {}
-        for attr, value in self.__dict__.items():
-            serialized[attr] = value
-        return serialized
