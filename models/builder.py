@@ -14,8 +14,8 @@ class Builder(object):
     def __init__(self, name=None, table_name=None):
         """" Constructor of the class """
         self.name = name
-        self.path = 'database/database.json'
-        self.table_name = table_name
+        Builder.path = 'database/database.json'
+        Builder.table_name = table_name
 
     @classmethod
     def insert(cls):
