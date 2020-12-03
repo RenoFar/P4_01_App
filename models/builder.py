@@ -14,14 +14,14 @@ class Builder(object):
     def __init__(self, name=None, table_name=None):
         """" Constructor of the class """
         self.name = name
-        Builder.path = 'database/database.json'
         Builder.table_name = table_name
+        Builder.path = 'database/database.json'
 
     def insert(self):
         serialized = {}
         for attr, value in self.__dict__.items():
             serialized[attr] = value
-        TinyDB(self.path).table(self.table_name).insert(serialized)
+        TinyDB(Builder.path).table(Builder.table_name).insert(serialized)
 
     @classmethod
     def update(cls, key, value, id_list):

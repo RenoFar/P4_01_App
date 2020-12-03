@@ -57,7 +57,7 @@ class PlayerController:
 
     def create_player(self):
         name = self.input_service.one_char_alnum('Please enter player name: ')
-        firstname = self.input_service.one_char_alnum('Please enter player name: ')
+        firstname = self.input_service.one_char_alnum('Please enter player firstname: ')
 
         # TODO
         birthdate = self.input_service.date_format('Please enter player\'s date of birth: ')
