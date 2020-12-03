@@ -26,18 +26,18 @@ class TournamentController:
         # creation of the tournament
         self.tournament = self.create_tournament()
         # registration in the database
-        self.tournament.insert()
-        MenuView.print_menu('Tournament created ')
+        tournament_id = self.table_db.insert(self.tournament.serialize())
+        MenuView.print_menu('Tournament created')
         # selection of 8 players
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
-        self.table_db.update('players_index', self.tournament.players_index, [int(self.table_db.get_last())])
+        self.table_db.update('players_index', self.tournament.players_index, [tournament_id])
         MenuView.print_menu('\n Tournament players updating \n')
         # play the turns
         turns = self.play_turns()
         # update the tournament
         self.tournament.rounds_list = turns[0].copy()
-        self.table_db.update('rounds_list', self.tournament.rounds_list, [int(self.table_db.get_last())])
+        self.table_db.update('rounds_list', self.tournament.rounds_list, [tournament_id])
         MenuView.print_menu('\n Tournament rounds updating \n')
         # update the ranking
         self.input_service.lower_not_in('Do you want to update the ranking? (Y): ', 'y')

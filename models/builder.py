@@ -17,11 +17,15 @@ class Builder(object):
         Builder.table_name = table_name
         Builder.path = 'database/database.json'
 
-    def insert(self):
+    def serialize(self):
         serialized = {}
         for attr, value in self.__dict__.items():
             serialized[attr] = value
-        TinyDB(Builder.path).table(Builder.table_name).insert(serialized)
+        return serialized
+
+    @classmethod
+    def insert(cls, serialized):
+        return TinyDB(cls.path).table(cls.table_name).insert(serialized)
 
     @classmethod
     def update(cls, key, value, id_list):
