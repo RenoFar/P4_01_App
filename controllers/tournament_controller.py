@@ -10,7 +10,6 @@ from controllers.report_controller import ReportController
 from services.input_service import InputService
 from views.info_view import InfoView
 from views.menu_view import MenuView
-from views.board_view import BoardView
 
 
 class TournamentController:
@@ -62,7 +61,7 @@ class TournamentController:
             nb_turn = self.input_service.empty_alnum(
                 'The number of laps by default is 4,\n type another number or Enter to validate: '
             )
-            if len(nb_turn) < 1:  # if nothing is entered
+            if len(str(nb_turn)) < 1:  # if nothing is entered
                 nb_turn = 4
                 break
             else:

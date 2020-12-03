@@ -16,9 +16,10 @@ class InputService:
 
     @staticmethod
     def empty_alnum(message):
-        element = ''
-        while len(element) != 0 or not element.isalnum():
+        while True:
             element = InputView.input_data(message)
+            if element == '' or element.isalnum():
+                break
         return element
 
     @staticmethod
