@@ -21,7 +21,6 @@ class Builder(object):
         serialized = {}
         for attr, value in self.__dict__.items():
             serialized[attr] = value
-        print(f'serialized {serialized}')
         TinyDB(self.path).table(self.table_name).insert(serialized)
 
     @classmethod
@@ -33,14 +32,15 @@ class Builder(object):
         return TinyDB(cls.path).table(cls.table_name).all()
 
     @classmethod
-    def get_last(cls):
-        table = TinyDB(cls.path).table(cls.table_name)
-        return str(table.all()[len(table) - 1].doc_id)
-
-    @classmethod
     def search_by(cls, key, value):
         return TinyDB(cls.path).table(cls.table_name).get(Query()[str(key)] == str(value))
 
     @classmethod
     def search_by_id(cls, id_number):
         return TinyDB(cls.path).table(cls.table_name).get(doc_id=id_number)
+
+"""    @classmethod
+    def get_last(cls):
+        table = TinyDB(cls.path).table(cls.table_name)
+        return str(table.all()[len(table) - 1].doc_id)
+"""

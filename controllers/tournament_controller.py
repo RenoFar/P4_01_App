@@ -19,7 +19,7 @@ class TournamentController:
         self.turns = None
         self.players = None
         self.input_service = InputService()
-        self.table_db = Builder('2', 'existing_tournaments')
+        self.table_db = Builder("tournament", "existing_tournaments")
         self.tournament_execution()
 
     def tournament_execution(self):
@@ -29,7 +29,7 @@ class TournamentController:
         self.tournament.insert()
         MenuView.print_menu('Tournament created ')
         # selection of 8 players
-        self.tournament.players_index = PlayerController.players_selection()
+        self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
         self.table_db.update('players_index', self.tournament.players_index, [int(self.table_db.get_last())])
         MenuView.print_menu('\n Tournament players updating \n')
@@ -41,10 +41,10 @@ class TournamentController:
         MenuView.print_menu('\n Tournament rounds updating \n')
         # update the ranking
         self.input_service.lower_not_in('Do you want to update the ranking? (Y): ', 'y')
-        PlayerController.ranking_update(turns[1])
+        PlayerController().ranking_update(turns[1])
         # show ranking
         MenuView.print_menu('\nNew ranking')
-        ReportController.players_sorted()
+        ReportController().players_sorted()
 
     def create_tournament(self):
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')

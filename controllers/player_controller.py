@@ -14,19 +14,18 @@ class PlayerController:
 
     def __init__(self):
         self.input_service = InputService()
-        self.table_db = Builder('1', 'known_players')
+        self.table_db = Builder("player", "known_players")
 
     def players_selection(self):
         # selection of 8 players
         list_players = []
         for n in range(8):
-            MenuView.print_menu(f'\nSelect player N° {str(n + 1)} ')
+            MenuView.print_menu(f'Select player N° {str(n + 1)} ')
             selected_player = self.player_select(list_players)
             if selected_player == 'new':  # creation of a new player
                 tournament_player = self.create_player()
                 # save new player
-                tournament_player.insert()
-                selected_player = self.table_db.get_last()
+                selected_player = tournament_player.insert()
             list_players.append(selected_player)
         return list_players
 
