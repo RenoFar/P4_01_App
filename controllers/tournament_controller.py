@@ -27,7 +27,7 @@ class TournamentController:
         self.tournament = self.create_tournament()
         # registration in the database
         self.tournament.insert()
-        MenuView.print_menu('\nTournament created ')
+        MenuView.print_menu('Tournament created ')
         # selection of 8 players
         self.tournament.players_index = PlayerController.players_selection()
         # update the tournament

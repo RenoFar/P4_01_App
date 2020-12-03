@@ -6,4 +6,4 @@ class InfoView:
 
     @staticmethod
     def print_info(info):
-        print(f'{info}')
+        print(f'\n{info}')

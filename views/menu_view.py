@@ -6,4 +6,4 @@ class MenuView:
 
     @staticmethod
     def print_menu(info):
-        print(f' ********** {info} ********** ')
+        print(f'\n ********** {info} ********** \n')
