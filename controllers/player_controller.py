@@ -88,11 +88,6 @@ class PlayerController:
         score = 0
         match_result = []
         # show the match details
-        print(f'list_turn[num_turn][0]:{list_turn[num_turn][0]}')
-        print(f'Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name): '
-              f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)}')
-        print(f'Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name)["name"]:'
-              f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)["name"]}')
         InfoView.print_info(f'\nMatch N° {str(num_turn + 1)}: '
                             f'playerID {(list_turn[num_turn][0])} '
                             f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)["name"]}'
@@ -114,11 +109,11 @@ class PlayerController:
 
     def ranking_update(self, board):
         # show the Tournament scoreboard
-        MenuView.print_menu('\nTournament scoreboard')
+        MenuView.print_menu('Tournament scoreboard')
         for num, point in board.items():
             BoardView.print_board(num, Player.search_by_id(int(num), Player.table_name)["ranking"], f'scores {str(point)}')
         # enter the new ranking
-        MenuView.print_menu('\nEnter the new ranking')
+        MenuView.print_menu('Enter the new ranking')
         new_ranking_list = []
         for number in board.keys():
             while True:  # control the chosen ranking

@@ -25,20 +25,26 @@ class TournamentController:
         # registration in the database
         tournament_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
         MenuView.print_menu('Tournament created')
+
         # selection of 8 players
+        self.input_service.lower_not_in('Do you want to select the players? (Y): ', 'y')
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
         Tournament.update('players_index', self.tournament.players_index, [tournament_id], Tournament.table_name)
         MenuView.print_menu(' Tournament players updating ')
+
         # play the turns
+        self.input_service.lower_diff('Do you want to play the turns? (Y): ', 'y')
         turns = self.play_turns()
         # update the tournament
         self.tournament.rounds_list = turns[0].copy()
         Tournament.update('rounds_list', self.tournament.rounds_list, [tournament_id], Tournament.table_name)
-        MenuView.print_menu('\n Tournament rounds updating \n')
+        MenuView.print_menu(' Tournament rounds updating ')
+
         # update the ranking
-        self.input_service.lower_not_in('Do you want to update the ranking? (Y): ', 'y')
+        self.input_service.lower_diff('Do you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(turns[1])
+
         # show ranking
         MenuView.print_menu('\nNew ranking')
         PlayerController.players_sorted()
@@ -91,13 +97,16 @@ class TournamentController:
             for m in range(len(list_match)):
                 match_results = PlayerController().players_score(list_match, m)
                 # save the results
-                turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
+                turn.match_list.append(([list_match[m][0], match_results[0]],
+                                        [list_match[m][1], match_results[1]]))
                 scoreboard[list_match[m][0]] += match_results[0]
                 scoreboard[list_match[m][1]] += match_results[1]
+
             # finish the turn
-            self.input_service.lower_not_in('\nDo you want to validate the turn? (Y): ', 'y')
+            self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
             turn.end = "end"
             list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
+
         return [list_turns, scoreboard]
 
     @staticmethod

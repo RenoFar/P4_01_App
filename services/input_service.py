@@ -35,3 +35,10 @@ class InputService:
         while element.lower() not in in_check:
             element = InputView.input_data(message)
         return element
+
+    @staticmethod
+    def lower_diff(message, in_check):
+        element = ''
+        while element.lower() != in_check:
+            element = InputView.input_data(message)
+        return element
