@@ -74,6 +74,44 @@ class PlayerController:
                 InfoView.print_info('\nPlease enter a positive integer!')
         return Player(name, firstname, birthdate, gender, ranking)
 
+    @staticmethod
+    def current_ranking(players_nb, actual_scoreboard, turn_nb):
+        actual_ranking = []
+        for c in range(len(players_nb)):
+            if turn_nb == 0:  # take the known ranking
+                actual_ranking.append([players_nb[c], Player.all(Player.table_name)[c]['ranking']])
+            else:  # take the total of the score of the previous rounds
+                actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
+        return actual_ranking
+
+    def Players_score(self, list_turn, num_turn):
+        score = 0
+        match_result = []
+        # show the match details
+        print(f'list_turn[num_turn][0]:{list_turn[num_turn][0]}')
+        print(f'Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name): '
+              f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)}')
+        print(f'Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name)["name"]:'
+              f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)["name"]}')
+        InfoView.print_info(f'\nMatch N° {str(num_turn + 1)}: '
+                            f'playerID {(list_turn[num_turn][0])} '
+                            f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)["name"]}'
+                            f' -VS- playerID {(list_turn[num_turn][1])} '
+                            f'{Player.search_by_id(int(list_turn[num_turn][1]), Player.table_name)["name"]}')
+        # choose the result
+        score = self.input_service.lower_not_in(
+            f'Choose the winner of the match: \nType (1) for ID: {str(list_turn[num_turn][0])}'
+            f', (2) for ID: {str(list_turn[num_turn][1])} (3) for : Draw \n Result: ',
+            ('1', '2', '3')
+        )
+        if score == '1':
+            match_result = [1, 0]
+        if score == '2':
+            match_result = [0, 1]
+        if score == '3':
+            match_result = [1 / 2, 1 / 2]
+        return match_result
+
     def ranking_update(self, board):
         # show the Tournament scoreboard
         MenuView.print_menu('\nTournament scoreboard')
@@ -99,3 +137,12 @@ class PlayerController:
                     InfoView.print_info(f'\nnew ranking {str(new_ranking)} already chosen')
             # update the database
             Player.update('ranking', new_ranking, [int(number)], Player.table_name)
+
+    @staticmethod
+    def players_sorted():
+        sorted_ranking = sorted(Player.all(Player.table_name), key=lambda ranking: ranking['ranking'])
+        for sort in range(len(sorted_ranking)):
+            BoardView.print_board(
+                f'{Player.search_by_rank(sorted_ranking[sort]["ranking"]).doc_id} {sorted_ranking[sort]["name"]} ',
+                f'{str(sorted_ranking[sort]["ranking"])}'
+            )

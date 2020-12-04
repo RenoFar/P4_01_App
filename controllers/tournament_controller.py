@@ -24,25 +24,25 @@ class TournamentController:
         # creation of the tournament
         self.tournament = self.create_tournament()
         # registration in the database
-        tournament_id = self.tournament.insert(self.tournament.serialize(), self.tournament.table_name)
+        tournament_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
         MenuView.print_menu('Tournament created')
         # selection of 8 players
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
-        self.tournament.update('players_index', self.tournament.players_index, [tournament_id], self.tournament.table_name)
-        MenuView.print_menu('\n Tournament players updating \n')
+        Tournament.update('players_index', self.tournament.players_index, [tournament_id], Tournament.table_name)
+        MenuView.print_menu(' Tournament players updating ')
         # play the turns
         turns = self.play_turns()
         # update the tournament
         self.tournament.rounds_list = turns[0].copy()
-        self.tournament.update('rounds_list', self.tournament.rounds_list, [tournament_id], self.tournament.table_name)
+        Tournament.update('rounds_list', self.tournament.rounds_list, [tournament_id], Tournament.table_name)
         MenuView.print_menu('\n Tournament rounds updating \n')
         # update the ranking
         self.input_service.lower_not_in('Do you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(turns[1])
         # show ranking
         MenuView.print_menu('\nNew ranking')
-        ReportController().players_sorted()
+        PlayerController().players_sorted()
 
     def create_tournament(self):
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
@@ -81,16 +81,16 @@ class TournamentController:
             scoreboard[self.tournament.players_index[numb]] = 0
         # Play the rounds
         for t in range(self.tournament.nb_turn):
-            MenuView.print_menu(f'\nExecution of round N° {str(t + 1)}')
+            MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
             # creation of a new round
             turn = self.create_round(t)
             # find the current ranking
-            current_classification = self.current_ranking(self.tournament.players_index, scoreboard, t)
+            current_classification = PlayerController.current_ranking(self.tournament.players_index, scoreboard, t)
             # generate matches
             list_match = self.create_match(current_classification)
             # enter the results of the matches
             for m in range(len(list_match)):
-                match_results = self.turn_results(list_match, m)
+                match_results = PlayerController.Players_score(list_match, m)
                 # save the results
                 turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
                 scoreboard[list_match[m][0]] += match_results[0]
@@ -109,16 +109,6 @@ class TournamentController:
         return Round(name, start, end)
 
     @staticmethod
-    def current_ranking(players_nb, actual_scoreboard, turn_nb):
-        actual_ranking = []
-        for c in range(len(players_nb)):
-            if turn_nb == 0:  # take the known ranking
-                actual_ranking.append([players_nb[c], Tournament.all(Tournament.table_name)[c]['ranking']])
-            else:  # take the total of the score of the previous rounds
-                actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
-        return actual_ranking
-
-    @staticmethod
     def create_match(selected_players):
         match_list = []
         ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
@@ -128,25 +118,3 @@ class TournamentController:
             match_list.append([player1, player2])
         return match_list
 
-    def turn_results(self, list_turn, num_turn):
-        score = 0
-        match_result = []
-        # show the match details
-        InfoView.print_info(f'\nMatch N° {str(num_turn + 1)}: '
-                            f'playerID {(list_turn[num_turn][0])} '
-                            f'{Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name)["name"]}'
-                            f' -VS- playerID {(list_turn[num_turn][1])} '
-                            f'{Tournament.search_by_id(int(list_turn[num_turn][1]), Tournament.table_name)["name"]}')
-        # choose the result
-        score = self.input_service.lower_not_in(
-            f'Choose the winner of the match: \nType (1) for ID: {str(list_turn[num_turn][0])}'
-            f', (2) for ID: {str(list_turn[num_turn][1])} (3) for : Draw \n Result: ',
-            ('1', '2', '3')
-        )
-        if score == '1':
-            match_result = [1, 0]
-        if score == '2':
-            match_result = [0, 1]
-        if score == '3':
-            match_result = [1 / 2, 1 / 2]
-        return match_result
