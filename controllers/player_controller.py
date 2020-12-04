@@ -23,9 +23,9 @@ class PlayerController:
             MenuView.print_menu(f'Select player N° {str(n + 1)} ')
             selected_player = self.player_select(list_players)
             if selected_player == 'new':  # creation of a new player
-                tournament_player = self.create_player()
+                new_player = self.create_player()
                 # save new player
-                selected_player = tournament_player.insert()
+                selected_player = str(self.table_db.insert(new_player.serialize()))
             list_players.append(selected_player)
         return list_players
 
