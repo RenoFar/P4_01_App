@@ -5,7 +5,6 @@
 from models.tournament import Tournament
 from models.round import Round
 from controllers.player_controller import PlayerController
-from controllers.report_controller import ReportController
 from services.input_service import InputService
 from views.info_view import InfoView
 from views.menu_view import MenuView
@@ -42,7 +41,7 @@ class TournamentController:
         PlayerController().ranking_update(turns[1])
         # show ranking
         MenuView.print_menu('\nNew ranking')
-        PlayerController().players_sorted()
+        PlayerController.players_sorted()
 
     def create_tournament(self):
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
@@ -90,7 +89,7 @@ class TournamentController:
             list_match = self.create_match(current_classification)
             # enter the results of the matches
             for m in range(len(list_match)):
-                match_results = PlayerController.Players_score(list_match, m)
+                match_results = PlayerController().players_score(list_match, m)
                 # save the results
                 turn.match_list.append(([list_match[m][0], match_results[0]], [list_match[m][1], match_results[1]]))
                 scoreboard[list_match[m][0]] += match_results[0]
@@ -117,4 +116,3 @@ class TournamentController:
             player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
             match_list.append([player1, player2])
         return match_list
-

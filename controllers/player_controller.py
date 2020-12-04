@@ -84,7 +84,7 @@ class PlayerController:
                 actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
         return actual_ranking
 
-    def Players_score(self, list_turn, num_turn):
+    def players_score(self, list_turn, num_turn):
         score = 0
         match_result = []
         # show the match details
