@@ -17,6 +17,8 @@ class Tournament(Builder):  # Definition of the Tournament class
     - its list of rounds
     - its list of players"""
 
+    table_name = 'existing_tournaments'
+
     def __init__(self, name=None, place=None, date=None,
                  mode_game=None, nb_turn=None, description=None):
         """" Constructor of the class """

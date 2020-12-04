@@ -14,6 +14,8 @@ class Player(Builder):  # Definition of the Player class
     - its gender
     - its ranking"""
 
+    table_name = 'known_players'
+
     def __init__(self, name=None, firstname=None, date_birth=None,
                  gender=None, ranking=None):
         """ Constructor of the class """

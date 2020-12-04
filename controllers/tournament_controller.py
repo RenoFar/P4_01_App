@@ -2,7 +2,6 @@
 # coding: utf-8
 
 
-from models.builder import Builder
 from models.tournament import Tournament
 from models.round import Round
 from controllers.player_controller import PlayerController
@@ -19,25 +18,24 @@ class TournamentController:
         self.turns = None
         self.players = None
         self.input_service = InputService()
-        self.table_db = Builder("tournament", "existing_tournaments")
         self.tournament_execution()
 
     def tournament_execution(self):
         # creation of the tournament
         self.tournament = self.create_tournament()
         # registration in the database
-        tournament_id = self.table_db.insert(self.tournament.serialize())
+        tournament_id = self.tournament.insert(self.tournament.serialize(), self.tournament.table_name)
         MenuView.print_menu('Tournament created')
         # selection of 8 players
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
-        self.table_db.update('players_index', self.tournament.players_index, [tournament_id])
+        self.tournament.update('players_index', self.tournament.players_index, [tournament_id], self.tournament.table_name)
         MenuView.print_menu('\n Tournament players updating \n')
         # play the turns
         turns = self.play_turns()
         # update the tournament
         self.tournament.rounds_list = turns[0].copy()
-        self.table_db.update('rounds_list', self.tournament.rounds_list, [tournament_id])
+        self.tournament.update('rounds_list', self.tournament.rounds_list, [tournament_id], self.tournament.table_name)
         MenuView.print_menu('\n Tournament rounds updating \n')
         # update the ranking
         self.input_service.lower_not_in('Do you want to update the ranking? (Y): ', 'y')
@@ -110,11 +108,12 @@ class TournamentController:
         end = ""
         return Round(name, start, end)
 
-    def current_ranking(self, players_nb, actual_scoreboard, turn_nb):
+    @staticmethod
+    def current_ranking(players_nb, actual_scoreboard, turn_nb):
         actual_ranking = []
         for c in range(len(players_nb)):
             if turn_nb == 0:  # take the known ranking
-                actual_ranking.append([players_nb[c], self.table_db.all()[c]['ranking']])
+                actual_ranking.append([players_nb[c], Tournament.all(Tournament.table_name)[c]['ranking']])
             else:  # take the total of the score of the previous rounds
                 actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
         return actual_ranking
@@ -135,9 +134,9 @@ class TournamentController:
         # show the match details
         InfoView.print_info(f'\nMatch N° {str(num_turn + 1)}: '
                             f'playerID {(list_turn[num_turn][0])} '
-                            f'{self.table_db.search_by_id(int(list_turn[num_turn][0]))["name"]}'
+                            f'{Tournament.search_by_id(int(list_turn[num_turn][0]), Tournament.table_name)["name"]}'
                             f' -VS- playerID {(list_turn[num_turn][1])} '
-                            f'{self.table_db.search_by_id(int(list_turn[num_turn][1]))["name"]}')
+                            f'{Tournament.search_by_id(int(list_turn[num_turn][1]), Tournament.table_name)["name"]}')
         # choose the result
         score = self.input_service.lower_not_in(
             f'Choose the winner of the match: \nType (1) for ID: {str(list_turn[num_turn][0])}'

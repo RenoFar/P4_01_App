@@ -3,7 +3,6 @@
 
 
 from models.player import Player
-from models.builder import Builder
 from services.input_service import InputService
 from views.info_view import InfoView
 from views.menu_view import MenuView
@@ -14,42 +13,41 @@ class PlayerController:
 
     def __init__(self):
         self.input_service = InputService()
-        self.table_db = Builder("player", "known_players")
 
     def players_selection(self):
         # selection of 8 players
-        list_players = []
+        list_chosen_players = []
         for n in range(8):
             MenuView.print_menu(f'Select player N° {str(n + 1)} ')
-            selected_player = self.player_select(list_players)
+            selected_player = self.player_select(list_chosen_players)
             if selected_player == 'new':  # creation of a new player
                 new_player = self.create_player()
                 # save new player
-                selected_player = str(self.table_db.insert(new_player.serialize()))
-            list_players.append(selected_player)
-        return list_players
+                selected_player = str(Player.insert(new_player.serialize(), Player.table_name))
+            list_chosen_players.append(selected_player)
+        return list_chosen_players
 
     def player_select(self, chosen_players):
         # get all known players
-        player_list = self.table_db.all()
+        player_db = Player.all(Player.table_name)
         player_choice = '-1'
         while player_choice == '-1':
             # initialize available players
-            player_listing = []
+            players_available = []
             MenuView.print_menu('List of available players:')
-            for a, elt in enumerate(player_list):
+            for a, elt in enumerate(player_db):
                 if str(a + 1) not in chosen_players:  # exclude players already chosen
                     InfoView.print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
-                    player_listing.append(str(a + 1))
+                    players_available.append(str(a + 1))
             # choose a player
             menu_choice = self.input_service.lower_not_in(
                 '\nSelect an available player (1) or add a new player (2): ',
                 ('1', '2')
             )
-            if menu_choice == '1' and len(player_listing) > 0:  # test the available players
+            if menu_choice == '1' and len(players_available) > 0:  # test the available players
                 player_choice = self.input_service.lower_not_in(
                     'Select a player number: ',
-                    player_listing
+                    players_available
                 )
             elif menu_choice == '2':
                 player_choice = 'new'
@@ -80,7 +78,7 @@ class PlayerController:
         # show the Tournament scoreboard
         MenuView.print_menu('\nTournament scoreboard')
         for num, point in board.items():
-            BoardView.print_board(num, self.table_db.search_by_id(int(num))["ranking"], f'scores {str(point)}')
+            BoardView.print_board(num, Player.search_by_id(int(num), Player.table_name)["ranking"], f'scores {str(point)}')
         # enter the new ranking
         MenuView.print_menu('\nEnter the new ranking')
         new_ranking_list = []
@@ -100,4 +98,4 @@ class PlayerController:
                 else:
                     InfoView.print_info(f'\nnew ranking {str(new_ranking)} already chosen')
             # update the database
-            self.table_db.update('ranking', new_ranking, [int(number)])
+            Player.update('ranking', new_ranking, [int(number)], Player.table_name)
