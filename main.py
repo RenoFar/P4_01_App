@@ -2,16 +2,14 @@
 # coding: utf-8
 
 
-from controllers.tournament_controller import *
-from views.menu_view import *
+from controllers.menu_controller import MenuController
 
 
 def main():
     """
         Main execution function of the application
     """
-
-    TournamentController()
+    MenuController()
 
 
 if __name__ == "__main__":
