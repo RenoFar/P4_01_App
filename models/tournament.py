@@ -2,7 +2,6 @@
 # coding: utf-8
 
 
-from tinydb import TinyDB
 from models.builder import Builder
 
 

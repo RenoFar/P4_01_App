@@ -170,13 +170,14 @@ class PlayerController:
             Player.update('ranking', new_ranking, [int(number)], Player.table_name)
 
     @staticmethod
-    def players_sorted():
+    def players_sorted(key):
         """
-            Sort and print a list of the actual players ranking from the database
+            Sort by the key and print a list of the actual players ranking from the database
+            :param key: chosen key for the sort
         """
-        sorted_ranking = sorted(Player.all(Player.table_name), key=lambda ranking: ranking['ranking'])
-        for sort in range(len(sorted_ranking)):
+        sorted_players = sorted(Player.all(Player.table_name), key=lambda k: k[key])
+        for sort in range(len(sorted_players)):
             BoardView.print_board(
-                f'{Player.search_by_rank(sorted_ranking[sort]["ranking"]).doc_id} {sorted_ranking[sort]["name"]} ',
-                f'{str(sorted_ranking[sort]["ranking"])}'
+                f'{Player.search_by_rank(sorted_players[sort]["ranking"]).doc_id} {sorted_players[sort]["name"]} ',
+                f'{str(sorted_players[sort]["ranking"])}'
             )

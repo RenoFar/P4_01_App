@@ -54,8 +54,8 @@ class TournamentController:
         self.input_service.lower_diff('Do you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(turns[1])
         # show ranking
-        MenuView.print_menu('\nNew ranking')
-        PlayerController.players_sorted()
+        MenuView.print_menu('New ranking')
+        PlayerController.players_sorted('ranking')
 
     def create_tournament(self):
         """
