@@ -6,9 +6,15 @@ from views.input_view import InputView
 
 
 class InputService:
+    """ Class grouping together all the Input services """
 
     @staticmethod
     def one_char_alnum(message):
+        """
+            Ask for an information
+            :param message: asking information message
+            :return: an input element with one character at least and alphanumeric
+        """
         element = ''
         while len(element) < 1 or not element.isalnum():
             element = InputView.input_data(message)
@@ -16,6 +22,11 @@ class InputService:
 
     @staticmethod
     def empty_alnum(message):
+        """
+            Ask for an information
+            :param message: asking information message
+            :return: an input element empty or alphanumeric
+        """
         while True:
             element = InputView.input_data(message)
             if element == '' or element.isalnum():
@@ -24,6 +35,11 @@ class InputService:
 
     @staticmethod
     def date_format(message):
+        """
+            Ask for an information
+            :param message: asking information message
+            :return: an input element  with a datetime format
+        """
         element = ''
         while len(element) < 1 or not element.isalnum():
             element = InputView.input_data(message)
@@ -31,6 +47,12 @@ class InputService:
 
     @staticmethod
     def lower_not_in(message, in_check):
+        """
+            Ask for an information
+            :param message: asking information message
+            :param in_check: container of the possible inputs
+            :return: an input element contained in in_check
+        """
         element = ''
         while element.lower() not in in_check:
             element = InputView.input_data(message)
@@ -38,6 +60,12 @@ class InputService:
 
     @staticmethod
     def lower_diff(message, in_check):
+        """
+            Ask for an information
+            :param message: asking information message
+            :param in_check: the excepted input
+            :return: the excepted input
+        """
         element = ''
         while element.lower() != in_check:
             element = InputView.input_data(message)

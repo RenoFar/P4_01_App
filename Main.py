@@ -7,7 +7,9 @@ from views.menu_view import *
 
 
 def main():
-    """Main execution function of the application"""
+    """
+        Main execution function of the application
+    """
 
     TournamentController()
 

@@ -11,8 +11,14 @@ from views.menu_view import MenuView
 
 
 class TournamentController:
+    """
+        Class grouping together all the tournament controllers
+    """
 
     def __init__(self):
+        """
+            Constructor of the class
+        """
         self.tournament = None
         self.turns = None
         self.players = None
@@ -20,6 +26,9 @@ class TournamentController:
         self.tournament_execution()
 
     def tournament_execution(self):
+        """
+            Main part of the tournament execution
+        """
         # creation of the tournament
         self.tournament = self.create_tournament()
         # registration in the database
@@ -44,12 +53,15 @@ class TournamentController:
         # update the ranking
         self.input_service.lower_diff('Do you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(turns[1])
-
         # show ranking
         MenuView.print_menu('\nNew ranking')
         PlayerController.players_sorted()
 
     def create_tournament(self):
+        """
+            Ask and format the tournament information
+            :return: a Tournament Object
+        """
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
         place = self.input_service.one_char_alnum('Please enter the tournament place: ')
 
@@ -79,23 +91,33 @@ class TournamentController:
         return Tournament(name, place, date, game_mode, nb_turn, description)
 
     def play_turns(self):
+        """
+            Ask format and determine the Rounds information and the match results
+            :return: a list of them
+        """
         # initialization of the tournament scoreboard & the list of turns
         scoreboard = {}
         list_turns = []
         for numb in range(len(self.tournament.players_index)):
             scoreboard[self.tournament.players_index[numb]] = 0
+
         # Play the rounds
         for t in range(self.tournament.nb_turn):
             MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
+
             # creation of a new round
             turn = self.create_round(t)
+
             # find the current ranking
             current_classification = PlayerController.current_ranking(self.tournament.players_index, scoreboard, t)
+
             # generate matches
             list_match = self.create_match(current_classification)
-            # enter the results of the matches
+
             for m in range(len(list_match)):
+                # enter the results of the matches
                 match_results = PlayerController().players_score(list_match, m)
+
                 # save the results
                 turn.match_list.append(([list_match[m][0], match_results[0]],
                                         [list_match[m][1], match_results[1]]))
@@ -111,6 +133,11 @@ class TournamentController:
 
     @staticmethod
     def create_round(number_turn):
+        """
+             format the round information
+            :param number_turn: actual turn number
+            :return: a Round Object
+        """
         name = "round " + str(number_turn + 1)
         start = "start"
         end = ""
@@ -118,6 +145,11 @@ class TournamentController:
 
     @staticmethod
     def create_match(selected_players):
+        """
+            Determine the match configuration
+            :param selected_players: list of the players with their ranking
+            :return: a list of it
+        """
         match_list = []
         ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
         for index in range(len(ranking_list) // 2):

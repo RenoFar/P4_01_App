@@ -11,6 +11,8 @@ from views.menu_view import MenuView
 
 
 class ReportController:
-
+    """
+        Class grouping together all the report controllers
+    """
     def __init__(self):
         pass

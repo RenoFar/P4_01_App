@@ -10,11 +10,21 @@ from views.board_view import BoardView
 
 
 class PlayerController:
+    """
+        Class grouping together all the player controllers
+    """
 
     def __init__(self):
+        """
+            Constructor of the class
+        """
         self.input_service = InputService()
 
     def players_selection(self):
+        """
+            Ask for the selection or the creation of the eight tournament players
+            :return: a list of them
+        """
         # selection of 8 players
         list_chosen_players = []
         for n in range(8):
@@ -28,6 +38,11 @@ class PlayerController:
         return list_chosen_players
 
     def player_select(self, chosen_players):
+        """
+            Ask for a chosen player among the available
+            :param chosen_players: list of the already chosen player
+            :return: a string corresponding to a player ID or 'new' for create a new one
+        """
         # get all known players
         player_db = Player.all(Player.table_name)
         player_choice = '-1'
@@ -54,6 +69,10 @@ class PlayerController:
         return player_choice
 
     def create_player(self):
+        """
+            Ask and format the player information
+            :return: a Player Object
+        """
         name = self.input_service.one_char_alnum('Please enter player name: ')
         firstname = self.input_service.one_char_alnum('Please enter player firstname: ')
 
@@ -76,6 +95,13 @@ class PlayerController:
 
     @staticmethod
     def current_ranking(players_nb, actual_scoreboard, turn_nb):
+        """
+            Give the rank of the players, depending of the turn number
+            :param players_nb: number of the players
+            :param actual_scoreboard: actual scoreboard
+            :param turn_nb: actual turn number
+            :return: a list of players and their actual tournament ranking
+        """
         actual_ranking = []
         for c in range(len(players_nb)):
             if turn_nb == 0:  # take the known ranking
@@ -85,6 +111,12 @@ class PlayerController:
         return actual_ranking
 
     def players_score(self, list_turn, num_turn):
+        """
+            Print the match information and ask for the result
+            :param list_turn: list of all the matches of the actual turn
+            :param num_turn: actual turn number
+            :return: a list of the match results
+        """
         score = 0
         match_result = []
         # show the match details
@@ -108,6 +140,10 @@ class PlayerController:
         return match_result
 
     def ranking_update(self, board):
+        """
+            Show the tournament scoreboard, ask and update the new players ranking into the database
+            :param board: actual scoreboard
+        """
         # show the Tournament scoreboard
         MenuView.print_menu('Tournament scoreboard')
         for num, point in board.items():
@@ -135,6 +171,9 @@ class PlayerController:
 
     @staticmethod
     def players_sorted():
+        """
+            Sort and print a list of the actual players ranking from the database
+        """
         sorted_ranking = sorted(Player.all(Player.table_name), key=lambda ranking: ranking['ranking'])
         for sort in range(len(sorted_ranking)):
             BoardView.print_board(

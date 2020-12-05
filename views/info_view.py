@@ -3,7 +3,9 @@
 
 
 class InfoView:
+    """ Class of the info's view """
 
     @staticmethod
     def print_info(info):
+        """ Print the general information """
         print(f'{info}')
