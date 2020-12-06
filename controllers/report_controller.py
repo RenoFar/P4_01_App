@@ -2,6 +2,8 @@
 # coding: utf-8
 
 
+from controllers.tournament_controller import TournamentController
+from controllers.player_controller import PlayerController
 from services.input_service import InputService
 from views.menu_view import MenuView
 
@@ -20,16 +22,51 @@ class ReportController:
             report_choice = self.input_service.lower_not_in(
                 f'Show all the players known: enter (1)\n'
                 f'Show all the Tournaments played: enter (2)\n'
-                f'Show the Players: enter (3)\n'
-                f'Return to the Main menu: enter (4)\n'
+                f'Return to the Main menu: enter (3)\n'
                 f'Please enter your choice: ',
-                ('1', '2', '3', '4')
+                ('1', '2', '3')
             )
             if report_choice == '1':
-                pass
+                self.show_all_players()
             elif report_choice == '2':
-                pass
+                self.show_tournaments()
             elif report_choice == '3':
-                pass
-            elif report_choice == '4':
                 break
+
+    @staticmethod
+    def show_all_players():
+        """
+            Print a list of all the known players sorted by name then by rank
+        """
+        MenuView.print_menu('All players in alphabetical order')
+        PlayerController().players_sorted('name')
+        MenuView.print_menu('All players by ranking')
+        PlayerController().players_sorted('ranking')
+
+    def show_tournaments(self):
+        """
+            Print a list all the known tournaments sorted by ID
+            then offer the possibility to see the details of a chosen tournament
+        """
+        MenuView.print_menu('All tournaments')
+        list_id = TournamentController().show_tournaments()
+        # Show the details
+        show_details = self.input_service.lower_not_in(
+            f'Do you want to see the tournament details (Turns & matches results)\n'
+            f'Please enter your choice, yes (Y) or no (N): ',
+            ('y', 'n')
+        )
+        if show_details == 'y':
+            tournament_chosen = self.input_service.lower_not_in(
+                f'Please enter the ID of the chosen tournament: ',
+                list_id
+            )
+            self.details_tournament(tournament_chosen)
+
+    @staticmethod
+    def details_tournament(tournament_id):
+        """
+            Print a list all the turns & matches of a tournament chosen by ID
+        """
+        MenuView.print_menu(' Tournament details ')
+        TournamentController().turns_details(tournament_id)

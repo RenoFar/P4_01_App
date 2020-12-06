@@ -159,3 +159,34 @@ class TournamentController:
             player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
             match_list.append([player1, player2])
         return match_list
+
+    @staticmethod
+    def show_tournaments():
+        """
+            print a list of the actual tournaments from the database
+            :return: a list of all tournament ID
+        """
+        all_tournaments_id = []
+        all_tournament = Tournament.all(Tournament.table_name)
+        for elt in range(len(all_tournament)):
+            InfoView.print_info(
+                f'Tournament ID: {all_tournament[elt].doc_id} '
+                f'name: {all_tournament[elt]["name"]} '
+                f'date: {all_tournament[elt]["date"]} '
+                )
+            all_tournaments_id.append(all_tournament[elt].doc_id)
+        return all_tournaments_id
+
+    @staticmethod
+    def turns_details(chosen_id):
+        tournament_turns = Tournament.search_by_id(chosen_id, Tournament.table_name)["rounds_list"]
+        for elt in range(len(tournament_turns)):
+            InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt} ')
+            for elt2 in range(len(tournament_turns[elt])):
+                InfoView.print_info(
+                    f'match n°: {elt2} '
+                    f'playerID {tournament_turns[elt2][0][0]} '
+                    f' -VS- playerID {tournament_turns[elt2][1][0]} '
+                    f': {tournament_turns[elt2][0][1]} - {tournament_turns[elt2][1][1]}'
+                )
+                InfoView.print_info('\n')

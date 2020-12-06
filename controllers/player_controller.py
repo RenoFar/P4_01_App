@@ -172,7 +172,7 @@ class PlayerController:
     @staticmethod
     def players_sorted(key):
         """
-            Sort by the key and print a list of the actual players ranking from the database
+            Sort by the key and print a list of the actual players from the database
             :param key: chosen key for the sort
         """
         sorted_players = sorted(Player.all(Player.table_name), key=lambda k: k[key])
