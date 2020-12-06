@@ -179,6 +179,10 @@ class TournamentController:
 
     @staticmethod
     def turns_details(chosen_id):
+        """
+        Print into a list the rounds details of a chosen tournament
+        :param chosen_id:  id of the chosen tournament
+        """
         tournament_turns = Tournament.search_by_id(chosen_id, Tournament.table_name)["rounds_list"]
         for elt in range(len(tournament_turns)):
             InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt} ')

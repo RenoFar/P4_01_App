@@ -67,6 +67,7 @@ class ReportController:
     def details_tournament(tournament_id):
         """
             Print a list all the turns & matches of a tournament chosen by ID
+            :param tournament_id:  id of the chosen tournament
         """
         MenuView.print_menu(' Tournament details ')
         TournamentController().turns_details(tournament_id)
