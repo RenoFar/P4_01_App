@@ -2,14 +2,14 @@
 # coding: utf-8
 
 
-from controllers.menu_controller import MenuController
+from controllers.main_controller import MainController
 
 
 def main():
     """
-        Main execution function of the application
+        Main function of the application
     """
-    MenuController()
+    MainController()
 
 
 if __name__ == "__main__":

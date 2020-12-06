@@ -166,7 +166,7 @@ class PlayerController:
                     break
                 else:
                     InfoView.print_info(f'\nnew ranking {str(new_ranking)} already chosen')
-            # update the database
+            # update in the database
             Player.update('ranking', new_ranking, [int(number)], Player.table_name)
 
     @staticmethod

@@ -2,11 +2,7 @@
 # coding: utf-8
 
 
-from models.builder import Builder
-from models.tournament import Tournament
-from models.player import Player
-from views.board_view import BoardView
-from views.info_view import InfoView
+from services.input_service import InputService
 from views.menu_view import MenuView
 
 
@@ -15,4 +11,25 @@ class ReportController:
         Class grouping together all the report controllers
     """
     def __init__(self):
-        pass
+        self.input_service = InputService()
+        self.report_execution()
+
+    def report_execution(self):
+        while True:
+            MenuView.print_menu(' Report menu ')
+            report_choice = self.input_service.lower_not_in(
+                f'Show all the players known: enter (1)\n'
+                f'Show all the Tournaments played: enter (2)\n'
+                f'Show the Players: enter (3)\n'
+                f'Return to the Main menu: enter (4)\n'
+                f'Please enter your choice: ',
+                ('1', '2', '3', '4')
+            )
+            if report_choice == '1':
+                pass
+            elif report_choice == '2':
+                pass
+            elif report_choice == '3':
+                pass
+            elif report_choice == '4':
+                break

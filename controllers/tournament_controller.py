@@ -74,7 +74,7 @@ class TournamentController:
         )
         while True:
             nb_turn = self.input_service.empty_alnum(
-                'The number of laps by default is 4,\n type another number or Enter to validate: '
+                'The number of laps by default is 4,\ntype another number or Enter to validate: '
             )
             if len(str(nb_turn)) < 1:  # if nothing is entered
                 nb_turn = 4
@@ -126,6 +126,7 @@ class TournamentController:
 
             # finish the turn
             self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
+            #  TODO
             turn.end = "end"
             list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
 
@@ -139,6 +140,7 @@ class TournamentController:
             :return: a Round Object
         """
         name = "round " + str(number_turn + 1)
+        # TODO
         start = "start"
         end = ""
         return Round(name, start, end)

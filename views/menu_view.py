@@ -8,4 +8,4 @@ class MenuView:
     @staticmethod
     def print_menu(info):
         """ Print the menu information """
-        print(f'\n ********** {info} ********** ')
+        print(f'\n\n ********** {info} ********** ')
