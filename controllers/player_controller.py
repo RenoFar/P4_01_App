@@ -49,7 +49,7 @@ class PlayerController:
         while player_choice == '-1':
             # initialize available players
             players_available = []
-            MenuView.print_menu('List of available players:')
+            InfoView.print_info('List of available players:')
             for a, elt in enumerate(player_db):
                 if str(a + 1) not in chosen_players:  # exclude players already chosen
                     InfoView.print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
@@ -141,20 +141,41 @@ class PlayerController:
 
     def ranking_update(self, board):
         """
-            Show the tournament scoreboard, ask and update the new players ranking into the database
+            Show the tournament scoreboard, the players ranking
+            then ask and update the new players ranking into the database
             :param board: actual scoreboard
         """
         # show the Tournament scoreboard
         MenuView.print_menu('Tournament scoreboard')
         for num, point in board.items():
-            BoardView.print_board(num, Player.search_by_id(int(num), Player.table_name)["ranking"], f'scores {str(point)}')
+            BoardView.print_board(num, Player.search_by_id(int(num), Player.table_name)["ranking"],
+                                  f'scores {str(point)}')
+
+        # select the new ranking
+        self.new_ranking()
+
+    def new_ranking(self):
+        """
+            Show the players ranking
+            then ask and update the new players ranking into the database
+        """
+        # show all the players ranking
+        MenuView.print_menu('Actual ranking')
+        all_players_rank = []
+        for elt in Player.all(Player.table_name):
+            all_players_rank.append(
+                [Player.search_by('ranking', elt['ranking'], Player.table_name).doc_id,
+                 elt['ranking']]
+            )
+            InfoView.print_info(f'Player ID {all_players_rank[elt][0]} ranking: {all_players_rank[elt][1]}')
+
         # enter the new ranking
         MenuView.print_menu('Enter the new ranking')
         new_ranking_list = []
-        for number in board.keys():
+        for number in all_players_rank:
             while True:  # control the chosen ranking
                 while True:  # control the format
-                    new_ranking = self.input_service.empty_alnum(f'New ranking of player ID {str(number)} : ')
+                    new_ranking = self.input_service.empty_alnum(f'New ranking of player ID {number[0]} : ')
                     try:  # conversion on a positive integer for ranking
                         new_ranking = int(new_ranking)
                         if new_ranking > 0:
@@ -167,7 +188,7 @@ class PlayerController:
                 else:
                     InfoView.print_info(f'\nnew ranking {str(new_ranking)} already chosen')
             # update in the database
-            Player.update('ranking', new_ranking, [int(number)], Player.table_name)
+            Player.update('ranking', new_ranking, [int(number[0])], Player.table_name)
 
     @staticmethod
     def players_sorted(key):
@@ -181,6 +202,7 @@ class PlayerController:
                 f'{Player.search_by_rank(sorted_players[sort]["ranking"]).doc_id} {sorted_players[sort]["name"]} ',
                 f'{str(sorted_players[sort]["ranking"])}'
             )
+        return sorted_players
 
     @staticmethod
     def tournament_players_sorted(key, players_index):
@@ -201,4 +223,3 @@ class PlayerController:
                 f'{sorted_players[sort][0]} {sorted_players[sort][1]} ',
                 f'{str(sorted_players[sort][2])}'
             )
-
