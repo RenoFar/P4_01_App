@@ -52,8 +52,7 @@ class ReportController:
         list_id = TournamentController.show_tournaments()
         # Show the details
         show_details = self.input_service.lower_not_in(
-            f'Do you want to see the tournament details (Turns & matches results)\n'
-            f'Please enter your choice, yes (Y) or no (N): ',
+            f'Do you want to see the tournament details (Turns & matches results) (yes: Y / no: N): ',
             ('y', 'n')
         )
         if show_details == 'y':

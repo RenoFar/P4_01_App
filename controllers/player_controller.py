@@ -88,6 +88,8 @@ class PlayerController:
             try:
                 ranking = int(ranking)
                 if ranking > 0:
+                    # test existing ranking
+                    # TODO
                     break
             except ValueError:
                 InfoView.print_info('\nPlease enter a positive integer!')
@@ -162,12 +164,14 @@ class PlayerController:
         # show all the players ranking
         MenuView.print_menu('Actual ranking')
         all_players_rank = []
+        count = 0
         for elt in Player.all(Player.table_name):
             all_players_rank.append(
-                [Player.search_by('ranking', elt['ranking'], Player.table_name).doc_id,
-                 elt['ranking']]
+                [Player.search_by_rank(int(elt["ranking"])).doc_id,
+                 elt["ranking"]]
             )
-            InfoView.print_info(f'Player ID {all_players_rank[elt][0]} ranking: {all_players_rank[elt][1]}')
+            InfoView.print_info(f'Player ID {all_players_rank[count][0]} ranking: {all_players_rank[count][1]}')
+            count += 1
 
         # enter the new ranking
         MenuView.print_menu('Enter the new ranking')
