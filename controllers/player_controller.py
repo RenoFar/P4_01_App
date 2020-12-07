@@ -128,7 +128,7 @@ class PlayerController:
         # choose the result
         score = self.input_service.lower_not_in(
             f'Choose the winner of the match: \nType (1) for ID: {str(list_turn[num_turn][0])}'
-            f', (2) for ID: {str(list_turn[num_turn][1])} (3) for : Draw \n Result: ',
+            f', (2) for ID: {str(list_turn[num_turn][1])}, (3) for : Draw \n Result: ',
             ('1', '2', '3')
         )
         if score == '1':

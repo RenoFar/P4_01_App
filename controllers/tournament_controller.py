@@ -30,6 +30,7 @@ class TournamentController:
             Main part of the tournament execution
         """
         # creation of the tournament
+        MenuView.print_menu('Tournament creation')
         self.tournament = self.create_tournament()
         # registration in the database
         tournament_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
@@ -51,7 +52,7 @@ class TournamentController:
         MenuView.print_menu(' Tournament rounds updating ')
 
         # update the ranking
-        self.input_service.lower_diff('Do you want to update the ranking? (Y): ', 'y')
+        self.input_service.lower_diff('\nDo you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(turns[1])
         # show ranking
         MenuView.print_menu('New ranking')
