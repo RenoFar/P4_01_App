@@ -40,7 +40,7 @@ class ReportController:
         """
         MenuView.print_menu('All players in alphabetical order')
         PlayerController().players_sorted('name')
-        MenuView.print_menu('All players by ranking')
+        MenuView.print_menu('All players sorted by ranking')
         PlayerController().players_sorted('ranking')
 
     def show_tournaments(self):
@@ -49,7 +49,7 @@ class ReportController:
             then offer the possibility to see the details of a chosen tournament
         """
         MenuView.print_menu('All tournaments')
-        list_id = TournamentController().show_tournaments()
+        list_id = TournamentController.show_tournaments()
         # Show the details
         show_details = self.input_service.lower_not_in(
             f'Do you want to see the tournament details (Turns & matches results)\n'
@@ -70,4 +70,4 @@ class ReportController:
             :param tournament_id:  id of the chosen tournament
         """
         MenuView.print_menu(' Tournament details ')
-        TournamentController().turns_details(tournament_id)
+        TournamentController.turns_details(tournament_id)

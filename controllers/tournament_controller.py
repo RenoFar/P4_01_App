@@ -175,7 +175,7 @@ class TournamentController:
                 f'name: {all_tournament[elt]["name"]} '
                 f'date: {all_tournament[elt]["date"]} '
                 )
-            all_tournaments_id.append(all_tournament[elt].doc_id)
+            all_tournaments_id.append(str(all_tournament[elt].doc_id))
         return all_tournaments_id
 
     @staticmethod
@@ -184,7 +184,7 @@ class TournamentController:
         Print into a list the rounds details of a chosen tournament
         :param chosen_id:  id of the chosen tournament
         """
-        tournament_turns = Tournament.search_by_id(chosen_id, Tournament.table_name)["rounds_list"]
+        tournament_turns = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["rounds_list"]
         for elt in range(len(tournament_turns)):
             InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt} ')
             for elt2 in range(len(tournament_turns[elt])):
