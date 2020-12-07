@@ -181,3 +181,24 @@ class PlayerController:
                 f'{Player.search_by_rank(sorted_players[sort]["ranking"]).doc_id} {sorted_players[sort]["name"]} ',
                 f'{str(sorted_players[sort]["ranking"])}'
             )
+
+    @staticmethod
+    def tournament_players_sorted(key, players_index):
+        """
+            Sort by the key and print a list of the tournament players
+            :param key: chosen key for the sort
+            :param players_index: list of the tournament players ID
+        """
+        list_player_index = []
+        for elt in players_index:
+            list_player_index.append(
+                [elt, Player.search_by_id(int(elt), Player.table_name)['name'],
+                 Player.search_by_id(int(elt), Player.table_name)['ranking']]
+            )
+        sorted_players = sorted(list_player_index, key=lambda k: k[key])
+        for sort in range(len(sorted_players)):
+            BoardView.print_board(
+                f'{sorted_players[sort][0]} {sorted_players[sort][1]} ',
+                f'{str(sorted_players[sort][2])}'
+            )
+

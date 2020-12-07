@@ -184,14 +184,23 @@ class TournamentController:
         Print into a list the rounds details of a chosen tournament
         :param chosen_id:  id of the chosen tournament
         """
+        # list of players
+        tournament_players = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["players_index"]
+        MenuView.print_menu('players in alphabetical order')
+        PlayerController.tournament_players_sorted(1, tournament_players)
+        MenuView.print_menu('players sorted by ranking')
+        PlayerController.tournament_players_sorted(2, tournament_players)
+
+        # details of the rounds
+        MenuView.print_menu('Turns details')
         tournament_turns = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["rounds_list"]
         for elt in range(len(tournament_turns)):
-            InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt} ')
+            InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt + 1} ')
             for elt2 in range(len(tournament_turns[elt])):
                 InfoView.print_info(
-                    f'match n°: {elt2} '
-                    f'playerID {tournament_turns[elt2][0][0]} '
-                    f' -VS- playerID {tournament_turns[elt2][1][0]} '
-                    f': {tournament_turns[elt2][0][1]} - {tournament_turns[elt2][1][1]}'
+                    f'match n°: {elt2 + 1} '
+                    f'playerID {tournament_turns[elt][3][elt2][0][0]} '
+                    f'-VS- playerID {tournament_turns[elt][3][elt2][1][0]} '
+                    f': {tournament_turns[elt][3][elt2][0][1]} '
+                    f'- {tournament_turns[elt][3][elt2][1][1]}'
                 )
-                InfoView.print_info('\n')
