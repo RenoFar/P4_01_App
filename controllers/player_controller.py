@@ -86,8 +86,13 @@ class PlayerController:
                 ranking = int(ranking)
                 if ranking > 0:
                     # test existing ranking
-                    # TODO test existing ranking
-                    break
+                    if Player.search_by_rank(ranking) is None:
+                        break
+                    else:
+                        InfoView.print_info(
+                            f'\nRank already taken by the player ID :{Player.search_by_rank(ranking).doc_id} '
+                            f'name : {Player.search_by_rank(ranking)["name"]}'
+                        )
             except ValueError:
                 InfoView.print_info('\nPlease enter a positive integer!')
         return Player(name, firstname, birthdate, gender, ranking)

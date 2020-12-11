@@ -2,6 +2,7 @@
 # coding: utf-8
 
 
+from datetime import datetime
 from models.tournament import Tournament
 from models.round import Round
 from controllers.player_controller import PlayerController
@@ -124,8 +125,7 @@ class TournamentController:
 
             # finish the turn
             self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
-            #  TODO endtime
-            turn.end = "end"
+            turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
             list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
 
         return [list_turns, scoreboard]
@@ -138,8 +138,7 @@ class TournamentController:
             :return: a Round Object
         """
         name = "round " + str(number_turn + 1)
-        # TODO start time
-        start = "start"
+        start = datetime.now().strftime("%X")  # local time HH:MM:SS
         end = ""
         return Round(name, start, end)
 
