@@ -26,38 +26,99 @@ class TournamentController:
         self.input_service = InputService()
         self.tournament_execution()
 
-    def tournament_execution(self):
+    def tournament_execution(self, t_id=0, step=0, turn=0):
         """
-            Main part of the tournament execution
+            Tournament processing step by step
+            :param t_id: id of the chosen tournament
+            :param step: current step of the chosen tournament
+            :param turn: current turn of the chosen tournament
         """
+        if step == 0:
+            # creation of the tournament
+            self.tournament_step_zero()
+        if step == 1:
+            # selection of 8 players
+            self.tournament_step_one(t_id)
+        if step == 2:
+            # play the turns
+            self.tournament_step_two(t_id)
+        if step == 3:
+            # update the ranking
+            self.tournament_step_three(t_id)
+            MenuView.print_menu(' Tournament ended ')
+
+    def tournament_step_zero(self):
         # creation of the tournament
         MenuView.print_menu('Tournament creation')
         self.tournament = self.create_tournament()
         # registration in the database
-        tournament_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
+        t_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
+        Tournament.update('current_step', 1, [t_id], Tournament.table_name)
         MenuView.print_menu('Tournament created')
+        choice0 = self.input_service.lower_not_in(
+            'Do you want to select the players (y/n): ',
+            ('y', 'n')
+        )
+        if choice0 == 'y':
+            self.tournament_execution(t_id, 1)
 
+    def tournament_step_one(self, t_id):
         # selection of 8 players
-        self.input_service.lower_not_in('Do you want to select the players? (Y): ', 'y')
+        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
-        Tournament.update('players_index', self.tournament.players_index, [tournament_id], Tournament.table_name)
+        Tournament.update('players_index', self.tournament.players_index, [t_id], Tournament.table_name)
+        Tournament.update('current_step', 2, [t_id], Tournament.table_name)
         MenuView.print_menu(' Tournament players updating ')
+        choice1 = self.input_service.lower_not_in(
+            'Do you want to play the turns (y/n): ',
+            ('y', 'n')
+        )
+        if choice1 == 'y':
+            self.tournament_execution(t_id, 2)
 
+    def tournament_step_two(self, t_id):
         # play the turns
-        self.input_service.lower_diff('Do you want to play the turns? (Y): ', 'y')
+        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
         turns = self.play_turns()
         # update the tournament
         self.tournament.rounds_list = turns[0].copy()
-        Tournament.update('rounds_list', self.tournament.rounds_list, [tournament_id], Tournament.table_name)
+        self.tournament.scoreboard = turns[1].copy()
+        Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
+        Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
+        Tournament.update('current_step', 3, [t_id], Tournament.table_name)
         MenuView.print_menu(' Tournament rounds updating ')
+        choice2 = self.input_service.lower_not_in(
+            'Do you want to update the ranking (y/n): ',
+            ('y', 'n')
+        )
+        if choice2 == 'y':
+            self.tournament_execution(t_id, 3)
 
+    def tournament_step_three(self, t_id):
         # update the ranking
+        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
         self.input_service.lower_diff('\nDo you want to update the ranking? (Y): ', 'y')
-        PlayerController().ranking_update(turns[1])
+        PlayerController().ranking_update(self.tournament.scoreboard)
         # show ranking
         MenuView.print_menu('New ranking')
         PlayerController.players_sorted('ranking')
+        Tournament.update('current_step', 4, [t_id], Tournament.table_name)
+        Tournament.update('is_ended', 1, [t_id], Tournament.table_name)
+
+    def choose_tournament(self):
+        """
+            Show all the not ended tournament and ask to choose one
+            :return: the not ended tournament chosen
+        """
+        # show tournament not ended
+        not_ended = self.show_tournaments([0])
+        # ask for choice
+        not_ended_id = self.input_service.lower_not_in(
+            'Please select an ID: ',
+            not_ended
+        )
+        return Tournament.search_by_id(not_ended_id, Tournament.table_name)
 
     def create_tournament(self):
         """
@@ -158,20 +219,22 @@ class TournamentController:
         return match_list
 
     @staticmethod
-    def show_tournaments():
+    def show_tournaments(statement):
         """
             print a list of the actual tournaments from the database
+            :param statement: statement of the tournament chosen (ended or not)
             :return: a list of all tournament ID
         """
         all_tournaments_id = []
         all_tournament = Tournament.all(Tournament.table_name)
         for elt in range(len(all_tournament)):
-            InfoView.print_info(
-                f'Tournament ID: {all_tournament[elt].doc_id} '
-                f'name: {all_tournament[elt]["name"]} '
-                f'date: {all_tournament[elt]["date"]} '
+            if all_tournament[elt]["is_ended"] in statement:
+                InfoView.print_info(
+                    f'Tournament ID: {all_tournament[elt].doc_id} '
+                    f'name: {all_tournament[elt]["name"]} '
+                    f'date: {all_tournament[elt]["date"]} '
                 )
-            all_tournaments_id.append(str(all_tournament[elt].doc_id))
+                all_tournaments_id.append(str(all_tournament[elt].doc_id))
         return all_tournaments_id
 
     @staticmethod
