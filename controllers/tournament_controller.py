@@ -65,10 +65,7 @@ class TournamentController:
         """
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
         place = self.input_service.one_char_alnum('Please enter the tournament place: ')
-
-        # TODO
-        date = self.input_service.date_format('Tournament date: ')
-
+        date = self.input_service.date_format('Tournament date in the format m/d/yyyy: ')
         game_mode = self.input_service.lower_not_in(
             'Please enter the tournament mode (bullet / blitz / speed): ',
             ('bullet', 'blitz', 'speed')
@@ -127,7 +124,7 @@ class TournamentController:
 
             # finish the turn
             self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
-            #  TODO
+            #  TODO endtime
             turn.end = "end"
             list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
 
@@ -141,7 +138,7 @@ class TournamentController:
             :return: a Round Object
         """
         name = "round " + str(number_turn + 1)
-        # TODO
+        # TODO start time
         start = "start"
         end = ""
         return Round(name, start, end)

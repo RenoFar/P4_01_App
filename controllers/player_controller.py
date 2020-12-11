@@ -75,10 +75,7 @@ class PlayerController:
         """
         name = self.input_service.one_char_alnum('Please enter player name: ')
         firstname = self.input_service.one_char_alnum('Please enter player firstname: ')
-
-        # TODO
-        birthdate = self.input_service.date_format('Please enter player\'s date of birth: ')
-
+        birthdate = self.input_service.date_format('Please enter player\'s date of birth in the format m/d/yyyy: ')
         gender = self.input_service.lower_not_in(
             'Please enter the player\'s gender (F / M): ',
             ('f', 'm')
@@ -89,7 +86,7 @@ class PlayerController:
                 ranking = int(ranking)
                 if ranking > 0:
                     # test existing ranking
-                    # TODO
+                    # TODO test existing ranking
                     break
             except ValueError:
                 InfoView.print_info('\nPlease enter a positive integer!')

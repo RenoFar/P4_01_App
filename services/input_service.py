@@ -2,7 +2,9 @@
 # coding: utf-8
 
 
+from datetime import datetime
 from views.input_view import InputView
+from views.info_view import InfoView
 
 
 class InputService:
@@ -36,14 +38,17 @@ class InputService:
     @staticmethod
     def date_format(message):
         """
-            Ask for an information
+            Ask for a date information and test the format
             :param message: asking information message
-            :return: an input element  with a datetime format
+            :return: an input element with the datetime format: '%d/%m/%Y'
         """
-        element = ''
-        while len(element) < 1 or not element.isalnum():
-            element = InputView.input_data(message)
-        return element
+        while True:
+            try:
+                element = datetime.strptime(InputView.input_data(message), '%d/%m/%Y')
+                break
+            except ValueError:
+                InfoView.print_info('\nPlease enter a date in the format m/d/yyyy')
+        return element.strftime('%d/%m/%Y')
 
     @staticmethod
     def lower_not_in(message, in_check):

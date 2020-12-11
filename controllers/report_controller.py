@@ -39,9 +39,9 @@ class ReportController:
             Print a list of all the known players sorted by name then by rank
         """
         MenuView.print_menu('All players in alphabetical order')
-        PlayerController().players_sorted('name')
+        PlayerController.players_sorted('name')
         MenuView.print_menu('All players sorted by ranking')
-        PlayerController().players_sorted('ranking')
+        PlayerController.players_sorted('ranking')
 
     def show_tournaments(self):
         """
