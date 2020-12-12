@@ -77,15 +77,9 @@ class TournamentController:
             self.tournament_execution(t_id, 2)
 
     def tournament_step_two(self, t_id):
-        print(f'Tournament.search_by_id(t_id, Tournament.table_name): '
-              f'{Tournament.search_by_id(t_id, Tournament.table_name)}')
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
-        print(f'self.tournament.name: {self.tournament.name}')
-        print(f'self.tournament.players_index: {self.tournament.players_index}')
-        print(f'self.tournament.nb_turn: {self.tournament.nb_turn}')
         for numb in range(len(self.tournament.players_index)):
             self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
-        print(f'self.tournament.scoreboard: {self.tournament.scoreboard}')
         # play the turns
         for t in range(self.tournament.nb_turn):
             MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
@@ -116,7 +110,7 @@ class TournamentController:
             # finish the turn
             self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
-            self.tournament.scoreboard.append([turn.name, turn.start, turn.end, turn.match_list])
+            print(f'self.tournament.scoreboard: {self.tournament.scoreboard}')
 
         # update the tournament
         Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
@@ -168,7 +162,7 @@ class TournamentController:
         scoreboard = {}
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
         place = self.input_service.one_char_alnum('Please enter the tournament place: ')
-        date = self.input_service.date_format('Tournament date in the format d/m/yyyy: ')
+        date = self.input_service.date_format('Please enter the tournament date: ')
         game_mode = self.input_service.lower_not_in(
             'Please enter the tournament mode (bullet / blitz / speed): ',
             ('bullet', 'blitz', 'speed')

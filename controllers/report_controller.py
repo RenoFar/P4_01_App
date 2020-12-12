@@ -41,7 +41,7 @@ class ReportController:
         """
         MenuView.print_menu('All players in alphabetical order')
         PlayerController.players_sorted('name')
-        MenuView.print_menu('All players sorted by ranking')
+        MenuView.print_menu('All players sorted by rank')
         PlayerController.players_sorted('ranking')
 
     def show_tournaments(self):
