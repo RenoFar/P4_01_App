@@ -12,6 +12,7 @@ class ReportController:
     """
         Class grouping together all the report controllers
     """
+
     def __init__(self):
         self.input_service = InputService()
         self.report_execution()

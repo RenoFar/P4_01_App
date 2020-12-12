@@ -112,6 +112,7 @@ class TournamentController:
         # show tournament not ended
         MenuView.print_menu('Not ended tournaments')
         not_ended = self.show_tournaments([0])
+        print(f'not_ended: {not_ended}')
         if len(not_ended) < 1:
             return None
         else:
@@ -120,7 +121,7 @@ class TournamentController:
                 'Please select an ID: ',
                 not_ended
             )
-            return Tournament.search_by_id(not_ended_id, Tournament.table_name)
+            return Tournament.search_by_id(int(not_ended_id), Tournament.table_name)
 
     def create_tournament(self):
         """
@@ -242,8 +243,8 @@ class TournamentController:
     @staticmethod
     def turns_details(chosen_id):
         """
-        Print into a list the rounds details of a chosen tournament
-        :param chosen_id:  id of the chosen tournament
+            Print into a list the rounds details of a chosen tournament
+            :param chosen_id:  id of the chosen tournament
         """
         # list of players
         tournament_players = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["players_index"]
