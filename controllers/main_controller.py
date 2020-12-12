@@ -29,21 +29,24 @@ class MainController:
             MenuView.print_menu(' Main menu ')
             menu_choice = self.input_service.lower_not_in(
                 f'Execute a new tournament: enter (1)\n'
-                f'Continue an unfinished tournament: enter (2)'
+                f'Continue an unfinished tournament: enter (2) \n'
                 f'Update the actual ranking: enter (3) \n'
-                f'Show the reports: enter (4)\n'
-                f'Quit the application: enter (5)\n'
+                f'Show the reports: enter (4) \n'
+                f'Quit the application: enter (5) \n'
                 f'Please enter your choice: ',
                 ('1', '2', '3', '4', '5')
             )
             if menu_choice == '1':
-                TournamentController()
+                TournamentController().tournament_execution()
             elif menu_choice == '2':
                 t_choice = TournamentController().choose_tournament()
-                TournamentController.tournament_execution(
-                    t_choice.doc_id, t_choice["current_step"],
-                    t_choice["current_turn"]
-                )
+                if t_choice is None:
+                    MenuView.print_menu('No unfinished tournament')
+                else:
+                    TournamentController.tournament_execution(
+                        t_choice.doc_id, t_choice["current_step"],
+                        t_choice["current_turn"]
+                    )
             elif menu_choice == '3':
                 PlayerController().new_ranking()
             elif menu_choice == '4':

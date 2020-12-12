@@ -24,7 +24,6 @@ class TournamentController:
         self.turns = None
         self.players = None
         self.input_service = InputService()
-        self.tournament_execution()
 
     def tournament_execution(self, t_id=0, step=0, turn=0):
         """
@@ -98,7 +97,6 @@ class TournamentController:
     def tournament_step_three(self, t_id):
         # update the ranking
         self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
-        self.input_service.lower_diff('\nDo you want to update the ranking? (Y): ', 'y')
         PlayerController().ranking_update(self.tournament.scoreboard)
         # show ranking
         MenuView.print_menu('New ranking')
@@ -109,16 +107,20 @@ class TournamentController:
     def choose_tournament(self):
         """
             Show all the not ended tournament and ask to choose one
-            :return: the not ended tournament chosen
+            :return: the not ended tournament chosen or None
         """
         # show tournament not ended
+        MenuView.print_menu('Not ended tournaments')
         not_ended = self.show_tournaments([0])
-        # ask for choice
-        not_ended_id = self.input_service.lower_not_in(
-            'Please select an ID: ',
-            not_ended
-        )
-        return Tournament.search_by_id(not_ended_id, Tournament.table_name)
+        if len(not_ended) < 1:
+            return None
+        else:
+            # ask for choice
+            not_ended_id = self.input_service.lower_not_in(
+                'Please select an ID: ',
+                not_ended
+            )
+            return Tournament.search_by_id(not_ended_id, Tournament.table_name)
 
     def create_tournament(self):
         """
