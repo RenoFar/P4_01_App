@@ -63,7 +63,7 @@ class TournamentController:
 
     def tournament_step_one(self, t_id):
         # selection of 8 players
-        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
+        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
         Tournament.update('players_index', self.tournament.players_index, [t_id], Tournament.table_name)
@@ -77,10 +77,15 @@ class TournamentController:
             self.tournament_execution(t_id, 2)
 
     def tournament_step_two(self, t_id):
-
-        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
+        print(f'Tournament.search_by_id(t_id, Tournament.table_name): '
+              f'{Tournament.search_by_id(t_id, Tournament.table_name)}')
+        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
+        print(f'self.tournament.name: {self.tournament.name}')
+        print(f'self.tournament.players_index: {self.tournament.players_index}')
+        print(f'self.tournament.nb_turn: {self.tournament.nb_turn}')
         for numb in range(len(self.tournament.players_index)):
             self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
+        print(f'self.tournament.scoreboard: {self.tournament.scoreboard}')
         # play the turns
         for t in range(self.tournament.nb_turn):
             MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
@@ -127,7 +132,7 @@ class TournamentController:
 
     def tournament_step_three(self, t_id):
         # update the ranking
-        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
+        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         PlayerController().ranking_update(self.tournament.scoreboard)
         # show ranking
         MenuView.print_menu('New ranking')
@@ -158,6 +163,9 @@ class TournamentController:
             Ask and format the tournament information
             :return: a Tournament Object
         """
+        players_index = []
+        rounds_list = []
+        scoreboard = {}
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
         place = self.input_service.one_char_alnum('Please enter the tournament place: ')
         date = self.input_service.date_format('Tournament date in the format d/m/yyyy: ')
@@ -181,7 +189,7 @@ class TournamentController:
                 except ValueError:
                     InfoView.print_info('\nPlease enter a positive integer!')
         description = self.input_service.one_char_alnum('Please enter the tournament description: ')
-        return Tournament(name, place, date, game_mode, nb_turn, description)
+        return Tournament(name, place, date, game_mode, nb_turn, description, players_index, rounds_list, scoreboard)
 
     @staticmethod
     def create_round(number_turn):
@@ -222,7 +230,7 @@ class TournamentController:
         for elt in range(len(all_tournament)):
             if all_tournament[elt]["is_ended"] in statement:
                 if all_tournament[elt]["is_ended"] == 0:
-                    status = "NOT FINISHED"
+                    status = " - NOT FINISHED"
                 else:
                     status = ""
                 InfoView.print_info(
