@@ -75,7 +75,7 @@ class PlayerController:
         """
         name = self.input_service.one_char_alnum('Please enter player name: ')
         firstname = self.input_service.one_char_alnum('Please enter player firstname: ')
-        birthdate = self.input_service.date_format('Please enter player\'s date of birth in the format m/d/yyyy: ')
+        birthdate = self.input_service.date_format('Please enter player\'s date of birth in the format d/m/yyyy: ')
         gender = self.input_service.lower_not_in(
             'Please enter the player\'s gender (F / M): ',
             ('f', 'm')

@@ -77,6 +77,7 @@ class TournamentController:
             self.tournament_execution(t_id, 2)
 
     def tournament_step_two(self, t_id):
+
         self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
         for numb in range(len(self.tournament.players_index)):
             self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
@@ -88,7 +89,11 @@ class TournamentController:
             turn = self.create_round(t)
 
             # find the current ranking
-            current_classification = PlayerController.current_ranking(self.tournament.players_index, scoreboard, t)
+            current_classification = PlayerController.current_ranking(
+                self.tournament.players_index,
+                self.tournament.scoreboard,
+                t
+            )
 
             # generate matches
             list_match = self.create_match(current_classification)
@@ -216,10 +221,15 @@ class TournamentController:
         all_tournament = Tournament.all(Tournament.table_name)
         for elt in range(len(all_tournament)):
             if all_tournament[elt]["is_ended"] in statement:
+                if all_tournament[elt]["is_ended"] == 0:
+                    status = "NOT FINISHED"
+                else:
+                    status = ""
                 InfoView.print_info(
                     f'Tournament ID: {all_tournament[elt].doc_id} '
                     f'name: {all_tournament[elt]["name"]} '
                     f'date: {all_tournament[elt]["date"]} '
+                    f'{status}'
                 )
                 all_tournaments_id.append(str(all_tournament[elt].doc_id))
         return all_tournaments_id
