@@ -130,7 +130,7 @@ class TournamentController:
         """
         name = self.input_service.one_char_alnum('Please enter the tournament name: ')
         place = self.input_service.one_char_alnum('Please enter the tournament place: ')
-        date = self.input_service.date_format('Tournament date in the format m/d/yyyy: ')
+        date = self.input_service.date_format('Tournament date in the format d/m/yyyy: ')
         game_mode = self.input_service.lower_not_in(
             'Please enter the tournament mode (bullet / blitz / speed): ',
             ('bullet', 'blitz', 'speed')

@@ -47,7 +47,7 @@ class InputService:
                 element = datetime.strptime(InputView.input_data(message), '%d/%m/%Y')
                 break
             except ValueError:
-                InfoView.print_info('\nPlease enter a date in the format m/d/yyyy')
+                InfoView.print_info('\nPlease enter a date in the format d/m/yyyy')
         return element.strftime('%d/%m/%Y')
 
     @staticmethod
