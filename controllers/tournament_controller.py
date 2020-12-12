@@ -63,7 +63,7 @@ class TournamentController:
 
     def tournament_step_one(self, t_id):
         # selection of 8 players
-        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
+        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
         self.tournament.players_index = PlayerController().players_selection()
         # update the tournament
         Tournament.update('players_index', self.tournament.players_index, [t_id], Tournament.table_name)
@@ -77,12 +77,38 @@ class TournamentController:
             self.tournament_execution(t_id, 2)
 
     def tournament_step_two(self, t_id):
+        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
+        for numb in range(len(self.tournament.players_index)):
+            self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
         # play the turns
-        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
-        turns = self.play_turns()
+        for t in range(self.tournament.nb_turn):
+            MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
+
+            # creation of a new round
+            turn = self.create_round(t)
+
+            # find the current ranking
+            current_classification = PlayerController.current_ranking(self.tournament.players_index, scoreboard, t)
+
+            # generate matches
+            list_match = self.create_match(current_classification)
+
+            for m in range(len(list_match)):
+                # enter the results of the matches
+                match_results = PlayerController().players_score(list_match, m)
+
+                # save the results
+                turn.match_list.append(([list_match[m][0], match_results[0]],
+                                        [list_match[m][1], match_results[1]]))
+                self.tournament.scoreboard[list_match[m][0]] += match_results[0]
+                self.tournament.scoreboard[list_match[m][1]] += match_results[1]
+
+            # finish the turn
+            self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
+            turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
+            self.tournament.scoreboard.append([turn.name, turn.start, turn.end, turn.match_list])
+
         # update the tournament
-        self.tournament.rounds_list = turns[0].copy()
-        self.tournament.scoreboard = turns[1].copy()
         Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
         Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
         Tournament.update('current_step', 3, [t_id], Tournament.table_name)
@@ -96,7 +122,7 @@ class TournamentController:
 
     def tournament_step_three(self, t_id):
         # update the ranking
-        self.tournament = Tournament.search_by_id(t_id, Tournament.table_name)
+        self.tournament = Tournament.deserialize(Tournament.search_by_id(t_id, Tournament.table_name))
         PlayerController().ranking_update(self.tournament.scoreboard)
         # show ranking
         MenuView.print_menu('New ranking')
@@ -112,7 +138,6 @@ class TournamentController:
         # show tournament not ended
         MenuView.print_menu('Not ended tournaments')
         not_ended = self.show_tournaments([0])
-        print(f'not_ended: {not_ended}')
         if len(not_ended) < 1:
             return None
         else:
@@ -152,47 +177,6 @@ class TournamentController:
                     InfoView.print_info('\nPlease enter a positive integer!')
         description = self.input_service.one_char_alnum('Please enter the tournament description: ')
         return Tournament(name, place, date, game_mode, nb_turn, description)
-
-    def play_turns(self):
-        """
-            Ask format and determine the Rounds information and the match results
-            :return: a list of them
-        """
-        # initialization of the tournament scoreboard & the list of turns
-        scoreboard = {}
-        list_turns = []
-        for numb in range(len(self.tournament.players_index)):
-            scoreboard[self.tournament.players_index[numb]] = 0
-
-        # Play the rounds
-        for t in range(self.tournament.nb_turn):
-            MenuView.print_menu(f'Execution of round N° {str(t + 1)}')
-
-            # creation of a new round
-            turn = self.create_round(t)
-
-            # find the current ranking
-            current_classification = PlayerController.current_ranking(self.tournament.players_index, scoreboard, t)
-
-            # generate matches
-            list_match = self.create_match(current_classification)
-
-            for m in range(len(list_match)):
-                # enter the results of the matches
-                match_results = PlayerController().players_score(list_match, m)
-
-                # save the results
-                turn.match_list.append(([list_match[m][0], match_results[0]],
-                                        [list_match[m][1], match_results[1]]))
-                scoreboard[list_match[m][0]] += match_results[0]
-                scoreboard[list_match[m][1]] += match_results[1]
-
-            # finish the turn
-            self.input_service.lower_diff('\nDo you want to validate the turn? (Y): ', 'y')
-            turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
-            list_turns.append([turn.name, turn.start, turn.end, turn.match_list])
-
-        return [list_turns, scoreboard]
 
     @staticmethod
     def create_round(number_turn):

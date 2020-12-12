@@ -42,3 +42,14 @@ class Player(Builder):  # Definition of the Player class
             :return: a dictionary of it
         """
         return TinyDB(cls.path).table(cls.table_name).get(Query()['ranking'] == int(rank))
+
+    @staticmethod
+    def deserialize(data):
+        """
+            Serialize the object
+            :return: a dictionary
+        """
+        deserialized = Player()
+        for attr, value in data.items():
+            deserialized.attr = value
+        return deserialized

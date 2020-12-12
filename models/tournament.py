@@ -54,3 +54,14 @@ class Tournament(Builder):  # Definition of the Tournament class
         self.current_step = current_step
         self.current_turn = current_turn
         self.is_ended = is_ended
+
+    @staticmethod
+    def deserialize(data):
+        """
+            Serialize the object
+            :return: a dictionary
+        """
+        deserialized = Tournament()
+        for attr, value in data.items():
+            deserialized.attr = value
+        return deserialized

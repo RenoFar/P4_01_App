@@ -40,10 +40,6 @@ class MainController:
                 TournamentController().tournament_execution()
             elif menu_choice == '2':
                 t_choice = TournamentController().choose_tournament()
-                print(f't_choice: {t_choice}')
-                print(f't_choice.doc_id: {t_choice.doc_id}')
-                print(f't_choice["current_step"]: {t_choice["current_step"]}')
-                print(f't_choice["current_turn"]: {t_choice["current_turn"]}')
                 if t_choice is None:
                     MenuView.print_menu('No unfinished tournament')
                 else:
