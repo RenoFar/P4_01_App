@@ -196,7 +196,7 @@ class TournamentController:
             # finish the turn
             self.input_service.lower_diff('\nDo you want to end the turn? (y): ', 'y')
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
-            self.tournament.rounds_list += [turn.name, turn.start, turn.end, turn.match_list]
+            self.tournament.rounds_list += [[turn.name, turn.start, turn.end, turn.match_list]]
             # update the tournament
             Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
             Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
