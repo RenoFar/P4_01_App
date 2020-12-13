@@ -28,7 +28,7 @@ class MainController:
         while True:
             MenuView.print_menu(' Main menu ')
             menu_choice = self.input_service.lower_not_in(
-                f'\n Execute a new tournament: enter (1)\n'
+                f'\nExecute a new tournament: enter (1)\n'
                 f'Continue an unfinished tournament: enter (2) \n'
                 f'Update the actual ranking: enter (3) \n'
                 f'Show the reports: enter (4) \n'

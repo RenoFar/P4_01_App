@@ -105,17 +105,23 @@ class PlayerController:
             :param actual_scoreboard: actual scoreboard
             :return: a list of players and their actual tournament ranking
         """
-        actual_ranking = []
+        current_ranking = []
         for c in range(len(players_nb)):
-            actual_ranking.append(
+            current_ranking.append(
                 [players_nb[c],
                  Player.all(Player.table_name)[c]['ranking'],
                  actual_scoreboard[players_nb[c]]
                  ]
             )
-        # TODO
         # SORTED BY RANK & SCORE THEN RETURN ONLY A LIST OF SORTED ID
-        return actual_ranking
+        # sort by score then by ranking
+        actual_ranking = sorted(sorted(current_ranking, key=lambda score: score[2]), key=lambda rank: rank[1])
+        print(f'actual_ranking: {actual_ranking}')
+        # create and return a list of the player IDs sorted
+        sorted_player_id = []
+        for sorted_player in range(len(actual_ranking)):
+            sorted_player_id.append(actual_ranking[sorted_player][0])
+        return sorted_player_id
 
     def players_score(self, list_turn, num_turn):
         """

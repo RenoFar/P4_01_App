@@ -24,6 +24,7 @@ class Match:  # Definition of class Match
     def generate_matches(self):
         # we assume that players are ordered by points and rank
         # we generate all the matches considered as if all were good
+        print(f'self.sorted_players: {self.sorted_players}')
         while len(self.sorted_players) != 0:
             match_envisaged = [self.sorted_players[0], self.sorted_players[self.n]]
             self.check_match_availability(match_envisaged)
@@ -57,7 +58,8 @@ class Match:  # Definition of class Match
         # add the new match to matches_generated
         self.matches_generated.append(match_to_add)
         # remove the ids of the players who have been placed
-        del self.sorted_players[0]
+        print(f'self.n: {self.n}')
         del self.sorted_players[self.n]
+        del self.sorted_players[0]
         # reinitialise n
         self.n = 1
