@@ -41,7 +41,7 @@ class MainController:
             elif menu_choice == '2':
                 t_choice = TournamentController().choose_tournament()
                 if t_choice is None:
-                    MenuView.print_menu('No unfinished tournament')
+                    MenuView.print_menu('any tournament')
                 else:
                     TournamentController().tournament_execution(
                         t_choice.doc_id, t_choice["current_step"],

@@ -85,17 +85,18 @@ class TournamentController:
                 self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
 
         # play the turns
-        self.play_turns(self.tournament, t_id, turn_num)
+        actual_turn = self.play_turns(self.tournament, t_id, turn_num)
 
-        # finish the turns
-        Tournament.update('current_step', 3, [t_id], Tournament.table_name)
-        MenuView.print_menu(' Tournament rounds finished & saved ')
-        choice2 = self.input_service.lower_not_in(
-            'Do you want to update the ranking (y/n): ',
-            ('y', 'n')
-        )
-        if choice2 == 'y':
-            self.tournament_execution(t_id, 3)
+        if actual_turn == 3:
+            # finish the turns
+            Tournament.update('current_step', 3, [t_id], Tournament.table_name)
+            MenuView.print_menu(' Tournament rounds saved ')
+            choice2 = self.input_service.lower_not_in(
+                'Do you want to update the ranking (y/n): ',
+                ('y', 'n')
+            )
+            if choice2 == 'y':
+                self.tournament_execution(t_id, 3)
 
     def tournament_step_three(self, t_id):
         # update the ranking
@@ -113,7 +114,7 @@ class TournamentController:
             :return: the not ended tournament chosen or None
         """
         # show tournament not ended
-        MenuView.print_menu('Not ended tournaments')
+        MenuView.print_menu('Unfinished tournaments')
         not_ended = self.show_tournaments([0])
         if len(not_ended) < 1:
             return None
@@ -161,8 +162,9 @@ class TournamentController:
     def play_turns(self, tournament, t_id, turn_num):
         # play the turns
         turn_left = tournament.nb_turn - turn_num
+        current_turn = turn_num
         for t in range(turn_left):
-            current_turn = turn_num + t
+            current_turn += t
             MenuView.print_menu(f'Execution of round N° {str(current_turn + 1)}')
 
             # creation of a new round
@@ -181,7 +183,7 @@ class TournamentController:
             InfoView.print_info(f'Turn start at {turn.start} : Matches in progress...')
 
             # enter the results of the matches
-            self.input_service.lower_diff('\nDo you want to enter the results of the matches? (y): ', 'y')
+            self.input_service.lower_diff('\nDo you want to enter the results? (y): ', 'y')
             for m in range(len(list_match)):
                 match_results = PlayerController().players_score(list_match, m)
 
@@ -194,20 +196,22 @@ class TournamentController:
             # finish the turn
             self.input_service.lower_diff('\nDo you want to end the turn? (y): ', 'y')
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
-            self.tournament.rounds_list[turn_num] = [turn.name, turn.start, turn.end, turn.match_list]
-            print(f'self.tournament.scoreboard: {self.tournament.scoreboard}')
-            print(f'self.tournament.rounds_list: {self.tournament.rounds_list}')
+            self.tournament.rounds_list += [turn.name, turn.start, turn.end, turn.match_list]
             # update the tournament
             Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
             Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
             Tournament.update('current_turn', current_turn + 1, [t_id], Tournament.table_name)
             MenuView.print_menu(f' Turn n° {current_turn + 1} saved ')
-            choice4 = self.input_service.lower_not_in(
-                'Do you want to play the next turn (y/n): ',
-                ('y', 'n')
-            )
-            if choice4 == 'n':
+            if current_turn == 3:
                 break
+            else:
+                choice4 = self.input_service.lower_not_in(
+                    'Do you want to play the next turn (y/n): ',
+                    ('y', 'n')
+                )
+                if choice4 == 'n':
+                    break
+        return current_turn
 
     @staticmethod
     def create_round(number_turn):
