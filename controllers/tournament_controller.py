@@ -169,6 +169,7 @@ class TournamentController:
         # play the turns
         turn_left = tournament.nb_turn - turn_num
         current_turn = turn_num
+        played_match = []
         for t in range(turn_left):
             current_turn += t
             MenuView.print_menu(f'Execution of round N° {str(current_turn + 1)}')
@@ -184,7 +185,9 @@ class TournamentController:
             )
 
             # generate matches
-            list_match = Match(current_classification).matches_generated
+            match_created = Match(current_classification, played_match)
+            list_match = match_created.match_generated
+            played_match = match_created.match_played
             InfoView.print_info(f'Turn start at {turn.start} : Matches in progress...')
 
             # enter the results of the matches

@@ -11,13 +11,14 @@ class Match:  # Definition of class Match
         - its n
     """
 
-    def __init__(self, sorted_players):
+    def __init__(self, sorted_players, match_played):
         """
             Constructor of the class
             :param sorted_players: list of players sorted by ank and score
         """
         self.sorted_players = sorted_players
-        self.matches_generated = []
+        self.match_played = match_played
+        self.match_generated = []
         self.n = 1
         self.generate_matches()
 
@@ -31,7 +32,7 @@ class Match:  # Definition of class Match
 
     def check_match_availability(self, match_envisaged):
         # check the availability of the match
-        if match_envisaged not in self.matches_generated:
+        if match_envisaged not in self.match_played:
             self.add_match_to_new_matches(match_envisaged)
         else:
             self.n += 1
@@ -44,7 +45,7 @@ class Match:  # Definition of class Match
             else:
                 # 2: can't take the next
                 # take the last match
-                last_match_created = self.matches_generated[-1]
+                last_match_created = self.match_generated[-1]
                 # put the players back at the start of the list (in order)
                 self.sorted_players.insert(0, last_match_created[1])
                 self.sorted_players.insert(0, last_match_created[0])
@@ -55,8 +56,10 @@ class Match:  # Definition of class Match
     def add_match_to_new_matches(self, match_to_add):
         # the players did not meet
         # then validate the match compared to that envisaged
-        # add the new match to matches_generated
-        self.matches_generated.append(match_to_add)
+        # add the new match to match_generated
+        self.match_generated.append(match_to_add)
+        # add the match generated to match_played
+        self.match_played.append(match_to_add)
         # remove the ids of the players who have been placed
         print(f'self.n: {self.n}')
         del self.sorted_players[self.n]
