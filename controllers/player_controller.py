@@ -115,7 +115,7 @@ class PlayerController:
             )
         # SORTED BY RANK & SCORE THEN RETURN ONLY A LIST OF SORTED ID
         # sort by score then by ranking
-        actual_ranking = sorted(sorted(current_ranking, key=lambda score: score[2]), key=lambda rank: rank[1])
+        actual_ranking = sorted(current_ranking, key=lambda k: (-k[2], k[1]))
         print(f'actual_ranking: {actual_ranking}')
         # create and return a list of the player IDs sorted
         sorted_player_id = []
