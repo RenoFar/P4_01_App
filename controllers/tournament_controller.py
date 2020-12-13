@@ -5,6 +5,7 @@
 from datetime import datetime
 from models.tournament import Tournament
 from models.round import Round
+from models.match import Match
 from controllers.player_controller import PlayerController
 from services.input_service import InputService
 from views.info_view import InfoView
@@ -50,6 +51,7 @@ class TournamentController:
         # creation of the tournament
         MenuView.print_menu('Tournament creation')
         self.tournament = self.create_tournament()
+
         # registration in the database
         t_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
         Tournament.update('current_step', 1, [t_id], Tournament.table_name)
@@ -65,6 +67,7 @@ class TournamentController:
         # selection of 8 players
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         self.tournament.players_index = PlayerController().players_selection()
+
         # update the tournament
         Tournament.update('players_index', self.tournament.players_index, [t_id], Tournament.table_name)
         Tournament.update('current_step', 2, [t_id], Tournament.table_name)
@@ -102,6 +105,7 @@ class TournamentController:
         # update the ranking
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         PlayerController().ranking_update(self.tournament.scoreboard)
+
         # show ranking
         MenuView.print_menu('New ranking')
         PlayerController.players_sorted('ranking')
@@ -145,12 +149,14 @@ class TournamentController:
             nb_turn = self.input_service.empty_alnum(
                 'The number of laps by default is 4,\ntype another number or Enter to validate: '
             )
-            if len(str(nb_turn)) < 1:  # if nothing is entered
+            if len(str(nb_turn)) < 1:
+                # if nothing is entered
                 nb_turn = 4
                 break
             else:
                 try:
-                    nb_turn = int(nb_turn)  # conversion to integer
+                    # conversion to integer
+                    nb_turn = int(nb_turn)
                     if nb_turn > 0:
                         InfoView.print_info('The number of turns is changed to: ' + str(nb_turn))
                         break
@@ -174,12 +180,11 @@ class TournamentController:
             # find the current ranking
             current_classification = PlayerController.current_ranking(
                 tournament.players_index,
-                tournament.scoreboard,
-                t
+                tournament.scoreboard
             )
 
             # generate matches
-            list_match = self.create_match(current_classification)
+            list_match = Match(current_classification).matches_generated
             InfoView.print_info(f'Turn start at {turn.start} : Matches in progress...')
 
             # enter the results of the matches
@@ -197,6 +202,7 @@ class TournamentController:
             self.input_service.lower_diff('\nDo you want to end the turn? (y): ', 'y')
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
             self.tournament.rounds_list += [[turn.name, turn.start, turn.end, turn.match_list]]
+
             # update the tournament
             Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
             Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
@@ -224,21 +230,6 @@ class TournamentController:
         start = datetime.now().strftime("%X")  # local time HH:MM:SS
         end = ""
         return Round(name, start, end)
-
-    @staticmethod
-    def create_match(selected_players):
-        """
-            Determine the match configuration
-            :param selected_players: list of the players with their ranking
-            :return: a list of it
-        """
-        match_list = []
-        ranking_list = sorted(selected_players, key=lambda ranking: ranking[1])
-        for index in range(len(ranking_list) // 2):
-            player1 = ranking_list[index][0]
-            player2 = ranking_list[((len(ranking_list) // 2) + index)][0]
-            match_list.append([player1, player2])
-        return match_list
 
     @staticmethod
     def show_tournaments(statement):

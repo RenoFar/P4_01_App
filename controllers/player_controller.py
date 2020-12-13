@@ -98,20 +98,23 @@ class PlayerController:
         return Player(name, firstname, birthdate, gender, ranking)
 
     @staticmethod
-    def current_ranking(players_nb, actual_scoreboard, turn_nb):
+    def current_ranking(players_nb, actual_scoreboard):
         """
             Give the rank of the players, depending of the turn number
             :param players_nb: number of the players
             :param actual_scoreboard: actual scoreboard
-            :param turn_nb: actual turn number
             :return: a list of players and their actual tournament ranking
         """
         actual_ranking = []
         for c in range(len(players_nb)):
-            if turn_nb == 0:  # take the known ranking
-                actual_ranking.append([players_nb[c], Player.all(Player.table_name)[c]['ranking']])
-            else:  # take the total of the score of the previous rounds
-                actual_ranking.append([players_nb[c], actual_scoreboard[players_nb[c]]])
+            actual_ranking.append(
+                [players_nb[c],
+                 Player.all(Player.table_name)[c]['ranking'],
+                 actual_scoreboard[players_nb[c]]
+                 ]
+            )
+        # TODO
+        # SORTED BY RANK & SCORE THEN RETURN ONLY A LIST OF SORTED ID
         return actual_ranking
 
     def players_score(self, list_turn, num_turn):
