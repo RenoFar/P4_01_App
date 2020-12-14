@@ -21,10 +21,10 @@ class ReportController:
         while True:
             MenuView.print_menu(' Report menu ')
             report_choice = self.input_service.lower_not_in(
-                f'Show all the known players: enter (1)\n'
-                f'Show all the known tournaments: enter (2)\n'
-                f'Return to the Main menu: enter (3)\n'
-                f'Please enter your choice: ',
+                'Show all the known players: enter (1)\n'
+                'Show all the known tournaments: enter (2)\n'
+                'Return to the Main menu: enter (3)\n'
+                'Please enter your choice: ',
                 ('1', '2', '3')
             )
             if report_choice == '1':
@@ -52,12 +52,12 @@ class ReportController:
         MenuView.print_menu('Tournaments played')
         list_id = TournamentController.show_tournaments([0, 1])
         show_details = self.input_service.lower_not_in(
-            f'Do you want to see the tournament details (yes: Y / no: N): ',
+            'Do you want to see the tournament details (yes: Y / no: N): ',
             ('y', 'n')
         )
         if show_details == 'y':
             tournament_chosen = self.input_service.lower_not_in(
-                f'Please enter the ID of the chosen tournament: ',
+                'Please enter the ID of the chosen tournament: ',
                 list_id
             )
             self.details_tournament(tournament_chosen)
