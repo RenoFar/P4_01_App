@@ -7,5 +7,8 @@ class MenuView:
 
     @staticmethod
     def print_menu(info):
-        """ Print the menu information """
+        """
+            Print the menu information
+            :param info: information to print
+        """
         print(f'\n\n ********** {info} ********** ')

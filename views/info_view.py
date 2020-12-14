@@ -7,5 +7,8 @@ class InfoView:
 
     @staticmethod
     def print_info(info):
-        """ Print the general information """
+        """
+            Print the general information
+            :param info: information to print
+        """
         print(f'{info}')

@@ -2,7 +2,7 @@
 # coding: utf-8
 
 
-class Round:  # Definition of class Round
+class Round:
     """
         Class defining a tour characterized by:
         - its name

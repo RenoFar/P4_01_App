@@ -5,7 +5,7 @@
 from models.builder import Builder
 
 
-class Tournament(Builder):  # Definition of the Tournament class
+class Tournament(Builder):
     """
         Class defining a tournament characterized by:
         - its name

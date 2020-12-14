@@ -7,5 +7,9 @@ class InputView:
 
     @staticmethod
     def input_data(info):
-        """ Ask and return the general information """
+        """
+            Ask an information and return the asked information
+            :param info: information to ask
+            :return: the asked information
+        """
         return input(f'{info}')

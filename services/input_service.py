@@ -8,7 +8,7 @@ from views.info_view import InfoView
 
 
 class InputService:
-    """ Class grouping together all the Input services """
+    """ Class containing together all the Input services """
 
     @staticmethod
     def one_char_alnum(message):

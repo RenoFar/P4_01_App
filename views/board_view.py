@@ -7,5 +7,10 @@ class BoardView:
 
     @staticmethod
     def print_board(player_id, rank, score=''):
-        """ Print the player's board information """
+        """
+            Print the player's board information
+            :param player_id: player ID
+            :param rank: player ranking
+            :param score: player score
+        """
         print(f'Player ID {player_id} ranked {rank} {score}')
