@@ -48,11 +48,14 @@ class TournamentController:
             MenuView.print_menu(' Tournament ended ')
 
     def tournament_step_zero(self):
+        """
+            Creation of the tournament
+        """
         # creation of the tournament
         MenuView.print_menu('Tournament creation')
         self.tournament = self.create_tournament()
 
-        # registration in the database
+        # update in the database
         t_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
         Tournament.update('current_step', 1, [t_id], Tournament.table_name)
         MenuView.print_menu('Tournament created')
@@ -64,6 +67,10 @@ class TournamentController:
             self.tournament_execution(t_id, 1)
 
     def tournament_step_one(self, t_id):
+        """
+            Selection of the players
+            :param t_id: tournament database ID
+        """
         # selection of 8 players
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         self.tournament.players_index = PlayerController().players_selection()
@@ -80,6 +87,11 @@ class TournamentController:
             self.tournament_execution(t_id, 2)
 
     def tournament_step_two(self, t_id, turn_num):
+        """
+            initialize the scoreboard and performing the turns
+            :param t_id: tournament database ID
+            :param turn_num: current turn number
+        """
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
 
         # initialize the scoreboard
@@ -102,6 +114,10 @@ class TournamentController:
                 self.tournament_execution(t_id, 3)
 
     def tournament_step_three(self, t_id):
+        """
+            Ask for the manual update of the players ranking and ending the tournament
+            :param t_id: tournament database ID
+        """
         # update the ranking
         self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
         PlayerController().ranking_update(self.tournament.scoreboard)
@@ -114,7 +130,7 @@ class TournamentController:
 
     def choose_tournament(self):
         """
-            Show all the not ended tournament and ask to choose one
+            Show all the unfinished tournament and ask to choose one
             :return: the not ended tournament chosen or None
         """
         # show tournament not ended
@@ -166,6 +182,12 @@ class TournamentController:
         return Tournament(name, place, date, game_mode, nb_turn, description, players_index, rounds_list, scoreboard)
 
     def play_turns(self, tournament, t_id, turn_num):
+        """
+            Performing the matches, turn by turn with the actual ranking
+            :param tournament: current tournament
+            :param t_id: tournament database ID
+            :param turn_num: current tournament turn
+        """
         # play the turns
         turn_left = tournament.nb_turn - turn_num
         current_turn = turn_num
@@ -181,7 +203,8 @@ class TournamentController:
             # find the current ranking
             current_classification = PlayerController.current_ranking(
                 tournament.players_index,
-                tournament.scoreboard
+                tournament.scoreboard,
+                turn_num
             )
 
             # generate matches

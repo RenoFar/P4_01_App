@@ -51,7 +51,6 @@ class ReportController:
         """
         MenuView.print_menu('Tournaments played')
         list_id = TournamentController.show_tournaments([0, 1])
-        # Show the details
         show_details = self.input_service.lower_not_in(
             f'Do you want to see the tournament details (yes: Y / no: N): ',
             ('y', 'n')
