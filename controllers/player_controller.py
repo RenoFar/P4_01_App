@@ -30,9 +30,8 @@ class PlayerController:
         for n in range(8):
             MenuView.print_menu(f'Select player N° {str(n + 1)} ')
             selected_player = self.player_select(list_chosen_players)
-            if selected_player == 'new':  # creation of a new player
+            if selected_player == 'new':  # create & save a new player
                 new_player = self.create_player()
-                # save new player
                 selected_player = str(Player.insert(new_player.serialize(), Player.table_name))
             list_chosen_players.append(selected_player)
         return list_chosen_players
@@ -54,6 +53,7 @@ class PlayerController:
                 if str(a + 1) not in chosen_players:  # exclude players already chosen
                     InfoView.print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
                     players_available.append(str(a + 1))
+
             # choose a player
             menu_choice = self.input_service.lower_not_in(
                 '\nSelect an available player (1) or add a new player (2): ',
@@ -98,12 +98,13 @@ class PlayerController:
         return Player(name, firstname, birthdate, gender, ranking)
 
     @staticmethod
-    def current_ranking(players_nb, actual_scoreboard):
+    def current_ranking(players_nb, actual_scoreboard, num_turn):
         """
-            Give the rank of the players, depending of the turn number
+            Give a list of players sorted by ank and score
             :param players_nb: number of the players
             :param actual_scoreboard: actual scoreboard
-            :return: a list of players and their actual tournament ranking
+            :param num_turn: current tournament turn
+            :return: a list of players ID in the desired meeting order
         """
         current_ranking = []
         for c in range(len(players_nb)):
@@ -113,14 +114,20 @@ class PlayerController:
                  actual_scoreboard[players_nb[c]]
                  ]
             )
-        # SORTED BY RANK & SCORE THEN RETURN ONLY A LIST OF SORTED ID
-        # sort by score then by ranking
-        actual_ranking = sorted(current_ranking, key=lambda k: (-k[2], k[1]))
-        print(f'actual_ranking: {actual_ranking}')
-        # create and return a list of the player IDs sorted
         sorted_player_id = []
-        for sorted_player in range(len(actual_ranking)):
-            sorted_player_id.append(actual_ranking[sorted_player][0])
+        if num_turn == 0:
+            # sort by rank
+            actual_ranking = sorted(current_ranking, key=lambda rank: rank[1])
+        else:
+            # sort by score then by ranking
+            actual_ranking = sorted(current_ranking, key=lambda k: (-k[2], k[1]))
+
+        # The best player in the upper half is paired with the best player in the lower half, and so on
+        for m in range(len(actual_ranking) // 2):
+            player1 = actual_ranking[m][0]
+            sorted_player_id.append(player1)
+            player2 = actual_ranking[((len(actual_ranking) // 2) + m)][0]
+            sorted_player_id.append(player2)
         return sorted_player_id
 
     def players_score(self, list_turn, num_turn):
