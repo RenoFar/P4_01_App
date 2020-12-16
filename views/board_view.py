@@ -3,7 +3,9 @@
 
 
 class BoardView:
-    """ Class of the board's view """
+    """
+        Class of the board's view
+    """
 
     @staticmethod
     def print_board(player_id, rank, score=''):

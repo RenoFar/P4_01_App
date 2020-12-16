@@ -3,7 +3,9 @@
 
 
 class InputView:
-    """ Class of the input's view """
+    """
+        Class of the input's view
+    """
 
     @staticmethod
     def input_data(info):

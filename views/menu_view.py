@@ -3,7 +3,9 @@
 
 
 class MenuView:
-    """ Class of the menu's view """
+    """
+        Class of the menu's view
+    """
 
     @staticmethod
     def print_menu(info):
