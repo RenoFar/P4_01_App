@@ -5,20 +5,20 @@
 from controllers.tournament_controller import TournamentController
 from controllers.report_controller import ReportController
 from controllers.player_controller import PlayerController
-from services.input_service import InputService
+from controllers.builder_controller import BuilderController
 from views.menu_view import MenuView
 
 
-class MainController:
+class MainController(BuilderController):
     """
         Class grouping together all the Main menu controllers
     """
 
-    def __init__(self):
+    def __init__(self, message=None):
         """
             Constructor of the class
         """
-        self.input_service = InputService()
+        super().__init__(message)
         self.menu_list()
 
     def menu_list(self):
@@ -27,13 +27,14 @@ class MainController:
         """
         while True:
             MenuView.print_menu(' Main menu ')
-            menu_choice = self.input_service.lower_not_in(
+            menu_choice = self.input_service(
                 '\nExecute a new tournament: enter (1)\n'
                 'Continue an unfinished tournament: enter (2) \n'
                 'Update the actual ranking: enter (3) \n'
                 'Show the reports: enter (4) \n'
                 'Quit the application: enter (5) \n'
-                'Please enter your choice: ',
+                'Please enter your choice: '
+            ).lower_not_in(
                 ('1', '2', '3', '4', '5')
             )
             if menu_choice == '1':

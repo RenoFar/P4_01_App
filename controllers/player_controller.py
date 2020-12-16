@@ -3,7 +3,7 @@
 
 
 from models.player import Player
-from services.input_service import InputService
+from builder_controller import BuilderController
 from views.info_view import InfoView
 from views.menu_view import MenuView
 from views.board_view import BoardView
@@ -14,11 +14,11 @@ class PlayerController:
         Class grouping together all the player controllers
     """
 
-    def __init__(self):
+    def __init__(self, message=None):
         """
             Constructor of the class
         """
-        self.input_service = InputService()
+        super().__init__(message)
 
     def players_selection(self):
         """
@@ -61,14 +61,16 @@ class PlayerController:
                     players_available.append(str(a + 1))
 
             # choose a player
-            menu_choice = self.input_service.lower_not_in(
-                '\nSelect an available player (1) or add a new player (2): ',
+            menu_choice = self.input_service(
+                '\nSelect an available player (1) or add a new player (2): '
+            ).lower_not_in(
                 ('1', '2')
             )
             if menu_choice == '1' and len(players_available) > 0:
                 # test the available players
-                player_choice = self.input_service.lower_not_in(
-                    'Select a player number: ',
+                player_choice = self.input_service(
+                    'Select a player number: '
+                ).lower_not_in(
                     players_available
                 )
             elif menu_choice == '2':
@@ -80,21 +82,24 @@ class PlayerController:
             Ask and format the player information
             :return: a Player Object
         """
-        name = self.input_service.one_char_alnum('Please enter player name: ')
+        name = self.input_service(
+            'Please enter player name: '
+        ).one_char_alnum()
         firstname = self.input_service.one_char_alnum(
             'Please enter player firstname: '
-        )
-        birthdate = self.input_service.date_format(
+        ).one_char_alnum()
+        birthdate = self.input_service(
             'Please enter player\'s date of birth in the format d/m/yyyy: '
-        )
-        gender = self.input_service.lower_not_in(
-            'Please enter the player\'s gender (F / M): ',
+        ).date_format()
+        gender = self.input_service(
+            'Please enter the player\'s gender (F / M): '
+        ).lower_not_in(
             ('f', 'm')
         )
         while True:
-            ranking = self.input_service.one_char_alnum(
+            ranking = self.input_service(
                 'Please enter player ranking: '
-            )
+            ).one_char_alnum()
             try:
                 ranking = int(ranking)
                 if ranking > 0:
@@ -168,11 +173,12 @@ class PlayerController:
         )
 
         # choose the result
-        score = self.input_service.lower_not_in(
+        score = self.input_service(
             f'Choose the winner of the match: '
             f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
             f', (2) for ID: {str(list_turn[num_turn][1])}, '
-            f'(3) for : Draw \n Result: ',
+            f'(3) for : Draw \n Result: '
+        ).lower_not_in(
             ('1', '2', '3')
         )
         if score == '1':
@@ -227,9 +233,9 @@ class PlayerController:
         for number in all_players_rank:
             while True:  # control the chosen ranking
                 while True:  # control the format
-                    new_ranking = self.input_service.empty_alnum(
+                    new_ranking = self.input_service(
                         f'New ranking of player ID {number[0]} : '
-                    )
+                    ).empty_alnum()
                     try:  # conversion on a positive integer for ranking
                         new_ranking = int(new_ranking)
                         if new_ranking > 0:

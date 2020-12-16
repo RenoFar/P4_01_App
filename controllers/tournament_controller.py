@@ -7,24 +7,24 @@ from models.tournament import Tournament
 from models.round import Round
 from models.match import Match
 from controllers.player_controller import PlayerController
-from services.input_service import InputService
+from builder_controller import BuilderController
 from views.info_view import InfoView
 from views.menu_view import MenuView
 
 
-class TournamentController:
+class TournamentController(BuilderController):
     """
         Class grouping together all the tournament controllers
     """
 
-    def __init__(self):
+    def __init__(self, message=None):
         """
             Constructor of the class
         """
+        super().__init__(message)
         self.tournament = None
         self.turns = None
         self.players = None
-        self.input_service = InputService()
 
     def tournament_execution(self, t_id=0, step=0, turn=0):
         """
@@ -62,8 +62,8 @@ class TournamentController:
         )
         Tournament.update('current_step', 1, [t_id], Tournament.table_name)
         MenuView.print_menu('Tournament created')
-        choice0 = self.input_service.lower_not_in(
-            'Do you want to select the players (y/n): ',
+        choice0 = self.input_service(
+            'Do you want to select the players (y/n): ').lower_not_in(
             ('y', 'n')
         )
         if choice0 == 'y':
@@ -90,8 +90,8 @@ class TournamentController:
         )
         Tournament.update('current_step', 2, [t_id], Tournament.table_name)
         MenuView.print_menu(' Tournament players saved ')
-        choice1 = self.input_service.lower_not_in(
-            'Do you want to play the turns (y/n): ',
+        choice1 = self.input_service(
+            'Do you want to play the turns (y/n): ').lower_not_in(
             ('y', 'n')
         )
         if choice1 == 'y':
@@ -122,8 +122,8 @@ class TournamentController:
             # finish the turns
             Tournament.update('current_step', 3, [t_id], Tournament.table_name)
             MenuView.print_menu(' Tournament rounds saved ')
-            choice2 = self.input_service.lower_not_in(
-                'Do you want to update the ranking (y/n): ',
+            choice2 = self.input_service(
+                'Do you want to update the ranking (y/n): ').lower_not_in(
                 ('y', 'n')
             )
             if choice2 == 'y':
@@ -160,8 +160,9 @@ class TournamentController:
             return None
         else:
             # ask for choice
-            not_ended_id = self.input_service.lower_not_in(
-                'Please select an ID: ',
+            not_ended_id = self.input_service(
+                'Please select an ID: '
+            ).lower_not_in(
                 not_ended
             )
             return Tournament.search_by_id(int(not_ended_id),
@@ -176,24 +177,25 @@ class TournamentController:
         players_index = []
         rounds_list = []
         scoreboard = {}
-        name = self.input_service.one_char_alnum(
+        name = self.input_service(
             'Please enter the tournament name: '
-        )
-        place = self.input_service.one_char_alnum(
+        ).one_char_alnum()
+        place = self.input_service(
             'Please enter the tournament place: '
-        )
-        date = self.input_service.date_format(
+        ).one_char_alnum()
+        date = self.input_service(
             'Please enter the tournament date: '
-        )
-        game_mode = self.input_service.lower_not_in(
-            'Please enter the tournament mode (bullet / blitz / speed): ',
+        ).date_format()
+        game_mode = self.input_service(
+            'Please enter the tournament mode (bullet / blitz / speed): '
+        ).lower_not_in(
             ('bullet', 'blitz', 'speed')
         )
         while True:
-            nb_turn = self.input_service.empty_alnum(
+            nb_turn = self.input_service(
                 'The number of laps by default is 4,'
                 '\ntype another number or Enter to validate: '
-            )
+            ).empty_alnum()
             if len(str(nb_turn)) < 1:
                 # if nothing is entered
                 nb_turn = 4
@@ -210,9 +212,9 @@ class TournamentController:
                         break
                 except ValueError:
                     InfoView.print_info('\nPlease enter a positive integer!')
-        description = self.input_service.one_char_alnum(
+        description = self.input_service(
             'Please enter the tournament description: '
-        )
+        ).one_char_alnum()
         return Tournament(name,
                           place,
                           date,
@@ -243,10 +245,8 @@ class TournamentController:
             )
 
             # creation of a new round
-            self.input_service.lower_diff(
-                '\nDo you want to start the turn? (y): ',
-                'y'
-            )
+            self.input_service('\nDo you want to start the turn? (y): '
+                               ).lower_diff('y')
             turn = self.create_round(current_turn)
 
             # find the current ranking
@@ -266,10 +266,9 @@ class TournamentController:
             )
 
             # enter the results of the matches
-            self.input_service.lower_diff(
-                '\nDo you want to enter the results? (y): ',
-                'y'
-            )
+            self.input_service(
+                '\nDo you want to enter the results? (y): '
+            ).lower_diff('y')
             for m in range(len(list_match)):
                 match_results = PlayerController().players_score(list_match, m)
 
@@ -282,8 +281,9 @@ class TournamentController:
                     match_results[1]
 
             # finish the turn
-            self.input_service.lower_diff(
-                '\nDo you want to end the turn? (y): ',
+            self.input_service(
+                '\nDo you want to end the turn? (y): '
+            ).lower_diff(
                 'y'
             )
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
@@ -311,8 +311,9 @@ class TournamentController:
             if current_turn == 3:
                 break
             else:
-                choice4 = self.input_service.lower_not_in(
-                    'Do you want to play the next turn (y/n): ',
+                choice4 = self.input_service(
+                    'Do you want to play the next turn (y/n): '
+                ).lower_not_in(
                     ('y', 'n')
                 )
                 if choice4 == 'n':

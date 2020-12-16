@@ -4,27 +4,31 @@
 
 from controllers.tournament_controller import TournamentController
 from controllers.player_controller import PlayerController
-from services.input_service import InputService
+from builder_controller import BuilderController
 from views.menu_view import MenuView
 
 
-class ReportController:
+class ReportController(BuilderController):
     """
         Class grouping together all the report controllers
     """
 
-    def __init__(self):
-        self.input_service = InputService()
+    def __init__(self, message=None):
+        """
+            Constructor of the class
+        """
+        super().__init__(message)
         self.report_execution()
 
     def report_execution(self):
         while True:
             MenuView.print_menu(' Report menu ')
-            report_choice = self.input_service.lower_not_in(
+            report_choice = self.input_service(
                 'Show all the known players: enter (1)\n'
                 'Show all the known tournaments: enter (2)\n'
                 'Return to the Main menu: enter (3)\n'
-                'Please enter your choice: ',
+                'Please enter your choice: '
+            ).lower_not_in(
                 ('1', '2', '3')
             )
             if report_choice == '1':
@@ -51,13 +55,15 @@ class ReportController:
         """
         MenuView.print_menu('Tournaments played')
         list_id = TournamentController.show_tournaments([0, 1])
-        show_details = self.input_service.lower_not_in(
-            'Do you want to see the tournament details (yes: Y / no: N): ',
+        show_details = self.input_service(
+            'Do you want to see the tournament details (yes: Y / no: N): '
+        ).lower_not_in(
             ('y', 'n')
         )
         if show_details == 'y':
-            tournament_chosen = self.input_service.lower_not_in(
-                'Please enter the ID of the chosen tournament: ',
+            tournament_chosen = self.input_service(
+                'Please enter the ID of the chosen tournament: '
+            ).lower_not_in(
                 list_id
             )
             self.details_tournament(tournament_chosen)
