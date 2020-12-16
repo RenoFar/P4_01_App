@@ -9,6 +9,7 @@ Elle doit utiliser le module TinyDB et respecter les directives de la PEP8.
 ## Pré-requis:
 
 - Création d'un environnement virtuel
+- Pip : système de gestion de paquets utilisé pour installer et gérer des librairies écrites en Python
 - Utilisation d \'un terminal (interface en ligne de commande)
 
 ## Installation:
@@ -22,6 +23,7 @@ Elle doit utiliser le module TinyDB et respecter les directives de la PEP8.
 
 ## Rapport et execution:
 
-- Pour regénérer le rapport flake8 dans le dossier flake8-rapport grace au fichier setup.cfg, 
-il sufflt d'éxecuter la commande `python -m flake8`
+- Pour regénérer le rapport flake8 dans le dossier flake8-rapport grace au fichier setup.cfg
+	1. Installer flake8 avec la commande `pip install flake8` 
+	2. Executer la commande `python -m flake8` dans le dossier source le l'application (P4_01_App)
 - Pour démarrer l'application, il faut Exécuter le script Main.py avec la commande `python Main.py`
