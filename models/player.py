@@ -19,7 +19,14 @@ class Player(Builder):
 
     table_name = 'known_players'
 
-    def __init__(self, name=None, firstname=None, date_birth=None, gender=None, ranking=None):
+    def __init__(
+            self,
+            name=None,
+            firstname=None,
+            date_birth=None,
+            gender=None,
+            ranking=None
+    ):
         """
             Constructor of the class
             :param name: name of the player
@@ -37,8 +44,10 @@ class Player(Builder):
     @classmethod
     def search_by_rank(cls, rank):
         """
-            Search a specific serialized Player in the TinyDB database by its rank
+            Search a specific serialized Player by its rank
             :param rank: rank of the selected object
             :return: a dictionary of it
         """
-        return TinyDB(cls.path).table(cls.table_name).get(Query()['ranking'] == int(rank))
+        return TinyDB(cls.path).table(cls.table_name).get(
+            Query()['ranking'] == int(rank)
+        )

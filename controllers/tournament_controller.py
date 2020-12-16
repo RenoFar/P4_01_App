@@ -56,7 +56,10 @@ class TournamentController:
         self.tournament = self.create_tournament()
 
         # update in the database
-        t_id = self.tournament.insert(self.tournament.serialize(), Tournament.table_name)
+        t_id = self.tournament.insert(
+            self.tournament.serialize(),
+            Tournament.table_name
+        )
         Tournament.update('current_step', 1, [t_id], Tournament.table_name)
         MenuView.print_menu('Tournament created')
         choice0 = self.input_service.lower_not_in(
@@ -72,11 +75,19 @@ class TournamentController:
             :param t_id: tournament database ID
         """
         # selection of 8 players
-        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
+        self.tournament = Tournament(
+            **Tournament.search_by_id(
+                t_id, Tournament.table_name)
+        )
         self.tournament.players_index = PlayerController().players_selection()
 
         # update the tournament
-        Tournament.update('players_index', self.tournament.players_index, [t_id], Tournament.table_name)
+        Tournament.update(
+            'players_index',
+            self.tournament.players_index,
+            [t_id],
+            Tournament.table_name
+        )
         Tournament.update('current_step', 2, [t_id], Tournament.table_name)
         MenuView.print_menu(' Tournament players saved ')
         choice1 = self.input_service.lower_not_in(
@@ -92,12 +103,17 @@ class TournamentController:
             :param t_id: tournament database ID
             :param turn_num: current turn number
         """
-        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
+        self.tournament = Tournament(
+            **Tournament.search_by_id(
+                t_id, Tournament.table_name)
+        )
 
         # initialize the scoreboard
         if turn_num == 0:
             for numb in range(len(self.tournament.players_index)):
-                self.tournament.scoreboard[self.tournament.players_index[numb]] = 0
+                self.tournament.scoreboard[
+                    self.tournament.players_index[numb]
+                ] = 0
 
         # play the turns
         actual_turn = self.play_turns(self.tournament, t_id, turn_num)
@@ -115,11 +131,15 @@ class TournamentController:
 
     def tournament_step_three(self, t_id):
         """
-            Ask for the manual update of the players ranking and ending the tournament
+            Ask for the manual update of the players ranking
+            and ending the tournament
             :param t_id: tournament database ID
         """
         # update the ranking
-        self.tournament = Tournament(**Tournament.search_by_id(t_id, Tournament.table_name))
+        self.tournament = Tournament(
+            **Tournament.search_by_id(
+                t_id, Tournament.table_name)
+        )
         PlayerController().ranking_update(self.tournament.scoreboard)
 
         # show ranking
@@ -144,7 +164,9 @@ class TournamentController:
                 'Please select an ID: ',
                 not_ended
             )
-            return Tournament.search_by_id(int(not_ended_id), Tournament.table_name)
+            return Tournament.search_by_id(int(not_ended_id),
+                                           Tournament.table_name
+                                           )
 
     def create_tournament(self):
         """
@@ -154,16 +176,23 @@ class TournamentController:
         players_index = []
         rounds_list = []
         scoreboard = {}
-        name = self.input_service.one_char_alnum('Please enter the tournament name: ')
-        place = self.input_service.one_char_alnum('Please enter the tournament place: ')
-        date = self.input_service.date_format('Please enter the tournament date: ')
+        name = self.input_service.one_char_alnum(
+            'Please enter the tournament name: '
+        )
+        place = self.input_service.one_char_alnum(
+            'Please enter the tournament place: '
+        )
+        date = self.input_service.date_format(
+            'Please enter the tournament date: '
+        )
         game_mode = self.input_service.lower_not_in(
             'Please enter the tournament mode (bullet / blitz / speed): ',
             ('bullet', 'blitz', 'speed')
         )
         while True:
             nb_turn = self.input_service.empty_alnum(
-                'The number of laps by default is 4,\ntype another number or Enter to validate: '
+                'The number of laps by default is 4,'
+                '\ntype another number or Enter to validate: '
             )
             if len(str(nb_turn)) < 1:
                 # if nothing is entered
@@ -174,12 +203,26 @@ class TournamentController:
                     # conversion to integer
                     nb_turn = int(nb_turn)
                     if nb_turn > 0:
-                        InfoView.print_info('The number of turns is changed to: ' + str(nb_turn))
+                        InfoView.print_info(
+                            'The number of turns is changed to: '
+                            f'{str(nb_turn)}'
+                        )
                         break
                 except ValueError:
                     InfoView.print_info('\nPlease enter a positive integer!')
-        description = self.input_service.one_char_alnum('Please enter the tournament description: ')
-        return Tournament(name, place, date, game_mode, nb_turn, description, players_index, rounds_list, scoreboard)
+        description = self.input_service.one_char_alnum(
+            'Please enter the tournament description: '
+        )
+        return Tournament(name,
+                          place,
+                          date,
+                          game_mode,
+                          nb_turn,
+                          description,
+                          players_index,
+                          rounds_list,
+                          scoreboard
+                          )
 
     def play_turns(self, tournament, t_id, turn_num):
         """
@@ -194,10 +237,16 @@ class TournamentController:
         played_match = []
         for t in range(turn_left):
             current_turn += t
-            MenuView.print_menu(f'Execution of round N° {str(current_turn + 1)}')
+            MenuView.print_menu(
+                'Execution of round N° '
+                f'{str(current_turn + 1)}'
+            )
 
             # creation of a new round
-            self.input_service.lower_diff('\nDo you want to start the turn? (y): ', 'y')
+            self.input_service.lower_diff(
+                '\nDo you want to start the turn? (y): ',
+                'y'
+            )
             turn = self.create_round(current_turn)
 
             # find the current ranking
@@ -211,28 +260,53 @@ class TournamentController:
             match_created = Match(current_classification, played_match)
             list_match = match_created.match_generated
             played_match = match_created.match_played
-            InfoView.print_info(f'Turn start at {turn.start} : Matches in progress...')
+            InfoView.print_info(
+                f'Turn start at {turn.start} : '
+                'Matches in progress...'
+            )
 
             # enter the results of the matches
-            self.input_service.lower_diff('\nDo you want to enter the results? (y): ', 'y')
+            self.input_service.lower_diff(
+                '\nDo you want to enter the results? (y): ',
+                'y'
+            )
             for m in range(len(list_match)):
                 match_results = PlayerController().players_score(list_match, m)
 
                 # save the results
                 turn.match_list.append(([list_match[m][0], match_results[0]],
                                         [list_match[m][1], match_results[1]]))
-                self.tournament.scoreboard[list_match[m][0]] += match_results[0]
-                self.tournament.scoreboard[list_match[m][1]] += match_results[1]
+                self.tournament.scoreboard[list_match[m][0]] += \
+                    match_results[0]
+                self.tournament.scoreboard[list_match[m][1]] += \
+                    match_results[1]
 
             # finish the turn
-            self.input_service.lower_diff('\nDo you want to end the turn? (y): ', 'y')
+            self.input_service.lower_diff(
+                '\nDo you want to end the turn? (y): ',
+                'y'
+            )
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
-            self.tournament.rounds_list += [[turn.name, turn.start, turn.end, turn.match_list]]
+            self.tournament.rounds_list += [
+                [turn.name, turn.start, turn.end, turn.match_list]
+            ]
 
             # update the tournament
-            Tournament.update('rounds_list', self.tournament.rounds_list, [t_id], Tournament.table_name)
-            Tournament.update('scoreboard', self.tournament.scoreboard, [t_id], Tournament.table_name)
-            Tournament.update('current_turn', current_turn + 1, [t_id], Tournament.table_name)
+            Tournament.update('rounds_list',
+                              self.tournament.rounds_list,
+                              [t_id],
+                              Tournament.table_name
+                              )
+            Tournament.update('scoreboard',
+                              self.tournament.scoreboard,
+                              [t_id],
+                              Tournament.table_name
+                              )
+            Tournament.update('current_turn',
+                              current_turn + 1,
+                              [t_id],
+                              Tournament.table_name
+                              )
             MenuView.print_menu(f' Turn n° {current_turn + 1} saved ')
             if current_turn == 3:
                 break
@@ -288,7 +362,9 @@ class TournamentController:
             :param chosen_id:  id of the chosen tournament
         """
         # list of players
-        tournament_players = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["players_index"]
+        tournament_players = Tournament.search_by_id(
+            int(chosen_id), Tournament.table_name
+        )["players_index"]
         MenuView.print_menu('players in alphabetical order')
         PlayerController.tournament_players_sorted(1, tournament_players)
         MenuView.print_menu('players sorted by ranking')
@@ -296,9 +372,13 @@ class TournamentController:
 
         # details of the rounds
         MenuView.print_menu('Turns details')
-        tournament_turns = Tournament.search_by_id(int(chosen_id), Tournament.table_name)["rounds_list"]
+        tournament_turns = Tournament.search_by_id(
+            int(chosen_id), Tournament.table_name
+        )["rounds_list"]
         for elt in range(len(tournament_turns)):
-            InfoView.print_info(f'\nTournament ID: {chosen_id} Turn N°: {elt + 1} ')
+            InfoView.print_info(
+                f'\nTournament ID: {chosen_id} Turn N°: {elt + 1} '
+            )
             for elt2 in range(len(tournament_turns[elt])):
                 InfoView.print_info(
                     f'match n°: {elt2 + 1} '

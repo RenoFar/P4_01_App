@@ -26,9 +26,19 @@ class Tournament(Builder):
     table_name = 'existing_tournaments'
 
     def __init__(
-            self, name=None, place=None, date=None, mode_game=None, nb_turn=None,
-            description=None, players_index=None, rounds_list=None, scoreboard=None,
-            current_step=0, current_turn=0, is_ended=0
+            self,
+            name=None,
+            place=None,
+            date=None,
+            mode_game=None,
+            nb_turn=None,
+            description=None,
+            players_index=None,
+            rounds_list=None,
+            scoreboard=None,
+            current_step=0,
+            current_turn=0,
+            is_ended=0
     ):
         """
             Constructor of the class

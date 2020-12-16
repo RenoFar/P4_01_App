@@ -24,13 +24,16 @@ class Match:
 
     def generate_matches(self):
         """
-            Create match from the lists of match played and the sorted players ID
+            Create match from the lists of match played
+            and the sorted players ID
         """
         # we assume that players are ordered by points and rank
         # generate all the matches considered as if all were good
         print(f'self.sorted_players: {self.sorted_players}')
         while len(self.sorted_players) != 0:
-            match_envisaged = [self.sorted_players[0], self.sorted_players[self.n]]
+            match_envisaged = [self.sorted_players[0],
+                               self.sorted_players[self.n]
+                               ]
             self.check_match_availability(match_envisaged)
 
     def check_match_availability(self, match_envisaged):
@@ -47,7 +50,9 @@ class Match:
             # check the existence of a next player in the available list
             if self.sorted_players[self.n]:
                 # 1 : take the next one
-                match_envisaged = [self.sorted_players[0], self.sorted_players[self.n]]
+                match_envisaged = [self.sorted_players[0],
+                                   self.sorted_players[self.n]
+                                   ]
                 self.check_match_availability(match_envisaged)
             else:
                 # 2: can't take the next
@@ -57,7 +62,10 @@ class Match:
                 self.sorted_players.insert(0, last_match_created[1])
                 self.sorted_players.insert(0, last_match_created[0])
                 # revalidate it by taking the next player
-                match_envisaged = (self.sorted_players[0], self.sorted_players[0 + self.n])
+                match_envisaged = (
+                    self.sorted_players[0],
+                    self.sorted_players[0 + self.n]
+                )
                 self.check_match_availability(match_envisaged)
 
     def add_match_to_new_matches(self, match_to_add):

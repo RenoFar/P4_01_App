@@ -15,7 +15,7 @@ class InputService:
         """
             Ask for an information
             :param message: asking information message
-            :return: an input element with one character at least and alphanumeric
+            :return: an alphanumeric input with one character at least
         """
         element = ''
         while len(element) < 1 or not element.isalnum():
@@ -44,10 +44,15 @@ class InputService:
         """
         while True:
             try:
-                element = datetime.strptime(InputView.input_data(message), '%d/%m/%Y')
+                element = datetime.strptime(
+                    InputView.input_data(message),
+                    '%d/%m/%Y'
+                )
                 break
             except ValueError:
-                InfoView.print_info('\nPlease enter a date in the format d/m/yyyy')
+                InfoView.print_info(
+                    '\nPlease enter a date in the format d/m/yyyy'
+                )
         return element.strftime('%d/%m/%Y')
 
     @staticmethod

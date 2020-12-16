@@ -22,7 +22,7 @@ class PlayerController:
 
     def players_selection(self):
         """
-            Ask for the selection or the creation of the eight tournament players
+            Ask for the selection or creation of the 8 tournament players
             :return: a list of them
         """
         # selection of 8 players
@@ -32,7 +32,9 @@ class PlayerController:
             selected_player = self.player_select(list_chosen_players)
             if selected_player == 'new':  # create & save a new player
                 new_player = self.create_player()
-                selected_player = str(Player.insert(new_player.serialize(), Player.table_name))
+                selected_player = str(
+                    Player.insert(new_player.serialize(), Player.table_name)
+                )
             list_chosen_players.append(selected_player)
         return list_chosen_players
 
@@ -40,7 +42,7 @@ class PlayerController:
         """
             Ask for a chosen player among the available
             :param chosen_players: list of the already chosen player
-            :return: a string corresponding to a player ID or 'new' for create a new one
+            :return: a string of a player ID or 'new' for create a new one
         """
         # get all known players
         player_db = Player.all(Player.table_name)
@@ -50,8 +52,12 @@ class PlayerController:
             players_available = []
             InfoView.print_info('List of available players:')
             for a, elt in enumerate(player_db):
-                if str(a + 1) not in chosen_players:  # exclude players already chosen
-                    InfoView.print_info(f'{str(a + 1)}: {elt["name"]} ranking: {elt["ranking"]}')
+                if str(a + 1) not in chosen_players:
+                    # exclude players already chosen
+                    InfoView.print_info(
+                        f'{str(a + 1)}: '
+                        f'{elt["name"]} ranking: {elt["ranking"]}'
+                    )
                     players_available.append(str(a + 1))
 
             # choose a player
@@ -59,7 +65,8 @@ class PlayerController:
                 '\nSelect an available player (1) or add a new player (2): ',
                 ('1', '2')
             )
-            if menu_choice == '1' and len(players_available) > 0:  # test the available players
+            if menu_choice == '1' and len(players_available) > 0:
+                # test the available players
                 player_choice = self.input_service.lower_not_in(
                     'Select a player number: ',
                     players_available
@@ -74,14 +81,20 @@ class PlayerController:
             :return: a Player Object
         """
         name = self.input_service.one_char_alnum('Please enter player name: ')
-        firstname = self.input_service.one_char_alnum('Please enter player firstname: ')
-        birthdate = self.input_service.date_format('Please enter player\'s date of birth in the format d/m/yyyy: ')
+        firstname = self.input_service.one_char_alnum(
+            'Please enter player firstname: '
+        )
+        birthdate = self.input_service.date_format(
+            'Please enter player\'s date of birth in the format d/m/yyyy: '
+        )
         gender = self.input_service.lower_not_in(
             'Please enter the player\'s gender (F / M): ',
             ('f', 'm')
         )
         while True:
-            ranking = self.input_service.one_char_alnum('Please enter player ranking: ')
+            ranking = self.input_service.one_char_alnum(
+                'Please enter player ranking: '
+            )
             try:
                 ranking = int(ranking)
                 if ranking > 0:
@@ -90,7 +103,8 @@ class PlayerController:
                         break
                     else:
                         InfoView.print_info(
-                            f'\nRank already taken by the player ID :{Player.search_by_rank(ranking).doc_id} '
+                            f'\nRank already taken by the player ID :'
+                            f'{Player.search_by_rank(ranking).doc_id} '
                             f'name : {Player.search_by_rank(ranking)["name"]}'
                         )
             except ValueError:
@@ -120,9 +134,13 @@ class PlayerController:
             actual_ranking = sorted(current_ranking, key=lambda rank: rank[1])
         else:
             # sort by score then by ranking
-            actual_ranking = sorted(current_ranking, key=lambda k: (-k[2], k[1]))
+            actual_ranking = sorted(current_ranking,
+                                    key=lambda k: (-k[2], k[1])
+                                    )
 
-        # The best player in the upper half is paired with the best player in the lower half, and so on
+        # The best player in the upper half is paired
+        # with the best player in the lower half,
+        # and so on
         for m in range(len(actual_ranking) // 2):
             player1 = actual_ranking[m][0]
             sorted_player_id.append(player1)
@@ -137,18 +155,24 @@ class PlayerController:
             :param num_turn: actual turn number
             :return: a list of the match results
         """
-        score = 0
         match_result = []
         # show the match details
-        InfoView.print_info(f'\nMatch N° {str(num_turn + 1)}: '
-                            f'playerID {(list_turn[num_turn][0])} '
-                            f'{Player.search_by_id(int(list_turn[num_turn][0]), Player.table_name)["name"]}'
-                            f' -VS- playerID {(list_turn[num_turn][1])} '
-                            f'{Player.search_by_id(int(list_turn[num_turn][1]), Player.table_name)["name"]}')
+        id_player1 = int(list_turn[num_turn][0])
+        id_player2 = int(list_turn[num_turn][1])
+        InfoView.print_info(
+            f'\nMatch N° {str(num_turn + 1)}: '
+            f'playerID {(list_turn[num_turn][0])} '
+            f'{Player.search_by_id(id_player1, Player.table_name)["name"]}'
+            f' -VS- playerID {(list_turn[num_turn][1])} '
+            f'{Player.search_by_id(id_player2, Player.table_name)["name"]}'
+        )
+
         # choose the result
         score = self.input_service.lower_not_in(
-            f'Choose the winner of the match: \nType (1) for ID: {str(list_turn[num_turn][0])}'
-            f', (2) for ID: {str(list_turn[num_turn][1])}, (3) for : Draw \n Result: ',
+            f'Choose the winner of the match: '
+            f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
+            f', (2) for ID: {str(list_turn[num_turn][1])}, '
+            f'(3) for : Draw \n Result: ',
             ('1', '2', '3')
         )
         if score == '1':
@@ -168,8 +192,12 @@ class PlayerController:
         # show the Tournament scoreboard
         MenuView.print_menu('Tournament scoreboard')
         for num, point in board.items():
-            BoardView.print_board(num, Player.search_by_id(int(num), Player.table_name)["ranking"],
-                                  f'scores {str(point)}')
+            BoardView.print_board(
+                num,
+                Player.search_by_id(int(num),
+                                    Player.table_name)["ranking"],
+                f'scores {str(point)}'
+            )
 
         # select the new ranking
         self.new_ranking()
@@ -188,7 +216,9 @@ class PlayerController:
                 [Player.search_by_rank(int(elt["ranking"])).doc_id,
                  elt["ranking"]]
             )
-            InfoView.print_info(f'Player ID {all_players_rank[count][0]} ranking: {all_players_rank[count][1]}')
+            InfoView.print_info(f'Player ID {all_players_rank[count][0]} '
+                                f'ranking: {all_players_rank[count][1]}'
+                                )
             count += 1
 
         # enter the new ranking
@@ -197,32 +227,47 @@ class PlayerController:
         for number in all_players_rank:
             while True:  # control the chosen ranking
                 while True:  # control the format
-                    new_ranking = self.input_service.empty_alnum(f'New ranking of player ID {number[0]} : ')
+                    new_ranking = self.input_service.empty_alnum(
+                        f'New ranking of player ID {number[0]} : '
+                    )
                     try:  # conversion on a positive integer for ranking
                         new_ranking = int(new_ranking)
                         if new_ranking > 0:
                             break
                     except ValueError:
-                        InfoView.print_info('\nPlease enter a positive integer!')
-                if str(new_ranking) not in new_ranking_list:  # check for duplicate ranking
+                        InfoView.print_info(
+                            '\nPlease enter a positive integer!'
+                        )
+                if str(new_ranking) not in new_ranking_list:
+                    # check for duplicate ranking
                     new_ranking_list.append(str(new_ranking))
                     break
                 else:
-                    InfoView.print_info(f'\nnew ranking {str(new_ranking)} already chosen')
+                    InfoView.print_info(f'\nnew ranking {str(new_ranking)} '
+                                        f'already chosen'
+                                        )
             # update in the database
-            Player.update('ranking', new_ranking, [int(number[0])], Player.table_name)
+            Player.update('ranking',
+                          new_ranking,
+                          [int(number[0])],
+                          Player.table_name
+                          )
 
     @staticmethod
     def players_sorted(key):
         """
-            Sort by the key and print a list of the actual players from the database
+            Sort by key the players from the database and print as a list
             :param key: chosen key for the sort
         """
-        sorted_players = sorted(Player.all(Player.table_name), key=lambda k: k[key])
+        sorted_players = sorted(Player.all(Player.table_name),
+                                key=lambda k: k[key]
+                                )
         for sort in range(len(sorted_players)):
+            selected = sorted_players[sort]
             BoardView.print_board(
-                f'{Player.search_by_rank(sorted_players[sort]["ranking"]).doc_id} {sorted_players[sort]["name"]} ',
-                f'{str(sorted_players[sort]["ranking"])}'
+                f'{Player.search_by_rank(selected["ranking"]).doc_id}'
+                f' {selected["name"]} ',
+                f'{str(selected["ranking"])}'
             )
         return sorted_players
 

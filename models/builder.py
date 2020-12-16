@@ -44,14 +44,17 @@ class Builder(object):
     @classmethod
     def update(cls, key, value, id_list, table_name):
         """
-            update the {key : value} of the element with its id_list into the TinyDB database
+            update the {key : value} of the database by ID
             :param key: key of the dictionary
             :param value: value of the searched key
             :param id_list: ID of searched object
             :param table_name: table name of the search object
             :return: its ID
         """
-        TinyDB(cls.path).table(table_name).update({key: value}, doc_ids=id_list)
+        TinyDB(cls.path).table(table_name).update(
+            {key: value},
+            doc_ids=id_list
+        )
 
     @classmethod
     def all(cls, table_name):
@@ -65,18 +68,20 @@ class Builder(object):
     @classmethod
     def search_by(cls, key, value, table_name):
         """
-            Search a specific serialized data in the TinyDB database with the get() by Query method
+            Search a specific serialized data by Query method
             :param key: key of the dictionary
             :param value: value of the searched key
             :param table_name: table name of the search object
             :return: a dictionary of it
         """
-        return TinyDB(cls.path).table(table_name).get(Query()[str(key)] == str(value))
+        return TinyDB(cls.path).table(table_name).get(
+            Query()[str(key)] == str(value)
+        )
 
     @classmethod
     def search_by_id(cls, id_number, table_name):
         """
-            Search a specific serialized data in the TinyDB database with the get() by its ID method
+            Search a specific serialized data by its ID
             :param id_number: ID of the search object
             :param table_name: table name of the search object
             :return: a dictionary of it
