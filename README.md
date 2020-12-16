@@ -12,10 +12,16 @@ Elle doit utiliser le module TinyDB et respecter les directives de la PEP8.
 - Utilisation d \'un terminal (interface en ligne de commande)
 
 ## Installation:
+
 1. Cloner le projet depuis cette [page](https://github.com/RenoFar/P4_01_App "page")
 2. Créer un environnement virtuel dans votre dossier de travail contenant les fichiers téléchargés
 	- Utilisez la commande dans votre CLI `python -m venv <environment name>`  .
-	- Activer l'environnement, exécutez `source env/bin/activate`  (si vous êtes sous Windows, la commande sera `env/Scripts/activate.bat`  )
+	- Activer l'environnement: exécutez `source env/bin/activate`  (si vous êtes sous Windows, la commande sera `env/Scripts/activate.bat`  )
 	- Installer les paquets Python répertoriés dans le fichier `requirements.txt`
 		avec la commande `$ pip install -r requirements.txt`
-3. Exécuter le script Main.py avec la commande `python Main.py`
+
+## Rapport et execution:
+
+- Pour regénérer le rapport flake8 dans le dossier flake8-rapport grace au fichier setup.cfg, 
+il sufflt d'éxecuter la commande `python -m flake8`
+- Pour démarrer l'application, il faut Exécuter le script Main.py avec la commande `python Main.py`
