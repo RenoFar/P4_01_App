@@ -28,7 +28,7 @@ class Match:
             and the sorted players ID
         """
         # we assume that players are ordered by points and rank
-        # generate all the matches considered as if all were good
+        # generate all the matches considered as if all were goodc
         while len(self.sorted_players) != 0:
             match_envisaged = [self.sorted_players[0],
                                self.sorted_players[self.n]
