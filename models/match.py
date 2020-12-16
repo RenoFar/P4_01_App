@@ -29,7 +29,6 @@ class Match:
         """
         # we assume that players are ordered by points and rank
         # generate all the matches considered as if all were good
-        print(f'self.sorted_players: {self.sorted_players}')
         while len(self.sorted_players) != 0:
             match_envisaged = [self.sorted_players[0],
                                self.sorted_players[self.n]
