@@ -15,7 +15,7 @@ class InputService:
     def __init__(self, message=None):
         self.message = message
 
-    def one_char_alnum(self):
+    def one_char_alphanum(self):
         """
             Ask for an information
             :return: an alphanumeric input with one character at least
@@ -25,7 +25,7 @@ class InputService:
             element = InputView.input_data(self.message)
         return element
 
-    def empty_alnum(self):
+    def empty_alphanum(self):
         """
             Ask for an information
             :return: an input element empty or alphanumeric

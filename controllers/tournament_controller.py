@@ -179,10 +179,10 @@ class TournamentController(BuilderController):
         scoreboard = {}
         name = self.input_service(
             'Please enter the tournament name: '
-        ).one_char_alnum()
+        ).one_char_alphanum()
         place = self.input_service(
             'Please enter the tournament place: '
-        ).one_char_alnum()
+        ).one_char_alphanum()
         date = self.input_service(
             'Please enter the tournament date: '
         ).date_format()
@@ -195,7 +195,7 @@ class TournamentController(BuilderController):
             nb_turn = self.input_service(
                 'The number of laps by default is 4,'
                 '\ntype another number or Enter to validate: '
-            ).empty_alnum()
+            ).empty_alphanum()
             if len(str(nb_turn)) < 1:
                 # if nothing is entered
                 nb_turn = 4
@@ -214,7 +214,7 @@ class TournamentController(BuilderController):
                     InfoView.print_info('\nPlease enter a positive integer!')
         description = self.input_service(
             'Please enter the tournament description: '
-        ).one_char_alnum()
+        ).one_char_alphanum()
         return Tournament(name,
                           place,
                           date,

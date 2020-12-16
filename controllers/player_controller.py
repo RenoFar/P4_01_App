@@ -9,7 +9,7 @@ from views.menu_view import MenuView
 from views.board_view import BoardView
 
 
-class PlayerController:
+class PlayerController(BuilderController):
     """
         Class grouping together all the player controllers
     """
@@ -84,10 +84,10 @@ class PlayerController:
         """
         name = self.input_service(
             'Please enter player name: '
-        ).one_char_alnum()
-        firstname = self.input_service.one_char_alnum(
+        ).one_char_alphanum()
+        firstname = self.input_service.one_char_alphanum(
             'Please enter player firstname: '
-        ).one_char_alnum()
+        ).one_char_alphanum()
         birthdate = self.input_service(
             'Please enter player\'s date of birth in the format d/m/yyyy: '
         ).date_format()
@@ -99,7 +99,7 @@ class PlayerController:
         while True:
             ranking = self.input_service(
                 'Please enter player ranking: '
-            ).one_char_alnum()
+            ).one_char_alphanum()
             try:
                 ranking = int(ranking)
                 if ranking > 0:
@@ -235,7 +235,7 @@ class PlayerController:
                 while True:  # control the format
                     new_ranking = self.input_service(
                         f'New ranking of player ID {number[0]} : '
-                    ).empty_alnum()
+                    ).empty_alphanum()
                     try:  # conversion on a positive integer for ranking
                         new_ranking = int(new_ranking)
                         if new_ranking > 0:
