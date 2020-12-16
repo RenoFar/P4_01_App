@@ -19,7 +19,7 @@ class Match:
         self.sorted_players = sorted_players
         self.match_played = match_played
         self.match_generated = []
-        self.n = 1
+        self.next_one = 1
         self.generate_matches()
 
     def generate_matches(self):
@@ -31,7 +31,7 @@ class Match:
         # generate all the matches considered as if all were goodc
         while len(self.sorted_players) != 0:
             match_envisaged = [self.sorted_players[0],
-                               self.sorted_players[self.n]
+                               self.sorted_players[self.next_one]
                                ]
             self.check_match_availability(match_envisaged)
 
@@ -44,13 +44,13 @@ class Match:
         if match_envisaged not in self.match_played:
             self.add_match_to_new_matches(match_envisaged)
         else:
-            self.n += 2
+            self.next_one += 2
             # the match has already been played
             # check the existence of a next player in the available list
-            if self.sorted_players[self.n]:
+            if self.sorted_players[self.next_one]:
                 # 1 : take the next one
                 match_envisaged = [self.sorted_players[0],
-                                   self.sorted_players[self.n]
+                                   self.sorted_players[self.next_one]
                                    ]
                 self.check_match_availability(match_envisaged)
             else:
@@ -63,7 +63,7 @@ class Match:
                 # revalidate it by taking the next player
                 match_envisaged = (
                     self.sorted_players[0],
-                    self.sorted_players[0 + self.n]
+                    self.sorted_players[0 + self.next_one]
                 )
                 self.check_match_availability(match_envisaged)
 
@@ -80,7 +80,7 @@ class Match:
         # add the match generated to match_played
         self.match_played.append(match_to_add)
         # remove the ids of the players who have been placed
-        del self.sorted_players[self.n]
+        del self.sorted_players[self.next_one]
         del self.sorted_players[0]
         # reinitialise n
-        self.n = 1
+        self.next_one = 1
