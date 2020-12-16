@@ -7,7 +7,7 @@ from models.tournament import Tournament
 from models.round import Round
 from models.match import Match
 from controllers.player_controller import PlayerController
-from builder_controller import BuilderController
+from controllers.builder_controller import BuilderController
 from views.info_view import InfoView
 from views.menu_view import MenuView
 
@@ -62,8 +62,10 @@ class TournamentController(BuilderController):
         )
         Tournament.update('current_step', 1, [t_id], Tournament.table_name)
         MenuView.print_menu('Tournament created')
-        choice0 = self.input_service(
-            'Do you want to select the players (y/n): ').lower_not_in(
+        self.input_service.message = (
+            'Do you want to select the players (y/n): '
+        )
+        choice0 = self.input_service.lower_not_in(
             ('y', 'n')
         )
         if choice0 == 'y':
@@ -90,8 +92,10 @@ class TournamentController(BuilderController):
         )
         Tournament.update('current_step', 2, [t_id], Tournament.table_name)
         MenuView.print_menu(' Tournament players saved ')
-        choice1 = self.input_service(
-            'Do you want to play the turns (y/n): ').lower_not_in(
+        self.input_service.message = (
+            'Do you want to play the turns (y/n): '
+        )
+        choice1 = self.input_service.lower_not_in(
             ('y', 'n')
         )
         if choice1 == 'y':
@@ -122,8 +126,10 @@ class TournamentController(BuilderController):
             # finish the turns
             Tournament.update('current_step', 3, [t_id], Tournament.table_name)
             MenuView.print_menu(' Tournament rounds saved ')
-            choice2 = self.input_service(
-                'Do you want to update the ranking (y/n): ').lower_not_in(
+            self.input_service.message = (
+                'Do you want to update the ranking (y/n): '
+            )
+            choice2 = self.input_service.lower_not_in(
                 ('y', 'n')
             )
             if choice2 == 'y':
@@ -160,9 +166,10 @@ class TournamentController(BuilderController):
             return None
         else:
             # ask for choice
-            not_ended_id = self.input_service(
+            self.input_service.message = (
                 'Please select an ID: '
-            ).lower_not_in(
+            )
+            not_ended_id = self.input_service.lower_not_in(
                 not_ended
             )
             return Tournament.search_by_id(int(not_ended_id),
@@ -177,25 +184,30 @@ class TournamentController(BuilderController):
         players_index = []
         rounds_list = []
         scoreboard = {}
-        name = self.input_service(
+        self.input_service.message = (
             'Please enter the tournament name: '
-        ).one_char_alphanum()
-        place = self.input_service(
+        )
+        name = self.input_service.one_char_alphanum()
+        self.input_service.message = (
             'Please enter the tournament place: '
-        ).one_char_alphanum()
-        date = self.input_service(
+        )
+        place = self.input_service.one_char_alphanum()
+        self.input_service.message = (
             'Please enter the tournament date: '
-        ).date_format()
-        game_mode = self.input_service(
+        )
+        date = self.input_service.date_format()
+        self.input_service.message = (
             'Please enter the tournament mode (bullet / blitz / speed): '
-        ).lower_not_in(
+        )
+        game_mode = self.input_service.lower_not_in(
             ('bullet', 'blitz', 'speed')
         )
         while True:
-            nb_turn = self.input_service(
+            self.input_service.message = (
                 'The number of laps by default is 4,'
                 '\ntype another number or Enter to validate: '
-            ).empty_alphanum()
+            )
+            nb_turn = self.input_service.empty_alphanum()
             if len(str(nb_turn)) < 1:
                 # if nothing is entered
                 nb_turn = 4
@@ -212,9 +224,10 @@ class TournamentController(BuilderController):
                         break
                 except ValueError:
                     InfoView.print_info('\nPlease enter a positive integer!')
-        description = self.input_service(
+        self.input_service.message = (
             'Please enter the tournament description: '
-        ).one_char_alphanum()
+        )
+        description = self.input_service.one_char_alphanum()
         return Tournament(name,
                           place,
                           date,
@@ -245,8 +258,10 @@ class TournamentController(BuilderController):
             )
 
             # creation of a new round
-            self.input_service('\nDo you want to start the turn? (y): '
-                               ).lower_diff('y')
+            self.input_service.message = (
+                '\nDo you want to start the turn? (y): '
+            )
+            self.input_service.lower_diff('y')
             turn = self.create_round(current_turn)
 
             # find the current ranking
@@ -266,9 +281,10 @@ class TournamentController(BuilderController):
             )
 
             # enter the results of the matches
-            self.input_service(
+            self.input_service.message = (
                 '\nDo you want to enter the results? (y): '
-            ).lower_diff('y')
+            )
+            self.input_service.lower_diff('y')
             for m in range(len(list_match)):
                 match_results = PlayerController().players_score(list_match, m)
 
@@ -281,9 +297,10 @@ class TournamentController(BuilderController):
                     match_results[1]
 
             # finish the turn
-            self.input_service(
+            self.input_service.message = (
                 '\nDo you want to end the turn? (y): '
-            ).lower_diff(
+            )
+            self.input_service.lower_diff(
                 'y'
             )
             turn.end = datetime.now().strftime("%X")  # local time HH:MM:SS
@@ -311,9 +328,10 @@ class TournamentController(BuilderController):
             if current_turn == 3:
                 break
             else:
-                choice4 = self.input_service(
+                self.input_service.message = (
                     'Do you want to play the next turn (y/n): '
-                ).lower_not_in(
+                )
+                choice4 = self.input_service.lower_not_in(
                     ('y', 'n')
                 )
                 if choice4 == 'n':

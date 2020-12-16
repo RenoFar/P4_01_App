@@ -4,7 +4,7 @@
 
 from controllers.tournament_controller import TournamentController
 from controllers.player_controller import PlayerController
-from builder_controller import BuilderController
+from controllers.builder_controller import BuilderController
 from views.menu_view import MenuView
 
 
@@ -23,12 +23,13 @@ class ReportController(BuilderController):
     def report_execution(self):
         while True:
             MenuView.print_menu(' Report menu ')
-            report_choice = self.input_service(
+            self.input_service.message = (
                 'Show all the known players: enter (1)\n'
                 'Show all the known tournaments: enter (2)\n'
                 'Return to the Main menu: enter (3)\n'
                 'Please enter your choice: '
-            ).lower_not_in(
+            )
+            report_choice = self.input_service.lower_not_in(
                 ('1', '2', '3')
             )
             if report_choice == '1':
@@ -55,15 +56,17 @@ class ReportController(BuilderController):
         """
         MenuView.print_menu('Tournaments played')
         list_id = TournamentController.show_tournaments([0, 1])
-        show_details = self.input_service(
+        self.input_service.message = (
             'Do you want to see the tournament details (yes: Y / no: N): '
-        ).lower_not_in(
+        )
+        show_details = self.input_service.lower_not_in(
             ('y', 'n')
         )
         if show_details == 'y':
-            tournament_chosen = self.input_service(
+            self.input_service.message = (
                 'Please enter the ID of the chosen tournament: '
-            ).lower_not_in(
+            )
+            tournament_chosen = self.input_service.lower_not_in(
                 list_id
             )
             self.details_tournament(tournament_chosen)

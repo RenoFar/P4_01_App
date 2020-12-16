@@ -3,7 +3,7 @@
 
 
 from models.player import Player
-from builder_controller import BuilderController
+from controllers.builder_controller import BuilderController
 from views.info_view import InfoView
 from views.menu_view import MenuView
 from views.board_view import BoardView
@@ -61,16 +61,18 @@ class PlayerController(BuilderController):
                     players_available.append(str(a + 1))
 
             # choose a player
-            menu_choice = self.input_service(
+            self.input_service.message = (
                 '\nSelect an available player (1) or add a new player (2): '
-            ).lower_not_in(
+            )
+            menu_choice = self.input_service.lower_not_in(
                 ('1', '2')
             )
             if menu_choice == '1' and len(players_available) > 0:
                 # test the available players
-                player_choice = self.input_service(
+                self.input_service.message = (
                     'Select a player number: '
-                ).lower_not_in(
+                )
+                player_choice = self.input_service.lower_not_in(
                     players_available
                 )
             elif menu_choice == '2':
@@ -82,24 +84,29 @@ class PlayerController(BuilderController):
             Ask and format the player information
             :return: a Player Object
         """
-        name = self.input_service(
+        self.input_service.message = (
             'Please enter player name: '
-        ).one_char_alphanum()
-        firstname = self.input_service.one_char_alphanum(
+        )
+        name = self.input_service.one_char_alphanum()
+        self.input_service.message = (
             'Please enter player firstname: '
-        ).one_char_alphanum()
-        birthdate = self.input_service(
+        )
+        firstname = self.input_service.one_char_alphanum()
+        self.input_service.message = (
             'Please enter player\'s date of birth in the format d/m/yyyy: '
-        ).date_format()
-        gender = self.input_service(
+        )
+        birthdate = self.input_service.date_format()
+        self.input_service.message = (
             'Please enter the player\'s gender (F / M): '
-        ).lower_not_in(
+        )
+        gender = self.input_service.lower_not_in(
             ('f', 'm')
         )
         while True:
-            ranking = self.input_service(
+            self.input_service.message = (
                 'Please enter player ranking: '
-            ).one_char_alphanum()
+            )
+            ranking = self.input_service.one_char_alphanum()
             try:
                 ranking = int(ranking)
                 if ranking > 0:
@@ -173,12 +180,13 @@ class PlayerController(BuilderController):
         )
 
         # choose the result
-        score = self.input_service(
+        self.input_service.message = (
             f'Choose the winner of the match: '
             f'\nType (1) for ID: {str(list_turn[num_turn][0])}'
             f', (2) for ID: {str(list_turn[num_turn][1])}, '
             f'(3) for : Draw \n Result: '
-        ).lower_not_in(
+        )
+        score = self.input_service.lower_not_in(
             ('1', '2', '3')
         )
         if score == '1':
@@ -233,9 +241,10 @@ class PlayerController(BuilderController):
         for number in all_players_rank:
             while True:  # control the chosen ranking
                 while True:  # control the format
-                    new_ranking = self.input_service(
+                    self.input_service.message = (
                         f'New ranking of player ID {number[0]} : '
-                    ).empty_alphanum()
+                    )
+                    new_ranking = self.input_service.empty_alphanum()
                     try:  # conversion on a positive integer for ranking
                         new_ranking = int(new_ranking)
                         if new_ranking > 0:

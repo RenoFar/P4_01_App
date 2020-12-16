@@ -27,14 +27,15 @@ class MainController(BuilderController):
         """
         while True:
             MenuView.print_menu(' Main menu ')
-            menu_choice = self.input_service(
+            self.input_service.message = (
                 '\nExecute a new tournament: enter (1)\n'
                 'Continue an unfinished tournament: enter (2) \n'
                 'Update the actual ranking: enter (3) \n'
                 'Show the reports: enter (4) \n'
                 'Quit the application: enter (5) \n'
                 'Please enter your choice: '
-            ).lower_not_in(
+            )
+            menu_choice = self.input_service.lower_not_in(
                 ('1', '2', '3', '4', '5')
             )
             if menu_choice == '1':
