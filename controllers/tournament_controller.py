@@ -17,11 +17,12 @@ class TournamentController(BuilderController):
         Class grouping together all the tournament controllers
     """
 
-    def __init__(self, message=None):
+    def __init__(self):
+
         """
             Constructor of the class
         """
-        super().__init__(message)
+        super().__init__()
         self.tournament = None
         self.turns = None
         self.players = None

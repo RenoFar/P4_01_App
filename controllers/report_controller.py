@@ -13,11 +13,11 @@ class ReportController(BuilderController):
         Class grouping together all the report controllers
     """
 
-    def __init__(self, message=None):
+    def __init__(self):
         """
             Constructor of the class
         """
-        super().__init__(message)
+        super().__init__()
         self.report_execution()
 
     def report_execution(self):

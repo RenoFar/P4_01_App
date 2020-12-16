@@ -14,11 +14,11 @@ class PlayerController(BuilderController):
         Class grouping together all the player controllers
     """
 
-    def __init__(self, message=None):
+    def __init__(self):
         """
             Constructor of the class
         """
-        super().__init__(message)
+        super().__init__()
 
     def players_selection(self):
         """

@@ -12,4 +12,8 @@ class BuilderController(object):
     """
 
     def __init__(self, message=None):
+        """
+            Constructor of the class
+            :param message: information to ask
+        """
         self.input_service = InputService(message)

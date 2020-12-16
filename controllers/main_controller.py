@@ -14,11 +14,11 @@ class MainController(BuilderController):
         Class grouping together all the Main menu controllers
     """
 
-    def __init__(self, message=None):
+    def __init__(self):
         """
             Constructor of the class
         """
-        super().__init__(message)
+        super().__init__()
         self.menu_list()
 
     def menu_list(self):
