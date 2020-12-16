@@ -23,7 +23,7 @@ Elle doit utiliser le module TinyDB et respecter les directives de la PEP8.
 
 ## Rapport et execution:
 
-- Pour regénérer le rapport flake8 dans le dossier flake8-rapport grace au fichier setup.cfg
+- Pour regénérer le rapport flake8 dans le dossier flake8_rapport grace au fichier setup.cfg
 	1. Installer flake8 avec la commande `pip install flake8` 
 	2. Executer la commande `python -m flake8` dans le dossier source le l'application (P4_01_App)
 - Pour démarrer l'application, il faut Exécuter le script Main.py avec la commande `python Main.py`
