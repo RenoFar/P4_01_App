@@ -123,9 +123,13 @@ class TournamentController(BuilderController):
         # play the turns
         actual_turn = self.play_turns(self.tournament, t_id, turn_num)
 
-        if actual_turn == 3:
+        if actual_turn == self.tournament.nb_turn:
             # finish the turns
-            Tournament.update('current_step', 3, [t_id], Tournament.table_name)
+            Tournament.update('current_step',
+                              self.tournament.nb_turn,
+                              [t_id],
+                              Tournament.table_name
+                              )
             MenuView.print_menu(' Tournament rounds saved ')
             self.input_service.message = (
                 'Do you want to update the ranking (y/n): '
@@ -205,7 +209,7 @@ class TournamentController(BuilderController):
         )
         while True:
             self.input_service.message = (
-                'The number of laps by default is 4,'
+                'The number of turns by default is 4,'
                 '\ntype another number or Enter to validate: '
             )
             nb_turn = self.input_service.empty_alphanum()
@@ -251,8 +255,7 @@ class TournamentController(BuilderController):
         turn_left = tournament.nb_turn - turn_num
         current_turn = turn_num
         played_match = []
-        for t in range(turn_left):
-            current_turn += t
+        for turns in range(turn_left):
             MenuView.print_menu(
                 'Execution of round N° '
                 f'{str(current_turn + 1)}'
@@ -286,15 +289,15 @@ class TournamentController(BuilderController):
                 '\nDo you want to enter the results? (y): '
             )
             self.input_service.lower_diff('y')
-            for m in range(len(list_match)):
-                match_results = PlayerController().players_score(list_match, m)
+            for match in range(len(list_match)):
+                match_results = PlayerController().players_score(list_match, match)
 
                 # save the results
-                turn.match_list.append(([list_match[m][0], match_results[0]],
-                                        [list_match[m][1], match_results[1]]))
-                self.tournament.scoreboard[list_match[m][0]] += \
+                turn.match_list.append(([list_match[match][0], match_results[0]],
+                                        [list_match[match][1], match_results[1]]))
+                self.tournament.scoreboard[list_match[match][0]] += \
                     match_results[0]
-                self.tournament.scoreboard[list_match[m][1]] += \
+                self.tournament.scoreboard[list_match[match][1]] += \
                     match_results[1]
 
             # finish the turn
@@ -326,7 +329,8 @@ class TournamentController(BuilderController):
                               Tournament.table_name
                               )
             MenuView.print_menu(f' Turn n° {current_turn + 1} saved ')
-            if current_turn == 3:
+            current_turn += 1
+            if current_turn == tournament.nb_turn:
                 break
             else:
                 self.input_service.message = (
